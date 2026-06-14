@@ -1,0 +1,108 @@
+// 信息提示区域样式定义
+.info {
+  padding: 20px; // 内边距设置为20px以提供舒适的阅读空间
+  // 搜索PDF按钮样式
+  .searchPdf {
+    color: #409eff; // 按钮文字颜色设置为蓝色
+  }
+  h3 {
+    padding-bottom: 20px;
+    display: flex;
+    align-items: center;
+    .el-tooltip__trigger {
+      margin-left: 5px;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+    }
+  }
+  h1.label-wt-130 {
+    text-align: right;
+  }
+  .info-item {
+    // 偶数行样式
+    &:nth-child(even) {
+      .label-wt {
+        width: 130px;
+      }
+    }
+  }
+}
+
+// 文本居中样式
+.center {
+  text-align: center; // 将文本内容居中对齐
+}
+
+// 家属信息表格样式定义
+.family {
+  // 表头样式
+  .tableHead {
+    display: flex; // 使用弹性布局使得表头元素水平排列
+    background-color: #f3f8f9; // 设置背景颜色为淡灰色
+    height: 50px;
+    line-height: 50px; // 设置表头高度及行高以适应内容
+    font-size: 14px; // 字体大小设置为14px
+    justify-content: space-between; // 使表头元素左右间距均匀分布
+    padding: 0 20px; // 内边距设置为左右20px
+  }
+  // 表体样式
+  .tableBody {
+    // 表格列样式
+    .tableColumn {
+      display: flex; // 使用弹性布局使得表格列元素水平排列
+      padding: 0 20px; // 内边距设置为左右20px以提供阅读空间
+      justify-content: space-between; // 使表格列元素左右间距均匀分布
+      height: 50px;
+      line-height: 50px; // 设置表格行高及高度以适应内容
+    }
+  }
+}
+.oldSelectDialog {
+  .elDialogBox {
+    width: 850px !important;
+    .dialogCenter .el-input {
+      width: 100%;
+      &.elInputW {
+        width: 200px;
+      }
+    }
+    .el-pagination .el-select {
+      width: 100%;
+      .el-input {
+        width: 128px;
+      }
+    }
+    .oldTable {
+      display: flex;
+      .table {
+        flex: 1;
+        margin-left: 10px;
+        width: calc(100% - 100px);
+      }
+    }
+    .tit {
+      padding-bottom: 10px;
+      padding-top: 8px;
+    }
+    .pagination-container {
+      padding-bottom: 0px !important;
+    }
+    .el-form--inline .el-form-item {
+      margin-right: 10px !important;
+    }
+  }
+}
+.el-upload {
+  // width: auto !important;
+  // height: auto !important;
+  .avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+  }
+  width: 100px;
+  height: 100px;
+}

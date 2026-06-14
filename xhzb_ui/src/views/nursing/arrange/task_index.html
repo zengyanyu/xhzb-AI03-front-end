@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>护理记录</title>
+  <style>
+    /* 全局样式 */
+    body {
+      font-family: "Microsoft YaHei", sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      gap: 20px;
+    }
+
+    /* 左侧主内容区 */
+    .main-content {
+      flex: 1;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    /* 标题 */
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 16px;
+      color: #333;
+      display: block;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+
+    /* Tab切换样式 */
+    .tab-container {
+      margin-bottom: 16px;
+    }
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 16px;
+    }
+    .tab {
+      padding: 8px 16px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      font-size: 14px;
+      color: #666;
+    }
+    .tab.active {
+      border-bottom-color: #0066cc;
+      color: #0066cc;
+      font-weight: bold;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    /* 表格 */
+    .table-container {
+      overflow-x: auto;
+      margin-top: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #f5f5f5;
+      text-align: left;
+      padding: 12px 10px;
+      font-weight: normal;
+      color: #666;
+    }
+
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .status {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      display: inline-block;
+    }
+
+    .status.completed {
+      background-color: #e6f7ff;
+      color: #0066cc;
+      border: 1px solid #0066cc;
+    }
+
+    .status.cancelled {
+      background-color: #ffeaea;
+      color: #d90000;
+      border: 1px solid #d90000;
+    }
+
+    .status.pending {
+      background-color: #fff8e1;
+      color: #ff9800;
+      border: 1px solid #ff9800;
+    }
+
+    /* 状态标签简化样式（匹配图片） */
+    .status-simple {
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+      display: inline-block;
+    }
+    .status-simple.completed {
+      background-color: #e6f7ff;
+      color: #0066cc;
+      border: 1px solid #0066cc;
+    }
+    .status-simple.cancelled {
+      background-color: #ffeaea;
+      color: #d90000;
+      border: 1px solid #d90000;
+    }
+
+    .executed-image {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    /* 分页器 */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 10px 0;
+      border-top: 1px solid #eee;
+    }
+
+    .pagination select,
+    .pagination input,
+    .pagination button {
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .pagination button {
+      background: none;
+      cursor: pointer;
+    }
+
+    .pagination .page-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #ccc;
+      background: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pagination .current-page {
+      background-color: #0066cc;
+      color: white;
+      border-color: #0066cc;
+    }
+
+    /* 右侧建议栏 */
+    .sidebar {
+      width: 320px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    .sidebar h3 {
+      font-size: 16px;
+      margin-bottom: 16px;
+      color: #333;
+    }
+
+    /* 老人信息卡片 */
+    .elder-card {
+      background: linear-gradient(135deg, #0066cc, #003399);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .elder-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0 auto 10px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .elder-name {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .elder-info {
+      font-size: 14px;
+      margin: 5px 0;
+    }
+
+    .elder-tags {
+      display: flex;
+      gap: 8px;
+      margin: 10px 0;
+      justify-content: center;
+    }
+
+    .elder-tag {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    /* 健康趋势 */
+    .health-trend {
+      margin-bottom: 20px;
+    }
+
+    .trend-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .trend-value {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .trend-label {
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* 健康背景 */
+    .health-background {
+      margin-bottom: 20px;
+    }
+
+    .background-item {
+      margin-bottom: 12px;
+    }
+
+    .background-title {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .background-content {
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* 当日护理重点 */
+    .care-focus {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .focus-item {
+      margin-bottom: 0;
+    }
+
+    .focus-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .focus-content {
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* 进度条 */
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #eee;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+
+    .progress {
+      height: 100%;
+      background: #0066cc;
+      border-radius: 4px;
+      width: 70%;
+    }
+
+    /* 操作按钮 */
+    .operation-btn {
+      padding: 4px 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+
+    .operation-btn:hover {
+      background: #f0f0f0;
+    }
+
+    .operation-btn.red {
+      border-color: #d90000;
+      color: #d90000;
+    }
+
+    .operation-btn.blue {
+      border-color: #0066cc;
+      color: #0066cc;
+    }
+
+    .operation-btn.orange {
+      border-color: #ff9800;
+      color: #ff9800;
+    }
+
+    /* 健康建议模块 */
+    .health-suggestion {
+      margin-top: 20px;
+    }
+    .suggestion-item {
+      background-color: #f9f9f9;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+    .suggestion-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #0066cc;
+    }
+
+    /* 模块间距 */
+    .module {
+      margin-bottom: 30px;
+    }
+
+    /* 弹层样式 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      display: none;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header {
+      padding: 12px 16px;
+      background: #f5f5f5;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .modal-close {
+      cursor: pointer;
+      color: #666;
+      font-size: 16px;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .form-item {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-label .required {
+      color: #d90000;
+      margin-right: 4px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .form-textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      min-height: 80px;
+      resize: none;
+      box-sizing: border-box;
+    }
+
+    .char-count {
+      text-align: right;
+      font-size: 12px;
+      color: #999;
+      margin-top: 4px;
+    }
+
+    .modal-footer {
+      padding: 12px 16px;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .modal-btn {
+      padding: 6px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .modal-btn-cancel {
+      background: #f5f5f5;
+      border: 1px solid #ccc;
+      color: #666;
+    }
+
+    .modal-btn-confirm {
+      background: #0066cc;
+      border: 1px solid #0066cc;
+      color: white;
+    }
+
+    /* 新增：图片上传样式（匹配设计图） */
+    .upload-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .upload-box {
+      width: 100px;
+      height: 100px;
+      border: 1px dashed #ccc;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .upload-box:hover {
+      border-color: #0066cc;
+    }
+
+    .upload-icon {
+      font-size: 24px;
+      color: #999;
+      margin-bottom: 4px;
+    }
+
+    .upload-text {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .upload-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .upload-tips {
+      font-size: 12px;
+      color: #999;
+      line-height: 1.5;
+    }
+
+    /* 执行记录输入框特殊样式（字数限制10） */
+    .exec-record-wrapper {
+      position: relative;
+    }
+
+    .exec-record-count {
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      font-size: 12px;
+      color: #999;
+    }
+
+    .exec-record-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+      min-height: 60px;
+      resize: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- 左侧主内容区 -->
+    <div class="main-content">
+      <!-- 当日护理重点 -->
+      <div class="module">
+        <h2 class="section-title">今日护理重点</h2>
+        <div class="care-focus">
+          <div class="focus-item">
+            <div class="focus-title">
+              <span style="color: #0066cc;">📅</span>当日特别关注
+            </div>
+            <div class="focus-content">监测晨起血压和空腹血糖；观察老人夜间的睡眠情况，和上厕所的频率，注意老人关节疼痛的变化。观察有无咳嗽。</div>
+          </div>
+          <div class="focus-item">
+            <div class="focus-title">
+              <span style="color: #0066cc;">👤</span>个性化偏好
+            </div>
+            <div class="focus-content">喜欢用温水洗漱；下午喜欢喝红茶；晚间喜欢听戏曲广播。喜欢和老太太一起唱歌、跳广场舞。午睡起来以后需要喝蜂蜜水。</div>
+          </div>
+          <div class="focus-item">
+            <div class="focus-title">
+              <span style="color: #0066cc;">⚠️</span>风险防范重点
+            </div>
+            <div class="focus-content">防跌倒：浴室放置防滑垫，起床时慢起；防低血糖：备好糖块；防走失：房间门做好标识</div>
+          </div>
+          <div class="focus-item">
+            <div class="focus-title">
+              <span style="color: #0066cc;">💡</span>执行技巧提示
+            </div>
+            <div class="focus-content">喂药时确认吞咽完毕；协助洗澡时先调好水温；沟通时使用简单明确的语句。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 今日护理任务 -->
+      <div class="module">
+        <h2 class="section-title">今日护理任务</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div>进度：5/25</div>
+          <div class="progress-bar">
+            <div class="progress"></div>
+          </div>
+          <div>70%</div>
+          <div><a href="javascript:void(0);" class="remark-btn" onclick="openRemarkModal()">备注</a></div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>护理项目名称</th>
+                <th>项目类型</th>
+                <th>期望服务时间</th>
+                <th>护理注意事项</th>
+                <th>执行状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>口腔清洁</td>
+                <td>日常护理项目</td>
+                <td>15:00:00</td>
+                <td>测量血压、心率、体温，记录于护理记录单</td>
+                <td><span class="status completed">已执行</span></td>
+                <td>
+                  <button class="operation-btn red" onclick="openCancelModal('口腔清洁')">取消</button>
+                  <button class="operation-btn blue">查看</button>
+                  <button class="operation-btn blue" onclick="openExecuteModal('口腔清洁')">执行</button>
+                  <button class="operation-btn orange" onclick="openRescheduleModal('口腔清洁', '2048-10-10 15:00:00')">改期</button>
+                </td>
+              </tr>
+              <tr>
+                <td>面部清洁</td>
+                <td>额外护理项目</td>
+                <td>15:00:00</td>
+                <td>测量血压、心率、体温，记录于护理记录单</td>
+                <td><span class="status completed">已执行</span></td>
+                <td>
+                  <button class="operation-btn red" onclick="openCancelModal('面部清洁')">取消</button>
+                  <button class="operation-btn blue">查看</button>
+                  <button class="operation-btn blue" onclick="openExecuteModal('面部清洁')">执行</button>
+                  <button class="operation-btn orange" onclick="openRescheduleModal('面部清洁', '2048-10-10 15:00:00')">改期</button>
+                </td>
+              </tr>
+              <tr>
+                <td>床上洗头</td>
+                <td>家属下单项目</td>
+                <td>15:00:00</td>
+                <td>测量血压、心率、体温，记录于护理记录单</td>
+                <td><span class="status completed">已执行</span></td>
+                <td>
+                  <button class="operation-btn red" onclick="openCancelModal('床上洗头')">取消</button>
+                  <button class="operation-btn blue">查看</button>
+                  <button class="operation-btn blue" onclick="openExecuteModal('床上洗头')">执行</button>
+                  <button class="operation-btn orange" onclick="openRescheduleModal('床上洗头', '2048-10-10 15:00:00')">改期</button>
+                </td>
+              </tr>
+              <tr>
+                <td>协助更衣</td>
+                <td>日常护理项目</td>
+                <td>15:00:00</td>
+                <td>测量血压、心率、体温，记录于护理记录单</td>
+                <td><span class="status completed">已执行</span></td>
+                <td>
+                  <button class="operation-btn red" onclick="openCancelModal('协助更衣')">取消</button>
+                  <button class="operation-btn blue">查看</button>
+                  <button class="operation-btn blue" onclick="openExecuteModal('协助更衣')">执行</button>
+                  <button class="operation-btn orange" onclick="openRescheduleModal('协助更衣', '2048-10-10 15:00:00')">改期</button>
+                </td>
+              </tr>
+              <tr>
+                <td>指甲护理</td>
+                <td>额外护理项目</td>
+                <td>15:00:00</td>
+                <td>测量血压、心率、体温，记录于护理记录单</td>
+                <td><span class="status completed">已执行</span></td>
+                <td>
+                  <button class="operation-btn red" onclick="openCancelModal('指甲护理')">取消</button>
+                  <button class="operation-btn blue">查看</button>
+                  <button class="operation-btn blue" onclick="openExecuteModal('指甲护理')">执行</button>
+                  <button class="operation-btn orange" onclick="openRescheduleModal('指甲护理', '2048-10-10 15:00:00')">改期</button>
+                </td>
+              </tr>
+              <tr>
+                <td>足部清洁</td>
+                <td>家属下单项目</td>
+                <td>15:00:00</td>
+                <td>测量血压、心率、体温，记录于护理记录单</td>
+                <td><span class="status cancelled">已取消</span></td>
+                <td>
+                  <button class="operation-btn red" onclick="openCancelModal('足部清洁')">取消</button>
+                  <button class="operation-btn blue">查看</button>
+                  <button class="operation-btn blue" onclick="openExecuteModal('足部清洁')">执行</button>
+                  <button class="operation-btn orange" onclick="openRescheduleModal('足部清洁', '2048-10-10 15:00:00')">改期</button>
+                </td>
+              </tr>
+              <tr>
+                <td>足部清洁</td>
+                <td>日常护理项目</td>
+                <td>15:00:00</td>
+                <td>测量血压、心率、体温，记录于护理记录单</td>
+                <td><span class="status cancelled">已取消</span></td>
+                <td>
+                  <button class="operation-btn red" onclick="openCancelModal('足部清洁')">取消</button>
+                  <button class="operation-btn blue">查看</button>
+                  <button class="operation-btn blue" onclick="openExecuteModal('足部清洁')">执行</button>
+                  <button class="operation-btn orange" onclick="openRescheduleModal('足部清洁', '2048-10-10 15:00:00')">改期</button>
+                </td>
+              </tr>
+              <tr>
+                <td>协助更衣</td>
+                <td>额外护理项目</td>
+                <td>15:00:00</td>
+                <td>测量血压、心率、体温，记录于护理记录单</td>
+                <td><span class="status pending">待执行</span></td>
+                <td>
+                  <button class="operation-btn red" onclick="openCancelModal('协助更衣')">取消</button>
+                  <button class="operation-btn blue">查看</button>
+                  <button class="operation-btn blue" onclick="openExecuteModal('协助更衣')">执行</button>
+                  <button class="operation-btn orange" onclick="openRescheduleModal('协助更衣', '2048-10-10 15:00:00')">改期</button>
+                </td>
+              </tr>
+              <tr>
+                <td>协助更衣</td>
+                <td>家属下单项目</td>
+                <td>15:00:00</td>
+                <td>测量血压、心率、体温，记录于护理记录单</td>
+                <td><span class="status pending">待执行</span></td>
+                <td>
+                  <button class="operation-btn red" onclick="openCancelModal('协助更衣')">取消</button>
+                  <button class="operation-btn blue">查看</button>
+                  <button class="operation-btn blue" onclick="openExecuteModal('协助更衣')">执行</button>
+                  <button class="operation-btn orange" onclick="openRescheduleModal('协助更衣', '2048-10-10 15:00:00')">改期</button>
+                </td>
+              </tr>
+              <tr>
+                <td>协助更衣</td>
+                <td>日常护理项目</td>
+                <td>15:00:00</td>
+                <td>测量血压、心率、体温，记录于护理记录单</td>
+                <td><span class="status pending">待执行</span></td>
+                <td>
+                  <button class="operation-btn red" onclick="openCancelModal('协助更衣')">取消</button>
+                  <button class="operation-btn blue">查看</button>
+                  <button class="operation-btn blue" onclick="openExecuteModal('协助更衣')">执行</button>
+                  <button class="operation-btn orange" onclick="openRescheduleModal('协助更衣', '2048-10-10 15:00:00')">改期</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 今日护理任务分页器（匹配图片） -->
+        <div class="pagination">
+          <select>
+            <option>10条/页</option>
+            <option>20条/页</option>
+            <option>50条/页</option>
+          </select>
+          <button>&lt;</button>
+          <button class="page-btn">1</button>
+          <span>...</span>
+          <button class="page-btn">50</button>
+          <button class="page-btn">51</button>
+          <button class="page-btn current-page">52</button>
+          <button class="page-btn">53</button>
+          <button class="page-btn">54</button>
+          <span>...</span>
+          <button class="page-btn">90</button>
+          <button>&gt;</button>
+          <span>跳至</span>
+          <input type="number" placeholder="跳至" value="11" style="width: 60px;" />
+          <span>/20页</span>
+        </div>
+      </div>
+
+      <!-- 近7天历史记录（带Tab切换） -->
+      <div class="module">
+        <h2 class="section-title">近7天历史记录</h2>
+        
+        <!-- Tab切换区域 -->
+        <div class="tab-container">
+          <div class="tabs">
+            <div class="tab" data-tab="care-task">护理任务</div>
+            <div class="tab active" data-tab="remark">备注</div>
+          </div>
+
+          <!-- 护理任务Tab内容 -->
+          <div class="tab-content" id="care-task">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>护理项目名称</th>
+                    <th>项目类型</th>
+                    <th>执行状态</th>
+                    <th>执行图片</th>
+                    <th>执行/取消记录</th>
+                    <th>执行人</th>
+                    <th>执行/取消时间</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>口腔清洁</td>
+                    <td>日常护理项目</td>
+                    <td><span class="status-simple completed">已执行</span></td>
+                    <td><img src="https://via.placeholder.com/40" alt="执行图片" class="executed-image"></td>
+                    <td>已完成15分钟步行训练，无不适反应...</td>
+                    <td>顾廷烨</td>
+                    <td>2048-10-09 15:00:00</td>
+                  </tr>
+                  <tr>
+                    <td>面部清洁</td>
+                    <td>额外护理项目</td>
+                    <td><span class="status-simple completed">已执行</span></td>
+                    <td><img src="https://via.placeholder.com/40" alt="执行图片" class="executed-image"></td>
+                    <td>已完成15分钟步行训练，无不适反应...</td>
+                    <td>盛明兰</td>
+                    <td>2048-10-08 15:30:00</td>
+                  </tr>
+                  <tr>
+                    <td>床上洗头</td>
+                    <td>家属下单项目</td>
+                    <td><span class="status-simple completed">已执行</span></td>
+                    <td><img src="https://via.placeholder.com/40" alt="执行图片" class="executed-image"></td>
+                    <td>已完成15分钟步行训练，无不适反应...</td>
+                    <td>盛如兰</td>
+                    <td>2048-10-07 10:00:00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination">
+              <select>
+                <option>10条/页</option>
+                <option>20条/页</option>
+                <option>50条/页</option>
+              </select>
+              <button>&lt;</button>
+              <button class="page-btn current-page">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn">3</button>
+              <button>&gt;</button>
+              <span>跳至</span>
+              <input type="number" placeholder="跳至" value="1" style="width: 60px;" />
+              <span>/3页</span>
+            </div>
+          </div>
+
+          <!-- 备注Tab内容（匹配图片） -->
+          <div class="tab-content active" id="remark">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>备注内容</th>
+                    <th>备注人</th>
+                    <th>备注时间</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>老人昨晚睡眠较好，今天早上食欲正常，精神状态良好，服药顺利，无不良反应。</td>
+                    <td>顾廷烨</td>
+                    <td>2048-10-10 15:00:00</td>
+                  </tr>
+                  <tr>
+                    <td>晚间表示膝盖关节轻微疼痛，已使用热敷缓解，明日需关注。食欲正常，情绪稳定。</td>
+                    <td>顾廷烨</td>
+                    <td>2048-10-10 15:00:00</td>
+                  </tr>
+                  <tr>
+                    <td>家属探望后心情好多了，但是老人有点发烧，明天需要量一下老人的体温。</td>
+                    <td>顾廷烨</td>
+                    <td>2048-10-10 15:00:00</td>
+                  </tr>
+                  <tr>
+                    <td>老人昨晚睡眠较好，今天早上食欲正常，精神状态良好，服药顺利，无不良反应。</td>
+                    <td>顾廷烨</td>
+                    <td>2048-10-10 15:00:00</td>
+                  </tr>
+                  <tr>
+                    <td>晚间表示膝盖关节轻微疼痛，已使用热敷缓解，明日需关注。食欲正常，情绪稳定。</td>
+                    <td>顾廷烨</td>
+                    <td>2048-10-10 15:00:00</td>
+                  </tr>
+                  <tr>
+                    <td>家属探望后心情好多了，但是老人有点发烧，明天需要量一下老人的体温。</td>
+                    <td>顾廷烨</td>
+                    <td>2048-10-10 15:00:00</td>
+                  </tr>
+                  <tr>
+                    <td>老人昨晚睡眠较好，今天早上食欲正常，精神状态良好，服药顺利，无不良反应。</td>
+                    <td>顾廷烨</td>
+                    <td>2048-10-10 15:00:00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination">
+              <select>
+                <option>10条/页</option>
+                <option>20条/页</option>
+                <option>50条/页</option>
+              </select>
+              <button>&lt;</button>
+              <button class="page-btn current-page">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn">3</button>
+              <button>&gt;</button>
+              <span>跳至</span>
+              <input type="number" placeholder="跳至" value="1" style="width: 60px;" />
+              <span>/3页</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧建议栏 -->
+    <div class="sidebar">
+      <!-- 老人信息卡片 -->
+      <div class="elder-card">
+        <div class="elder-avatar">👤</div>
+        <div class="elder-name">高启强 - 101床位</div>
+        <div class="elder-tags">
+          <span class="elder-tag">重度失能</span>
+          <span class="elder-tag">男79岁</span>
+        </div>
+        <div class="elder-info">身份证号：230123197003301878</div>
+        <div class="elder-info">护理等级：1级护理等级</div>
+        <div class="elder-info">护理员姓名：顾廷烨、盛明兰、盛如兰、盛华兰</div>
+      </div>
+
+      <!-- 健康趋势 -->
+      <h3>健康趋势</h3>
+      <div class="health-trend">
+        <div class="trend-item">
+          <div class="trend-value">136/82</div>
+          <div class="trend-label">血压 (mmHg)</div>
+        </div>
+        <div class="trend-item">
+          <div class="trend-value">7.2</div>
+          <div class="trend-label">血糖 (mmol/L)</div>
+        </div>
+        <div class="trend-item">
+          <div class="trend-value">78</div>
+          <div class="trend-label">心率 (次/分)</div>
+        </div>
+      </div>
+
+      <!-- 健康异常提醒 -->
+      <div style="background: #ffeaea; padding: 12px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid #d90000;">
+        <strong>体温异常</strong><br>
+        今日下午体温37.6℃，轻微发热，需加强观察，多饮水。
+      </div>
+      <div style="background: #ffeaea; padding: 12px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid #d90000;">
+        <strong>睡眠质量下降</strong><br>
+        连续3天夜间醒来次数≥3次，建议调整睡前环境。
+      </div>
+
+      <!-- 健康背景 -->
+      <h3>健康背景</h3>
+      <div class="health-background">
+        <div class="background-item">
+          <div class="background-title">日常生活活动</div>
+          <div class="background-content">基本自理，需协助洗澡，步行需扶助，进食可独立。</div>
+        </div>
+        <div class="background-item">
+          <div class="background-title">精神状态</div>
+          <div class="background-content">意识清楚，偶尔有焦虑情绪，短期记忆力减退。</div>
+        </div>
+        <div class="background-item">
+          <div class="background-title">感知觉沟通</div>
+          <div class="background-content">老花，需佩戴眼镜，右耳听力轻度下降。</div>
+        </div>
+        <div class="background-item">
+          <div class="background-title">社会参与</div>
+          <div class="background-content">喜欢集体活动，与室友关系良好，每周与家人视频3次。</div>
+        </div>
+      </div>
+
+      <!-- 饮食与心理关怀建议 -->
+      <div class="health-suggestion">
+        <h3>饮食与心理关怀建议</h3>
+        <div class="suggestion-item">
+          <div class="suggestion-title">
+            <span>★</span>饮食建议
+          </div>
+          <div>
+            低盐低糖饮食，每日食盐摄入量&lt;5g；定时定量，每日6餐（3主餐+3加餐）；多食高纤维蔬菜，保证每日饮水量1500ml以上。
+          </div>
+        </div>
+        <div class="suggestion-item">
+          <div class="suggestion-title">
+            <span>★</span>心理关怀建议
+          </div>
+          <div>
+            每日安排15-20分钟倾听时间，鼓励讲述往事；安排参与轻度集体活动（如手工、音乐欣赏）；避免直接否定其观点，采用引导式沟通。注意观察情绪变化，及时与家属沟通。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 备注弹层 -->
+  <div class="modal-overlay" id="remarkModal">
+    <div class="modal">
+      <div class="modal-header">
+        <span>填写备注</span>
+        <span class="modal-close" onclick="closeModal()">×</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-item">
+          <label class="form-label">
+            <span class="required">*</span>备注
+          </label>
+          <textarea class="form-textarea" id="remarkContent" placeholder="请输入" maxlength="500"></textarea>
+          <div class="char-count" id="remarkCharCount">0/500</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">取消</button>
+        <button class="modal-btn modal-btn-confirm" onclick="confirmRemark()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 取消弹层 -->
+  <div class="modal-overlay" id="cancelModal">
+    <div class="modal">
+      <div class="modal-header">
+        <span>填写取消原因</span>
+        <span class="modal-close" onclick="closeCancelModal()">×</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-item">
+          <label class="form-label">
+            <span class="required">*</span>取消原因
+          </label>
+          <input type="text" class="form-input" id="cancelReason" placeholder="请输入" maxlength="10">
+          <div class="char-count" id="cancelCharCount">0/10</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" onclick="closeCancelModal()">取消</button>
+        <button class="modal-btn modal-btn-confirm" onclick="confirmCancel()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 改期弹层 -->
+  <div class="modal-overlay" id="rescheduleModal">
+    <div class="modal">
+      <div class="modal-header">
+        <span>修改执行时间</span>
+        <span class="modal-close" onclick="closeRescheduleModal()">×</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-item">
+          <label class="form-label">
+            <span class="required">*</span>期望服务时间
+          </label>
+          <input type="datetime-local" class="form-input" id="rescheduleTime">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" onclick="closeRescheduleModal()">取消</button>
+        <button class="modal-btn modal-btn-confirm" onclick="confirmReschedule()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新增：执行弹层（匹配设计图） -->
+  <div class="modal-overlay" id="executeModal">
+    <div class="modal">
+      <div class="modal-header">
+        <span>新增执行记录</span>
+        <span class="modal-close" onclick="closeExecuteModal()">×</span>
+      </div>
+      <div class="modal-body">
+        <!-- 执行时间 -->
+        <div class="form-item">
+          <label class="form-label">
+            <span class="required">*</span>执行时间
+          </label>
+          <input type="datetime-local" class="form-input" id="executeTime" value="2048-10-15T18:44">
+        </div>
+        
+        <!-- 执行图片上传 -->
+        <div class="form-item">
+          <label class="form-label">
+            <span class="required">*</span>执行图片
+          </label>
+          <div class="upload-container">
+            <div class="upload-box">
+              <div class="upload-icon">+</div>
+              <div class="upload-text">点击上传图片</div>
+              <input type="file" class="upload-input" id="executeImage" accept="image/png,image/jpg,image/jpeg" onchange="validateImage(this)">
+            </div>
+            <div class="upload-tips">
+              图片大小不超过5M<br>
+              仅支持上传PNG JPG JPEG类型图片
+            </div>
+          </div>
+        </div>
+        
+        <!-- 执行记录 -->
+        <div class="form-item">
+          <label class="form-label">
+            <span class="required">*</span>执行记录
+          </label>
+          <div class="exec-record-wrapper">
+            <textarea class="exec-record-input" id="executeRecord" placeholder="请输入" maxlength="10"></textarea>
+            <div class="exec-record-count" id="executeRecordCount">0/10</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" onclick="closeExecuteModal()">取消</button>
+        <button class="modal-btn modal-btn-confirm" onclick="confirmExecute()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab切换JS -->
+  <script>
+    // 获取所有tab和tab内容
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    // 为每个tab添加点击事件
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // 移除所有active类
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        
+        // 为当前点击的tab添加active类
+        tab.classList.add('active');
+        // 显示对应的tab内容
+        const targetTab = tab.getAttribute('data-tab');
+        document.getElementById(targetTab).classList.add('active');
+      });
+    });
+
+    // 弹层控制
+    let currentTask = '';
+
+    // 打开备注弹层
+    function openRemarkModal() {
+      const modal = document.getElementById('remarkModal');
+      const textarea = document.getElementById('remarkContent');
+      const charCount = document.getElementById('remarkCharCount');
+      
+      // 回显已保存的备注内容
+      const savedRemark = "";
+      textarea.value = savedRemark || '';
+      // 更新字数统计
+      updateRemarkCharCount(textarea.value.length);
+      
+      // 显示弹层
+      modal.style.display = 'flex';
+      
+      // 聚焦输入框
+      textarea.focus();
+    }
+
+    // 打开取消弹层
+    function openCancelModal(task) {
+      currentTask = task;
+      document.getElementById('cancelModal').style.display = 'flex';
+      document.getElementById('cancelReason').value = '';
+      updateCancelCharCount(0);
+    }
+
+    // 打开改期弹层
+    function openRescheduleModal(task, currentTime) {
+      currentTask = task;
+      document.getElementById('rescheduleModal').style.display = 'flex';
+      const timeInput = document.getElementById('rescheduleTime');
+      timeInput.value = currentTime.replace(' ', 'T');
+      // 设置最小时间为当前时间，禁止选择过去时间
+      timeInput.min = new Date().toISOString().slice(0, 16);
+    }
+
+    // 新增：打开执行弹层
+    function openExecuteModal(task) {
+      currentTask = task;
+      const modal = document.getElementById('executeModal');
+      // 重置表单
+      document.getElementById('executeImage').value = '';
+      document.getElementById('executeRecord').value = '';
+      updateExecuteRecordCount(0);
+      // 显示弹层
+      modal.style.display = 'flex';
+      // 聚焦执行记录输入框
+      document.getElementById('executeRecord').focus();
+    }
+
+    // 关闭弹层
+    function closeModal() {
+      document.getElementById('remarkModal').style.display = 'none';
+    }
+
+    function closeCancelModal() {
+      document.getElementById('cancelModal').style.display = 'none';
+    }
+
+    function closeRescheduleModal() {
+      document.getElementById('rescheduleModal').style.display = 'none';
+    }
+
+    // 新增：关闭执行弹层
+    function closeExecuteModal() {
+      document.getElementById('executeModal').style.display = 'none';
+    }
+
+    // 更新字数统计
+    function updateRemarkCharCount(count) {
+      const charCount = document.getElementById('remarkCharCount');
+      charCount.textContent = `${count}/500`;
+      charCount.style.color = count > 500 ? '#dc2626' : '#9ca3af';
+    }
+
+    function updateCancelCharCount(count) {
+      const charCount = document.getElementById('cancelCharCount');
+      charCount.textContent = `${count}/10`;
+      charCount.style.color = count > 10 ? '#dc2626' : '#9ca3af';
+    }
+
+    // 新增：更新执行记录字数统计
+    function updateExecuteRecordCount(count) {
+      const charCount = document.getElementById('executeRecordCount');
+      charCount.textContent = `${count}/10`;
+      charCount.style.color = count > 10 ? '#dc2626' : '#9ca3af';
+    }
+
+    // 新增：验证上传图片大小和格式
+    function validateImage(input) {
+      const file = input.files[0];
+      if (!file) return;
+      
+      // 验证文件大小（5M）
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        alert('图片大小不能超过5M，请重新选择！');
+        input.value = '';
+        return;
+      }
+      
+      // 验证文件格式
+      const allowedTypes = ['image/png', 'image/jpg', 'image/jpeg'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('仅支持上传PNG、JPG、JPEG格式的图片，请重新选择！');
+        input.value = '';
+        return;
+      }
+      
+      // 可选：预览图片
+      console.log('图片上传成功：', file.name);
+    }
+
+    // 监听输入事件
+    document.getElementById('remarkContent').addEventListener('input', function() {
+      updateRemarkCharCount(this.value.length);
+    });
+
+    document.getElementById('cancelReason').addEventListener('input', function() {
+      updateCancelCharCount(this.value.length);
+    });
+
+    // 新增：监听执行记录输入
+    document.getElementById('executeRecord').addEventListener('input', function() {
+      updateExecuteRecordCount(this.value.length);
+    });
+
+    // 确认操作
+    function confirmRemark() {
+      const content = document.getElementById('remarkContent').value.trim();
+      if (!content) {
+        alert('请输入备注内容');
+        return;
+      }
+      if (content.length > 500) {
+        alert('备注内容不能超过500字');
+        return;
+      }
+      console.log('提交备注内容：', content);
+      alert('备注保存成功！');
+      closeModal();
+    }
+
+    function confirmCancel() {
+      const reason = document.getElementById('cancelReason').value.trim();
+      if (!reason) {
+        alert('请输入取消原因');
+        return;
+      }
+      alert(`已取消“${currentTask}”，原因：${reason}`);
+      closeCancelModal();
+    }
+
+    function confirmReschedule() {
+      const newTime = document.getElementById('rescheduleTime').value;
+      if (!newTime) {
+        alert('请选择期望服务时间');
+        return;
+      }
+      alert(`已将“${currentTask}”改期至：${newTime.replace('T', ' ')}`);
+      closeRescheduleModal();
+    }
+
+    // 新增：确认执行记录提交
+    function confirmExecute() {
+      const executeTime = document.getElementById('executeTime').value;
+      const executeImage = document.getElementById('executeImage').files[0];
+      const executeRecord = document.getElementById('executeRecord').value.trim();
+      
+      // 验证必填项
+      if (!executeTime) {
+        alert('请选择执行时间！');
+        return;
+      }
+      if (!executeImage) {
+        alert('请上传执行图片！');
+        return;
+      }
+      if (!executeRecord) {
+        alert('请输入执行记录！');
+        return;
+      }
+      if (executeRecord.length > 10) {
+        alert('执行记录不能超过10个字！');
+        return;
+      }
+      
+      // 模拟提交
+      console.log(`
+        执行任务：${currentTask}
+        执行时间：${executeTime.replace('T', ' ')}
+        上传图片：${executeImage.name}
+        执行记录：${executeRecord}
+      `);
+      alert(`“${currentTask}”执行记录提交成功！`);
+      closeExecuteModal();
+    }
+
+    // 点击遮罩层关闭弹层
+    document.getElementById('remarkModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+    
+    document.getElementById('cancelModal').addEventListener('click', function(e) {
+      if (e.target === this) closeCancelModal();
+    });
+    
+    document.getElementById('rescheduleModal').addEventListener('click', function(e) {
+      if (e.target === this) closeRescheduleModal();
+    });
+    
+    // 新增：执行弹层遮罩点击关闭
+    document.getElementById('executeModal').addEventListener('click', function(e) {
+      if (e.target === this) closeExecuteModal();
+    });
+  </script>
+
+</body>
+</html>

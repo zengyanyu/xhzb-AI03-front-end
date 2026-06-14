@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>护理记录 · 优化版</title>
+  <!-- 引入 Vue 3 + Element Plus -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
+  
+  <style>
+    /* === 全局 & 布局 === */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Microsoft YaHei", sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f2f5;
+      color: #1e293b;
+    }
+    .app-container {
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    .two-column {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    /* 左侧主区 */
+    .left-main {
+      flex: 1;
+      min-width: 0; /* 防止flex溢出 */
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    /* 卡片通用样式 */
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      padding: 20px 24px;
+      transition: all 0.2s;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .card-header h2, .card-header h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+      color: #0f1825;
+      border-left: 4px solid #1989fa;
+      padding-left: 12px;
+      line-height: 1.4;
+    }
+    /* 今日护理重点网格 (参考图片结构) */
+    .focus-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px 24px;
+    }
+    .focus-item {
+      background-color: #f8fafc;
+      border-radius: 12px;
+      padding: 14px 16px;
+      border-left: 3px solid transparent;
+    }
+    .focus-item:nth-child(1) { border-left-color: #f97316; } /* 当日特别关注 */
+    .focus-item:nth-child(2) { border-left-color: #8b5cf6; } /* 个性化偏好 */
+    .focus-item:nth-child(3) { border-left-color: #e53e3e; } /* 风险防范 */
+    .focus-item:nth-child(4) { border-left-color: #0ca5af; } /* 执行技巧 */
+    .focus-title {
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      color: #1e293b;
+    }
+    .focus-title span:first-child {
+      font-size: 1.3rem;
+    }
+    .focus-content {
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+    /* 进度条区域 */
+    .task-progress-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .progress-stats {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f1f5f9;
+      padding: 4px 12px;
+      border-radius: 40px;
+      font-size: 14px;
+    }
+    /* 右侧侧边栏 */
+    .right-sidebar {
+      width: 340px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    /* 老人卡片 (深色渐变) */
+    .elder-profile {
+      background: linear-gradient(145deg, #1a2b4c, #14233c);
+      color: white;
+      border-radius: 20px;
+      padding: 22px 18px;
+      box-shadow: 0 10px 20px rgba(0,20,50,0.2);
+    }
+    .elder-avatar {
+      width: 56px;
+      height: 56px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 14px;
+    }
+    .elder-name-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .elder-name {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .badge-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .badge {
+      background: rgba(255,255,255,0.18);
+      border-radius: 40px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .info-line {
+      font-size: 13px;
+      opacity: 0.9;
+      margin: 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    /* 健康趋势卡片 */
+    .trend-grid {
+      display: flex;
+      justify-content: space-between;
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 16px 12px;
+      margin-top: 8px;
+      margin-bottom: 16px;
+    }
+    .trend-cell {
+      text-align: center;
+      flex: 1;
+    }
+    .trend-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1989fa;
+      line-height: 1.2;
+    }
+    .trend-label {
+      font-size: 12px;
+      color: #64748b;
+    }
+    /* 健康异常提醒样式 */
+    .health-alert-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .health-alert-item {
+      background-color: #fff0f0;
+      border-left: 4px solid #f56c6c;
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    .alert-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: #e53e3e;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .alert-content {
+      font-size: 13px;
+      color: #4b5a6e;
+      line-height: 1.5;
+    }
+    /* 健康背景条目 */
+    .background-block {
+      background: #f9f9fc;
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .bg-item {
+      margin-bottom: 16px;
+    }
+    .bg-item:last-child {
+      margin-bottom: 0;
+    }
+    .bg-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: #334155;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .bg-desc {
+      font-size: 13px;
+      color: #4b5a6e;
+      line-height: 1.5;
+      background: white;
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid #eef2f6;
+    }
+    /* 表格内操作按钮组 */
+    .action-btn-group {
+      display: flex;
+      gap: 12px;
+      color: #1989fa;
+      font-size: 13px;
+    }
+    .action-btn-group span {
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .action-btn-group span:hover {
+      color: #0056b3;
+    }
+    .action-btn-group .disabled-action {
+      color: #cbd5e0;
+      pointer-events: none;
+      cursor: default;
+    }
+    /* 上传预览 */
+    .upload-preview-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      object-fit: cover;
+      margin-top: 8px;
+    }
+    /* 一些小修正 */
+    .el-table .cell {
+      font-size: 13px;
+    }
+    .el-tag--small {
+      font-size: 12px;
+    }
+    .remark-icon {
+      cursor: pointer;
+      color: #1989fa;
+      margin-left: 6px;
+    }
+    .el-tabs--border-card{
+      border:0 none
+    }
+    .el-tabs--border-card>.el-tabs__header{
+      background-color: transparent;
+      border: 0 none;
+    }
+    .el-table th.el-table__cell{
+      background-color: #f8f5f5;
+    }
+    .el-tabs--border-card>.el-tabs__header .el-tabs__item{
+      border: 0 none;
+    }
+    .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active{
+      background: transparent;
+      border:0 none;
+    }
+    .el-tabs__nav.is-stretch{
+      min-width: auto;
+    }
+    .setBut span{ margin: 0 6px; color:#1989fa; cursor:pointer;}
+    .setBut span.grey{ color:#c0c4cc; pointer-events:none;}
+  </style>
+</head>
+<body>
+  <div id="app" class="app-container">
+    <!-- 双栏布局 -->
+    <div class="two-column">
+      <!-- 左侧主体 -->
+      <div class="left-main">
+        <!-- 卡片：今日护理重点 (完全按照图片结构组织) -->
+        <div class="card">
+          <div class="card-header">
+            <h2>📋 今日护理重点 · 高启强（101床）</h2>
+          </div>
+          <div class="focus-grid">
+            <!-- 当日特别关注 -->
+            <div class="focus-item">
+              <div class="focus-title"><span>📅</span> 当日特别关注</div>
+              <div class="focus-content">监测晨起血压和空腹血糖；观察老人夜间的睡眠情况，和上厕所的频率，注意老人关节疼痛的变化。观察有无咳嗽。</div>
+            </div>
+            <!-- 个性化偏好 -->
+            <div class="focus-item">
+              <div class="focus-title"><span>👤</span> 个性化偏好</div>
+              <div class="focus-content">喜欢用温水洗漱；下午喜欢喝红茶；晚间喜欢听戏曲广播。喜欢和老太太一起唱歌、跳广场舞。午睡起来后需要喝蜂蜜水。</div>
+            </div>
+            <!-- 风险防范重点 -->
+            <div class="focus-item">
+              <div class="focus-title"><span>⚠️</span> 风险防范重点</div>
+              <div class="focus-content">防跌倒：浴室放防滑垫，起床慢起；防低血糖：备好糖块；防走失：房间门做好标识。重度失能加强巡视。</div>
+            </div>
+            <!-- 执行技巧提示 -->
+            <div class="focus-item">
+              <div class="focus-title"><span>💡</span> 执行技巧提示</div>
+              <div class="focus-content">喂药时确认吞咽完毕；协助洗澡先调好水温；沟通使用简单明确的语句。注意老人关节疼痛变化。</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 卡片：今日护理任务 (含进度和表格) 完全仿图片 -->
+        <div class="card">
+          <div class="card-header">
+            <h2>📌 今日护理任务</h2>
+            <el-button type="primary" size="small" @click="openRemarkModal">备注</el-button>
+          </div>
+          <!-- 进度区域 图片风格 -->
+          <div class="task-progress-bar">
+            <span class="progress-stats">📊 进度：5/25</span>
+            <el-progress :percentage="70" :show-text="false" style="width:180px;" />
+            <span>70%</span>
+            <el-tag size="small" type="info" v-if="careTasks.length">剩余待执行: {{ remainingCount }}</el-tag>
+          </div>
+
+          <!-- Element Plus 表格 护理项目列表 (对应图片中的今日护理任务) -->
+          <el-table :data="careTasks" stripe header-cell-class-name="table-header" style="width: 100%">
+            <el-table-column prop="name" label="护理项目名称" min-width="110">
+              <template #default="{ row }">
+                <span>{{row.name}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="type" label="项目类型" min-width="120">
+              <template #default="{ row }">
+                <span>{{row.type}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="time" label="期望服务时间" width="130">
+              <template #default="{ row }">
+                <span>{{row.time}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="notes" label="护理注意事项" min-width="180" show-overflow-tooltip>
+              <template #default="{ row }">
+                <span>{{row.notes}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="执行状态" width="100">
+              <template #default="{ row }">
+                <el-tag :type="row.status === 0 ? 'info' : row.status === 1 ? 'success' : 'danger'" size="small" effect="light">
+                  {{ row.status === 0 ? '待执行' : row.status === 1 ? '已执行' : '已取消' }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="230" fixed="right">
+              <template #default="{ row }">
+                <div class="setBut">
+                  <span @click="openCancelModal(row)" :class="row.status !== 0 ? 'grey' : ''">取消</span>
+                  <span @click="viewTaskDetail(row)" >查看</span>
+                  <span @click="openExecuteModal(row)" :class="row.status !== 0 ? 'grey' : ''">执行</span>
+                  <span @click="openRescheduleModal(row)" :class="row.status !== 0 ? 'grey' : ''">改期</span>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <!-- 分页 (完全参考图片: 10条/页, 页码跳转) -->
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[10, 20, 50]"
+            :page-size="pageSize"
+            layout="sizes, prev, pager, next, jumper, ->, total"
+            :total="total"
+            style="margin-top: 20px; justify-content: flex-end;"
+            prev-text="上一页"
+            next-text="下一页"
+            jumper-text="前往"
+            sizes-text="条/页"
+            total-text="共 {total} 条" />
+        </div>
+
+        <!-- 卡片：近7天历史记录 + Tabs (护理任务/备注) 与图片完全对应 -->
+        <div class="card">
+          <div class="card-header">
+            <h2>📆 近7天历史记录</h2>
+          </div>
+          <el-tabs v-model="activeTab" type="border-card" stretch>
+            <!-- 护理任务 Tab -->
+            <el-tab-pane label="护理任务" name="0">
+              <el-table :data="historyTasks" stripe>
+                
+                <el-table-column prop="name" label="护理项目" min-width="100">
+                  <template #default="{ row }">
+                  {{ row.name }}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="type" label="项目类型" width="120">
+                  <template #default="{ row }">
+                  {{ row.type }}
+                  </template>
+                </el-table-column>
+                <el-table-column label="执行状态" width="90">
+                  <template #default="{ row }">
+                    <el-tag :type="row.status === '已执行' ? 'success' : 'danger'" size="small">{{ row.status }}</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column label="执行图片" width="100">
+                  <template #default="{ row }">
+                    <el-image :src="row.image" style="width:36px; height:36px; border-radius:6px;" fit="cover" />
+                  </template>
+                </el-table-column>
+                <el-table-column prop="record" label="执行/取消记录" min-width="160" show-overflow-tooltip>
+                  <template #default="{ row }">
+                    {{ row.record }}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="executor" label="执行人" width="90">
+                  <template  #default="{ row }">
+                    {{ row.executor }}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="execTime" label="执行时间" width="150" />
+              </el-table>
+              <el-pagination
+                @size-change="handleHistorySizeChange"
+                @current-change="handleHistoryCurrentChange"
+                :current-page="historyCurrentPage"
+                :page-sizes="[10,20,50]"
+                :page-size="historyPageSize"
+                layout="sizes, prev, pager, next, ->, total"
+                :total="historyTotal"
+                prev-text="上一页"
+                next-text="下一页"
+                jumper-text="前往"
+                sizes-text="条/页"
+                total-text="共 {total} 条"
+                style="margin-top: 16px;" />
+            </el-tab-pane>
+            <!-- 备注 Tab (完全参照图片右侧备注内容) -->
+            <el-tab-pane label="备注" name="1">
+              <el-table :data="remarkList" stripe>
+                <el-table-column prop="content" label="备注内容" min-width="300" show-overflow-tooltip>
+                  <template #default="{ row }">
+                  {{ row.content }}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="author" label="备注人" width="90">
+                  <template #default="{ row }">
+                    {{ row.author }}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="time" label="备注时间" width="150" />
+              </el-table>
+              <el-pagination
+                @size-change="handleRemarkSizeChange"
+                @current-change="handleRemarkCurrentChange"
+                :current-page="remarkCurrentPage"
+                :page-sizes="[10,20,50]"
+                :page-size="remarkPageSize"
+                layout="sizes, prev, pager, next, ->, total"
+                prev-text="上一页"
+                next-text="下一页"
+                jumper-text="前往"
+                sizes-text="条/页"
+                total-text="共 {total} 条"
+                :total="remarkTotal"
+                style="margin-top:16px;" />
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+      </div>
+
+      <!-- 右侧边栏 (完全仿图片结构) -->
+      <div class="right-sidebar">
+        <!-- 老人信息卡片 -->
+        <div class="elder-profile">
+          <div class="elder-avatar">👨🏻‍🦳</div>
+          <div class="elder-name-row">
+            <span class="elder-name">高启强 - 101床位</span>
+          </div>
+          <div class="badge-group">
+            <span class="badge">重度失能</span>
+            <span class="badge">男 79岁</span>
+            <span class="badge">1级护理</span>
+          </div>
+          <div class="info-line">🆔 230123197003301878</div>
+          <div class="info-line">👥 护理员：顾廷烨、盛明兰、盛如兰、盛华兰</div>
+        </div>
+
+        <!-- 健康趋势 (包含血压/血糖/心率 + 体温异常/睡眠质量下降提醒) -->
+        <div class="card" style="padding:16px;">
+          <h3 style="margin:0 0 12px 0; font-size:16px;">📈 健康趋势</h3>
+          <!-- 血压/血糖/心率 -->
+          <div class="trend-grid">
+            <div class="trend-cell"><span class="trend-value">136/82</span><div class="trend-label">血压 mmHg</div></div>
+            <div class="trend-cell"><span class="trend-value">7.2</span><div class="trend-label">血糖 mmol/L</div></div>
+            <div class="trend-cell"><span class="trend-value">78</span><div class="trend-label">心率 次/分</div></div>
+          </div>
+          <!-- 健康异常提醒 -->
+          <div class="health-alert-group">
+            <div class="health-alert-item">
+              <div class="alert-title">🌡️ 体温异常</div>
+              <div class="alert-content">今日下午体温37.6℃，轻微发热，需加强观察，多饮水。</div>
+            </div>
+            <div class="health-alert-item">
+              <div class="alert-title">😴 睡眠质量下降</div>
+              <div class="alert-content">连续3天夜间醒来次数≥3次，建议调整睡前环境。</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 健康背景 (日常生活活动/精神状态/感知觉/社会参与) 完全按照图片描述 -->
+        <div class="card" style="padding:18px;">
+          <h3 style="margin:0 0 16px 0; font-size:16px;">🧾 健康背景</h3>
+          <div class="background-block">
+            <div class="bg-item">
+              <div class="bg-title">🏥 日常生活活动</div>
+              <div class="bg-desc">基本自理，需协助洗澡，步行需扶助，进食可独立。</div>
+            </div>
+            <div class="bg-item">
+              <div class="bg-title">🧠 精神状态</div>
+              <div class="bg-desc">意识清楚，偶尔有焦虑情绪，短期记忆力减退。</div>
+            </div>
+            <div class="bg-item">
+              <div class="bg-title">👁️ 感知觉沟通</div>
+              <div class="bg-desc">老花，需佩戴眼镜，右耳听力轻度下降。</div>
+            </div>
+            <div class="bg-item">
+              <div class="bg-title">👥 社会参与</div>
+              <div class="bg-desc">喜欢集体活动，与室友关系良好，每周与家人视频3次。</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 饮食与心理关怀建议 (带★) -->
+        <div class="card">
+          <h3 style="margin:0 0 14px 0;">🥗 饮食与心理关怀建议</h3>
+          <div style="background:#f1f9fe; border-radius:12px; padding:14px; margin-bottom:16px;">
+            <div style="display:flex; gap:6px; font-weight:600; margin-bottom:6px;"><span>★</span> 饮食建议</div>
+            <div style="font-size:13px; color:#2d3a4f;">低盐低糖饮食，每日食盐摄入量&lt;5g；定时定量，每日6餐（3主餐+3加餐）；多食高纤维蔬菜，保证每日饮水量1500ml以上。</div>
+          </div>
+          <div style="background:#f0f2fa; border-radius:12px; padding:14px;">
+            <div style="display:flex; gap:6px; font-weight:600; margin-bottom:6px;"><span>★</span> 心理关怀建议</div>
+            <div style="font-size:13px; color:#2d3a4f;">每日安排15-20分钟倾听时间，鼓励讲述往事；安排参与轻度集体活动（手工、音乐）；避免直接否定，引导式沟通。注意情绪变化。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 备注弹层 -->
+    <el-dialog v-model="remarkDialogVisible" title="填写备注" width="500px" @close="resetRemarkForm">
+      <el-form :model="remarkForm" :rules="remarkRules" ref="remarkFormRef" label-width="70px">
+        <el-form-item label="备注" prop="content">
+          <el-input type="textarea" :rows="5" v-model="remarkForm.content" maxlength="500" show-word-limit />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="remarkDialogVisible=false">取消</el-button>
+        <el-button type="primary" @click="submitRemark">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 取消弹层 -->
+    <el-dialog v-model="cancelDialogVisible" title="填写取消原因" width="450px" @close="resetCancelForm">
+      <el-form :model="cancelForm" :rules="cancelRules" ref="cancelFormRef">
+        <el-form-item label="取消原因" prop="reason">
+          <el-input v-model="cancelForm.reason" maxlength="10" show-word-limit placeholder="10字以内" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="cancelDialogVisible=false">取消</el-button>
+        <el-button type="primary" @click="submitCancel">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 改期弹层 -->
+    <el-dialog v-model="rescheduleDialogVisible" title="修改执行时间" width="450px" @close="resetRescheduleForm">
+      <el-form :model="rescheduleForm" :rules="rescheduleRules" ref="rescheduleFormRef">
+        <el-form-item label="期望时间" prop="time">
+          <el-date-picker v-model="rescheduleForm.time" type="datetime" placeholder="选择日期时间" style="width:100%" :disabled-date="disabledPastDate" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="rescheduleDialogVisible=false">取消</el-button>
+        <el-button type="primary" @click="submitReschedule">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 执行弹层 (带图片上传) -->
+    <el-dialog v-model="executeDialogVisible" title="新增执行记录" width="520px" @close="resetExecuteForm">
+      <el-form :model="executeForm" :rules="executeRules" ref="executeFormRef" label-width="80px">
+        <el-form-item label="执行时间" prop="time">
+          <el-date-picker v-model="executeForm.time" type="datetime" placeholder="选择时间" style="width:100%" />
+        </el-form-item>
+        <el-form-item label="执行图片" prop="image">
+          <div style="display:flex; gap:16px; flex-wrap:wrap;">
+            <div class="upload-box" style="width:90px;height:90px;border:1px dashed #aaa;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;cursor:pointer;" @click="triggerFileInput">
+              <span style="font-size:26px;color:#aaa;">+</span>
+              <span style="font-size:12px;color:#888;">点击上传</span>
+              <input type="file" ref="fileInput" accept="image/png,image/jpeg,image/jpg" style="position:absolute;width:100%;height:100%;opacity:0;cursor:pointer;" @change="handleImageUpload" />
+            </div>
+            <div style="font-size:12px; color:#777;">图片不超过5M，支持PNG/JPG/JPEG</div>
+          </div>
+          <el-image v-if="executeForm.imageUrl" :src="executeForm.imageUrl" class="upload-preview-img" />
+        </el-form-item>
+        <el-form-item label="执行记录" prop="record">
+          <div style="position:relative;">
+            <el-input type="textarea" v-model="executeForm.record" :rows="3" maxlength="10" show-word-limit />
+          </div>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="executeDialogVisible=false">取消</el-button>
+        <el-button type="primary" @click="submitExecute">确定</el-button>
+      </template>
+    </el-dialog>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+    const { ElTable, ElTableColumn, ElPagination, ElDialog, ElForm, ElFormItem, ElInput, 
+            ElButton, ElTag, ElProgress, ElTabs, ElTabPane, ElAlert, ElDatePicker, ElImage } = ElementPlus;
+
+    createApp({
+      components: {
+        ElTable,
+        ElTableColumn,
+        ElPagination,
+        ElDialog,
+        ElForm,
+        ElFormItem,
+        ElInput,
+        ElButton,
+        ElTag,
+        ElProgress,
+        ElTabs,
+        ElTabPane,
+        ElAlert,
+        ElDatePicker,
+        ElImage
+      },
+      data() {
+        return {
+          // 表格数据
+          careTasks: [
+            { name: '口腔清洁', type: '日常护理项目', time: '15:00:00', notes: '测量血压、心率、体温，记录于护理记录单', status: 1 },
+            { name: '面部清洁', type: '额外护理项目', time: '15:00:00', notes: '测量血压、心率、体温，记录于护理记录单', status: 1 },
+            { name: '床上洗头', type: '家属下单项目', time: '15:00:00', notes: '测量血压、心率、体温，记录于护理记录单', status: 1 },
+            { name: '协助更衣', type: '日常护理项目', time: '15:00:00', notes: '测量血压、心率、体温，记录于护理记录单', status: 1 },
+            { name: '指甲护理', type: '额外护理项目', time: '15:00:00', notes: '测量血压、心率、体温，记录于护理记录单', status: 1 },
+            { name: '足部清洁', type: '家属下单项目', time: '15:00:00', notes: '测量血压、心率、体温，记录于护理记录单', status: 0 },
+            { name: '足部清洁', type: '日常护理项目', time: '15:00:00', notes: '测量血压、心率、体温，记录于护理记录单', status: 0 },
+            { name: '协助更衣', type: '额外护理项目', time: '15:00:00', notes: '测量血压、心率、体温，记录于护理记录单', status: 2 },
+            { name: '协助更衣', type: '家属下单项目', time: '15:00:00', notes: '测量血压、心率、体温，记录于护理记录单', status: 2 },
+            { name: '协助更衣', type: '日常护理项目', time: '15:00:00', notes: '测量血压、心率、体温，记录于护理记录单', status: 2 }
+          ],
+          historyTasks: [
+            { name: '口腔清洁', type: '日常护理项目', status: '已执行', image: 'https://via.placeholder.com/40', record: '已完成15分钟步行训练，无不适反应...', executor: '顾廷烨', execTime: '2048-10-09 15:00:00' },
+            { name: '面部清洁', type: '额外护理项目', status: '已执行', image: 'https://via.placeholder.com/40', record: '已完成15分钟步行训练，无不适反应...', executor: '盛明兰', execTime: '2048-10-08 15:30:00' },
+            { name: '床上洗头', type: '家属下单项目', status: '已执行', image: 'https://via.placeholder.com/40', record: '已完成15分钟步行训练，无不适反应...', executor: '盛如兰', execTime: '2048-10-07 10:00:00' }
+          ],
+          remarkList: [
+            { content: '老人昨晚睡眠较好，今天早上食欲正常，精神状态良好，服药顺利，无不良反应。', author: '顾廷烨', time: '2048-10-10 15:00:00' },
+            { content: '晚间表示膝盖关节轻微疼痛，已使用热敷缓解，明日需关注。食欲正常，情绪稳定。', author: '顾廷烨', time: '2048-10-10 15:00:00' },
+            { content: '家属探望后心情好多了，但是老人有点发烧，明天需要量一下老人的体温。', author: '顾廷烨', time: '2048-10-10 15:00:00' },
+            { content: '老人昨晚睡眠较好，今天早上食欲正常，精神状态良好，服药顺利，无不良反应。', author: '顾廷烨', time: '2048-10-10 15:00:00' },
+            { content: '晚间表示膝盖关节轻微疼痛，已使用热敷缓解，明日需关注。食欲正常，情绪稳定。', author: '顾廷烨', time: '2048-10-10 15:00:00' },
+            { content: '家属探望后心情好多了，但是老人有点发烧，明天需要量一下老人的体温。', author: '顾廷烨', time: '2048-10-10 15:00:00' },
+            { content: '老人昨晚睡眠较好，今天早上食欲正常，精神状态良好，服药顺利，无不良反应。', author: '顾廷烨', time: '2048-10-10 15:00:00' }
+          ],
+          
+          // 分页参数
+          currentPage: 52,
+          pageSize: 10,
+          total: 900,
+          
+          historyCurrentPage: 1,
+          historyPageSize: 10,
+          historyTotal: 30,
+          
+          remarkCurrentPage: 1,
+          remarkPageSize: 10,
+          remarkTotal: 21,
+          
+          // Tab切换
+          activeTab: '0',
+          
+          // 弹层控制
+          remarkDialogVisible: false,
+          cancelDialogVisible: false,
+          rescheduleDialogVisible: false,
+          executeDialogVisible: false,
+          
+          // 表单数据
+          remarkForm: {
+            content: ''
+          },
+          cancelForm: {
+            reason: '',
+            currentTask: ''
+          },
+          rescheduleForm: {
+            time: '',
+            currentTask: ''
+          },
+          executeForm: {
+            time: new Date(),
+            image: null,
+            imageUrl: '',
+            record: '',
+            currentTask: ''
+          },
+          
+          // 表单验证规则
+          remarkRules: {
+            content: [
+              { required: true, message: '请输入备注内容', trigger: 'blur' },
+              { max: 500, message: '备注内容不能超过500个字', trigger: 'blur' }
+            ]
+          },
+          cancelRules: {
+            reason: [
+              { required: true, message: '请输入取消原因', trigger: 'blur' },
+              { max: 10, message: '取消原因不能超过10个字', trigger: 'blur' }
+            ]
+          },
+          rescheduleRules: {
+            time: [
+              { required: true, message: '请选择期望服务时间', trigger: 'change' }
+            ]
+          },
+          executeRules: {
+            time: [
+              { required: true, message: '请选择执行时间', trigger: 'change' }
+            ],
+            image: [
+              { required: true, message: '请上传执行图片', trigger: 'change' }
+            ],
+            record: [
+              { required: true, message: '请输入执行记录', trigger: 'blur' },
+              { max: 10, message: '执行记录不能超过10个字', trigger: 'blur' }
+            ]
+          }
+        }
+      },
+      computed: {
+        // 计算剩余待执行任务数量
+        remainingCount() {
+          return this.careTasks.filter(task => task.status === 0).length;
+        }
+      },
+      methods: {
+        // 分页事件处理
+        handleSizeChange(val) {
+          this.pageSize = val;
+          console.log(`每页 ${val} 条`);
+        },
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          console.log(`当前页 ${val}`);
+        },
+        handleHistorySizeChange(val) {
+          this.historyPageSize = val;
+        },
+        handleHistoryCurrentChange(val) {
+          this.historyCurrentPage = val;
+        },
+        handleRemarkSizeChange(val) {
+          this.remarkPageSize = val;
+        },
+        handleRemarkCurrentChange(val) {
+          this.remarkCurrentPage = val;
+        },
+        
+        // 查看任务详情
+        viewTaskDetail(row) {
+          this.$message.info(`查看 ${row.name} 的详情`);
+        },
+        
+        // 禁用过去的日期
+        disabledPastDate(time) {
+          return time.getTime() < Date.now() - 8.64e7;
+        },
+        
+        // 弹层操作
+        openRemarkModal() {
+          this.remarkDialogVisible = true;
+          this.$nextTick(() => {
+            this.$refs.remarkFormRef?.clearValidate();
+          });
+        },
+        openCancelModal(task) {
+          if(task.status !== 0) return; // 只有待执行状态的任务可以取消
+          this.cancelForm.currentTask = task.name;
+          this.cancelDialogVisible = true;
+          this.$nextTick(() => {
+            this.$refs.cancelFormRef?.clearValidate();
+            this.cancelForm.reason = '';
+          });
+        },
+        openRescheduleModal(task) {
+          if(task.status !== 0) return; // 只有待执行状态的任务可以改期
+          this.rescheduleForm.currentTask = task.name;
+          this.rescheduleForm.time = new Date();
+          this.rescheduleDialogVisible = true;
+          this.$nextTick(() => {
+            this.$refs.rescheduleFormRef?.clearValidate();
+          });
+        },
+        openExecuteModal(task) {
+          if(task.status !== 0) return;
+          this.executeForm.currentTask = task.name;
+          this.executeForm.time = new Date();
+          this.executeForm.image = null;
+          this.executeForm.imageUrl = '';
+          this.executeForm.record = '';
+          this.executeDialogVisible = true;
+          this.$nextTick(() => {
+            this.$refs.executeFormRef?.clearValidate();
+          });
+        },
+        
+        // 重置表单
+        resetRemarkForm() {
+          this.remarkForm.content = '';
+          if (this.$refs.remarkFormRef) {
+            this.$refs.remarkFormRef.clearValidate();
+          }
+        },
+        resetCancelForm() {
+          this.cancelForm.reason = '';
+          this.cancelForm.currentTask = '';
+          if (this.$refs.cancelFormRef) {
+            this.$refs.cancelFormRef.clearValidate();
+          }
+        },
+        resetRescheduleForm() {
+          this.rescheduleForm.time = '';
+          this.rescheduleForm.currentTask = '';
+          if (this.$refs.rescheduleFormRef) {
+            this.$refs.rescheduleFormRef.clearValidate();
+          }
+        },
+        resetExecuteForm() {
+          this.executeForm.time = new Date();
+          this.executeForm.image = null;
+          this.executeForm.imageUrl = '';
+          this.executeForm.record = '';
+          this.executeForm.currentTask = '';
+          if (this.$refs.executeFormRef) {
+            this.$refs.executeFormRef.clearValidate();
+          }
+          if (this.$refs.fileInput) {
+            this.$refs.fileInput.value = '';
+          }
+        },
+        
+        // 提交表单
+        submitRemark() {
+          this.$refs.remarkFormRef.validate((valid) => {
+            if (valid) {
+              // 模拟提交
+              console.log('提交备注：', this.remarkForm.content);
+              this.$message({
+                type: 'success',
+                message: '备注保存成功！'
+              });
+              this.remarkDialogVisible = false;
+            } else {
+              console.log('验证失败');
+              return false;
+            }
+          });
+        },
+        submitCancel() {
+          this.$refs.cancelFormRef.validate((valid) => {
+            if (valid) {
+              console.log(`取消任务：${this.cancelForm.currentTask}，原因：${this.cancelForm.reason}`);
+              // 更新任务状态为已取消
+              this.careTasks = this.careTasks.map(task => {
+                if (task.name === this.cancelForm.currentTask && task.status === 0) {
+                  return { ...task, status: 2 };
+                }
+                return task;
+              });
+              this.$message({
+                type: 'success',
+                message: `已取消“${this.cancelForm.currentTask}”`
+              });
+              this.cancelDialogVisible = false;
+            } else {
+              console.log('验证失败');
+              return false;
+            }
+          });
+        },
+        submitReschedule() {
+          this.$refs.rescheduleFormRef.validate((valid) => {
+            if (valid) {
+              const timeStr = this.formatDate(this.rescheduleForm.time);
+              console.log(`改期任务：${this.rescheduleForm.currentTask} 至 ${timeStr}`);
+              this.$message({
+                type: 'success',
+                message: `已将“${this.rescheduleForm.currentTask}”改期至 ${timeStr}`
+              });
+              this.rescheduleDialogVisible = false;
+            } else {
+              console.log('验证失败');
+              return false;
+            }
+          });
+        },
+        submitExecute() {
+          this.$refs.executeFormRef.validate((valid) => {
+            if (valid) {
+              const timeStr = this.formatDate(this.executeForm.time);
+              console.log(`
+                执行任务：${this.executeForm.currentTask}
+                执行时间：${timeStr}
+                执行记录：${this.executeForm.record}
+                图片：${this.executeForm.imageUrl}
+              `);
+              // 更新任务状态为已执行
+              this.careTasks = this.careTasks.map(task => {
+                if (task.name === this.executeForm.currentTask && task.status === 0) {
+                  return { ...task, status: 1 };
+                }
+                return task;
+              });
+              this.$message({
+                type: 'success',
+                message: `“${this.executeForm.currentTask}”执行记录提交成功！`
+              });
+              this.executeDialogVisible = false;
+            } else {
+              console.log('验证失败');
+              return false;
+            }
+          });
+        },
+        
+        // 图片上传处理
+        triggerFileInput() {
+          this.$refs.fileInput.click();
+        },
+        handleImageUpload(e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          
+          // 验证文件大小（5M）
+          const maxSize = 5 * 1024 * 1024;
+          if (file.size > maxSize) {
+            this.$message.error('图片大小不能超过5M，请重新选择！');
+            this.$refs.fileInput.value = '';
+            return;
+          }
+          
+          // 验证文件格式
+          const allowedTypes = ['image/png', 'image/jpg', 'image/jpeg'];
+          if (!allowedTypes.includes(file.type)) {
+            this.$message.error('仅支持上传PNG、JPG、JPEG格式的图片，请重新选择！');
+            this.$refs.fileInput.value = '';
+            return;
+          }
+          
+          // 预览图片
+          this.executeForm.image = file;
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.executeForm.imageUrl = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        },
+        
+        // 日期格式化
+        formatDate(date) {
+          if (!date) return '';
+          const d = new Date(date);
+          const year = d.getFullYear();
+          const month = String(d.getMonth() + 1).padStart(2, '0');
+          const day = String(d.getDate()).padStart(2, '0');
+          const hour = String(d.getHours()).padStart(2, '0');
+          const minute = String(d.getMinutes()).padStart(2, '0');
+          return `${year}-${month}-${day} ${hour}:${minute}`;
+        }
+      }
+    }).use(ElementPlus).mount('#app');
+  </script>
+</body>
+</html>
