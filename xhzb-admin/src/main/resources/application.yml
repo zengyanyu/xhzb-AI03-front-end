@@ -24,6 +24,11 @@ spring:
       chat:
         options:
           model: qwen3.7-max
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: deepseek-r1:1.5b
 
 # 用户配置
 user:
