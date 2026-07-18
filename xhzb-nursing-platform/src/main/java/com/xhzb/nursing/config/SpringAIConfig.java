@@ -3,6 +3,7 @@ package com.xhzb.nursing.config;
 import com.xhzb.nursing.constants.SystemConstants;
 import com.xhzb.nursing.tool.NursingProjectTool;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,7 @@ public class SpringAIConfig {
         return ChatClient.builder(openAiChatModel)
                 .defaultSystem(SystemConstants.prompt)
                 .defaultTools(nursingProjectTool)
+                .defaultAdvisors(new SimpleLoggerAdvisor())
                 .build();
     }
 

@@ -21,6 +21,7 @@ logging:
   level:
     com.xhzb: debug
     org.springframework: warn
+    org.springframework.ai: debug
 
 # Spring配置
 spring:
