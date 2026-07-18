@@ -76,7 +76,7 @@ springdoc:
       packages-to-scan: com.xhzb
 # oss的配置，要根据自己实际情况来进行修改
 oss:
-  endpoint: oss-cn-beijing.aliyuncs.com
+  endpoint: oss-cn-beijing.aliyuncs.com # 注意如果是广州的将beijing修改为guangzhou
   accessKeyId: ${OSS_ACCESS_KEY_ID}
   accessKeySecret: ${OSS_ACCESS_KEY_SECRET}
-  bucketName: hm-xhzb02
+  bucketName: itheimaweb # 换成你自己的
