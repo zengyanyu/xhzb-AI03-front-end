@@ -17,6 +17,13 @@ ruoyi:
 spring:
   profiles:
     active: dev
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: https://dashscope.aliyuncs.com/compatible-mode
+      chat:
+        options:
+          model: qwen3.7-max
 
 # 用户配置
 user:

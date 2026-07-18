@@ -198,6 +198,15 @@
                 <version>${mybatis-plus-spring-boot.version}</version>
             </dependency>
 
+
+            <!-- 其他依赖省略....-->
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>1.1.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency><!--仅用于 dependencyManagement 标签内，专门用来导入别人的 BOM 版本管理清单，统一管控依赖版本，不会真正引入 jar 包。-->
         </dependencies>
     </dependencyManagement>
 
