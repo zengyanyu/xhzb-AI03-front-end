@@ -2,9 +2,14 @@ package com.xhzb.nursing.controller;
 
 import com.xhzb.common.core.controller.BaseController;
 import com.xhzb.common.core.domain.AjaxResult;
+import com.xhzb.nursing.domain.vo.MessageVo;
 import com.xhzb.nursing.service.ChatHistoryService;
+import com.xhzb.nursing.service.impl.RedisChatMemoryService;
+import org.springframework.ai.chat.messages.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,5 +34,33 @@ public class ChatHistoryController extends BaseController {
 
         //返回给前端
         return success(list);
+    }
+
+    @Autowired
+    private RedisChatMemoryService redisChatMemoryService;
+
+    /**
+     * 处理获取聊天记录详情
+     * @param chatId
+     * @return
+     */
+    @GetMapping("/history/{chatId}")
+    public AjaxResult getHistoryDetail(@PathVariable String chatId){
+
+        //1.调用聊天历史业务对象获取指定会话id的历史聊天信息列表
+        List<Message> messages = redisChatMemoryService.get(chatId);
+
+        //2.判空处理
+        if(CollectionUtils.isEmpty(messages)){
+            return success();
+        }
+
+        //3.将List<Message>转换为List<MessageVo>
+        List<MessageVo> messageVos = messages.stream().map(message -> new MessageVo(message)).toList();
+        // List<MessageVo> messageVos2 = messages.stream().map(MessageVo::new).toList();
+
+        //3.有数据
+        return success(messageVos);
+
     }
 }
