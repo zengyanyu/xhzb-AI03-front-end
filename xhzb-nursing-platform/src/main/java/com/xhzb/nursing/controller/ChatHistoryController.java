@@ -8,10 +8,7 @@ import com.xhzb.nursing.service.impl.RedisChatMemoryService;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -62,5 +59,19 @@ public class ChatHistoryController extends BaseController {
         //3.有数据
         return success(messageVos);
 
+    }
+
+    /**
+     * 处理删除会话及聊天记录
+     * @param chatId
+     * @return
+     */
+    @DeleteMapping("/history/{chatId}")
+    public AjaxResult delete(@PathVariable String chatId){
+        //调用业务处理
+        chatHistoryService.delete(chatId);
+
+        //返回成功
+        return success();
     }
 }

@@ -64,4 +64,21 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
                 .toList();
         return list;
     }
+
+    @Autowired
+    private RedisChatMemoryService redisChatMemoryService;
+
+    /**
+     * 删除会话及聊天信息
+     *
+     * @param chatId
+     */
+    @Override
+    public void delete(String chatId) {
+        //删除会话id的聊天历史信息
+        redisChatMemoryService.clear(chatId);
+
+        //删除登录用户的会话id的set中对应的会话id
+        redisTemplate.opsForSet().remove(HISTORY_PREFIX+SecurityUtils.getUserId(),chatId);
+    }
 }

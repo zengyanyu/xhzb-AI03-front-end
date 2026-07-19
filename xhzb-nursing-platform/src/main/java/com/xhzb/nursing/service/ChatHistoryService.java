@@ -20,4 +20,10 @@ public interface ChatHistoryService {
      * @return
      */
     List<String> getHistory();
+
+    /**
+     * 删除会话及聊天信息
+     * @param chatId
+     */
+    void delete(String chatId);
 }
