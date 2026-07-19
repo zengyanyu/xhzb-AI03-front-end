@@ -3,6 +3,9 @@ package com.xhzb.test;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.rag.Query;
+import org.springframework.ai.rag.retrieval.search.DocumentRetriever;
+import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
 import org.springframework.ai.reader.ExtractedTextFormatter;
 import org.springframework.ai.reader.TextReader;
 import org.springframework.ai.reader.pdf.PagePdfDocumentReader;
@@ -169,6 +172,17 @@ public class ETLTest {
             //Math.min(i + 10, documents.size())  取两个数据的最小值
             vectorStore.add(documents.subList(i, Math.min(i + 10, documents.size())));
         }
+    }
+
+    @Test
+    public void testRetriever() {
+        DocumentRetriever retriever = VectorStoreDocumentRetriever.builder()
+                .vectorStore(vectorStore)
+                .similarityThreshold(0.5) // 设置相似度阈值，在0.5以上
+                .topK(5) // 设置返回的匹配度最高的前5个文档数量
+                .build();
+        List<Document> documents = retriever.retrieve(new Query("护理服务宗旨与核心价值是什么"));
+        System.out.println(documents);
     }
 
 }
