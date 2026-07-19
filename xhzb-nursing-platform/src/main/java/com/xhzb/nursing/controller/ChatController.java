@@ -1,5 +1,6 @@
 package com.xhzb.nursing.controller;
 
+import com.xhzb.nursing.service.ChatHistoryService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ import reactor.core.publisher.Flux;
 @RequestMapping("/ai")
 public class ChatController {
 
+    @Autowired
+    private ChatHistoryService chatHistoryService;
+
 
     @Autowired
     private ChatClient chatClient;
@@ -31,6 +35,10 @@ public class ChatController {
      */
     @PostMapping(value = "/chat",produces = "text/html;charset=utf-8")
     public Flux<String> chat(String prompt,String chatId){//prompt用户提示词
+
+        //将会话id写入登录用户的会话id的redis的set集合中
+        chatHistoryService.save(chatId);
+
         //使用大模型客户端调用调用大模型聊天接口发送提示词并返回大模型输出的结果
         return chatClient.prompt()
                 .user(prompt) //设置用户提示词
