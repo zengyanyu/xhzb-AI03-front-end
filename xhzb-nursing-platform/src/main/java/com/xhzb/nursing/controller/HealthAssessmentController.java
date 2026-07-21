@@ -1,28 +1,23 @@
 package com.xhzb.nursing.controller;
 
-import java.util.List;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.xhzb.common.annotation.Log;
 import com.xhzb.common.core.controller.BaseController;
 import com.xhzb.common.core.domain.AjaxResult;
+import com.xhzb.common.core.page.TableDataInfo;
 import com.xhzb.common.enums.BusinessType;
+import com.xhzb.common.utils.poi.ExcelUtil;
+import com.xhzb.nursing.domain.HealthAssessment;
+import com.xhzb.nursing.domain.dto.health.ElderAssessmentDto;
+import com.xhzb.nursing.service.IHealthAssessmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import com.xhzb.nursing.domain.HealthAssessment;
-import com.xhzb.nursing.service.IHealthAssessmentService;
-import com.xhzb.common.utils.poi.ExcelUtil;
-import com.xhzb.common.core.page.TableDataInfo;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 健康评估记录Controller
@@ -84,9 +79,9 @@ public class HealthAssessmentController extends BaseController
     @Log(title = "健康评估记录", businessType = BusinessType.INSERT)
     @PostMapping
     @Operation(summary = "新增健康评估记录")
-    public AjaxResult add(@RequestBody HealthAssessment healthAssessment)
+    public AjaxResult add(@RequestBody ElderAssessmentDto dto)
     {
-        return toAjax(healthAssessmentService.insertHealthAssessment(healthAssessment));
+        return success(healthAssessmentService.insertHealthAssessment(dto));
     }
 
     /**
