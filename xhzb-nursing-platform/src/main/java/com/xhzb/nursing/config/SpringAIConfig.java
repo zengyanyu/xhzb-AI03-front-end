@@ -7,6 +7,8 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.ai.transformer.splitter.TextSplitter;
+import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -54,4 +56,15 @@ public class SpringAIConfig {
     //             .defaultSystem("您是一家名为“星海智伴deepseek”的职业养老机构的客户聊天助手，你的名字叫小智。请以友好、乐于助人和愉快的方式解答用户的各种问题。")
     //             .build();
     // }
+
+    @Bean
+    public TextSplitter textSplitter() {
+        return TokenTextSplitter.builder()
+                .withChunkSize(500)  //目标块大小  token数
+                .withMinChunkSizeChars(200) // 最小块的字符数
+                .withMinChunkLengthToEmbed(10) // 最小的文本字符长度
+                .withMaxNumChunks(10000)  //文档最大块数
+                .withKeepSeparator(false)   //不保留换行符
+                .build();
+    }
 }
