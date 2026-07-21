@@ -160,6 +160,20 @@ public class KnowledgeBaseServiceImpl extends ServiceImpl<KnowledgeBaseMapper, K
     @Override
     public int deleteKnowledgeBaseById(Long id)
     {
+        //根据id查询知识库对象
+        KnowledgeBase knowledgeBase = getById(id);
+
+        //获取知识库对应OSS上传文档url,删除oss对应文件
+        ossAliyunFileStorageService.delete(knowledgeBase.getDocumentUrl());
+
+        //获取remark备注中关联的文档id列表json字符串，转换为List<String>
+        String json = knowledgeBase.getRemark();
+        List<String> documentIds = JSONUtil.toList(json, String.class);
+
+        //向量数据库删除delete(List<String>), 向量数据库里面存储的key=doc:文档id,删除这个可以只需要提供文档id接口，向量存储对象会自动设置前缀doc:
+        vectorStore.delete(documentIds);
+
+        //删除数据库的知识库数据
         return removeById(id)? 1 : 0;
     }
 }

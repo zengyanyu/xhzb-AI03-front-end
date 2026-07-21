@@ -103,11 +103,11 @@ public class KnowledgeBaseController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('nursing:knowledgeBase:remove')")
     @Log(title = "知识库主", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+	@DeleteMapping("/{id}")
     @Operation(summary = "删除知识库主")
-    public AjaxResult remove(@Schema(name = "知识库主ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long[] ids)
+    public AjaxResult remove(@Schema(name = "知识库主ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long id)
     {
-        return toAjax(knowledgeBaseService.deleteKnowledgeBaseByIds(ids));
+        return toAjax(knowledgeBaseService.deleteKnowledgeBaseById(id));
     }
 
     @Autowired
