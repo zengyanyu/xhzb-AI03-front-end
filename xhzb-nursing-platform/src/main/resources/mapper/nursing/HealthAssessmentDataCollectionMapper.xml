@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhzb.nursing.mapper.HealthAssessmentDataCollectionMapper">
+    
+    <resultMap type="HealthAssessmentDataCollection" id="HealthAssessmentDataCollectionResult">
+        <result property="id"    column="id"    />
+        <result property="basicInfo"    column="basic_info"    />
+        <result property="healthAssessment"    column="health_assessment"    />
+        <result property="dailyLivingActivities"    column="daily_living_activities"    />
+        <result property="mentalState"    column="mental_state"    />
+        <result property="perceptionCommunication"    column="perception_communication"    />
+        <result property="socialParticipation"    column="social_participation"    />
+        <result property="assessmentDetails"    column="assessment_details"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectHealthAssessmentDataCollectionVo">
+        select id, basic_info, health_assessment, daily_living_activities, mental_state, perception_communication, social_participation, assessment_details, create_time, update_time, create_by, update_by, remark from health_assessment_data_collection
+    </sql>
+
+    <select id="selectHealthAssessmentDataCollectionList" parameterType="HealthAssessmentDataCollection" resultMap="HealthAssessmentDataCollectionResult">
+        <include refid="selectHealthAssessmentDataCollectionVo"/>
+        <where>  
+            <if test="basicInfo != null  and basicInfo != ''"> and basic_info = #{basicInfo}</if>
+            <if test="healthAssessment != null  and healthAssessment != ''"> and health_assessment = #{healthAssessment}</if>
+            <if test="dailyLivingActivities != null  and dailyLivingActivities != ''"> and daily_living_activities = #{dailyLivingActivities}</if>
+            <if test="mentalState != null  and mentalState != ''"> and mental_state = #{mentalState}</if>
+            <if test="perceptionCommunication != null  and perceptionCommunication != ''"> and perception_communication = #{perceptionCommunication}</if>
+            <if test="socialParticipation != null  and socialParticipation != ''"> and social_participation = #{socialParticipation}</if>
+            <if test="assessmentDetails != null  and assessmentDetails != ''"> and assessment_details = #{assessmentDetails}</if>
+        </where>
+    </select>
+    
+    <select id="selectHealthAssessmentDataCollectionById" parameterType="Long" resultMap="HealthAssessmentDataCollectionResult">
+        <include refid="selectHealthAssessmentDataCollectionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHealthAssessmentDataCollection" parameterType="HealthAssessmentDataCollection">
+        insert into health_assessment_data_collection
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="basicInfo != null">basic_info,</if>
+            <if test="healthAssessment != null">health_assessment,</if>
+            <if test="dailyLivingActivities != null">daily_living_activities,</if>
+            <if test="mentalState != null">mental_state,</if>
+            <if test="perceptionCommunication != null">perception_communication,</if>
+            <if test="socialParticipation != null">social_participation,</if>
+            <if test="assessmentDetails != null">assessment_details,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="basicInfo != null">#{basicInfo},</if>
+            <if test="healthAssessment != null">#{healthAssessment},</if>
+            <if test="dailyLivingActivities != null">#{dailyLivingActivities},</if>
+            <if test="mentalState != null">#{mentalState},</if>
+            <if test="perceptionCommunication != null">#{perceptionCommunication},</if>
+            <if test="socialParticipation != null">#{socialParticipation},</if>
+            <if test="assessmentDetails != null">#{assessmentDetails},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHealthAssessmentDataCollection" parameterType="HealthAssessmentDataCollection">
+        update health_assessment_data_collection
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="basicInfo != null">basic_info = #{basicInfo},</if>
+            <if test="healthAssessment != null">health_assessment = #{healthAssessment},</if>
+            <if test="dailyLivingActivities != null">daily_living_activities = #{dailyLivingActivities},</if>
+            <if test="mentalState != null">mental_state = #{mentalState},</if>
+            <if test="perceptionCommunication != null">perception_communication = #{perceptionCommunication},</if>
+            <if test="socialParticipation != null">social_participation = #{socialParticipation},</if>
+            <if test="assessmentDetails != null">assessment_details = #{assessmentDetails},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHealthAssessmentDataCollectionById" parameterType="Long">
+        delete from health_assessment_data_collection where id = #{id}
+    </delete>
+
+    <delete id="deleteHealthAssessmentDataCollectionByIds" parameterType="String">
+        delete from health_assessment_data_collection where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

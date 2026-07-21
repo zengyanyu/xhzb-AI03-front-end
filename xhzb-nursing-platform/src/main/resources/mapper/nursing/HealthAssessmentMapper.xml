@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhzb.nursing.mapper.HealthAssessmentMapper">
+    
+    <resultMap type="HealthAssessment" id="HealthAssessmentResult">
+        <result property="id"    column="id"    />
+        <result property="elderName"    column="elder_name"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="elderId"    column="elder_id"    />
+        <result property="coreSuggestion"    column="core_suggestion"    />
+        <result property="checkInStatus"    column="check_in_status"    />
+        <result property="evaluationProgress"    column="evaluation_progress"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectHealthAssessmentVo">
+        select id, elder_name, id_card, elder_id, core_suggestion, check_in_status, evaluation_progress, create_time, update_time, create_by, update_by, remark from health_assessment
+    </sql>
+
+    <select id="selectHealthAssessmentList" parameterType="HealthAssessment" resultMap="HealthAssessmentResult">
+        <include refid="selectHealthAssessmentVo"/>
+        <where>  
+            <if test="elderName != null  and elderName != ''"> and elder_name like concat('%', #{elderName}, '%')</if>
+            <if test="idCard != null  and idCard != ''"> and id_card = #{idCard}</if>
+            <if test="elderId != null "> and elder_id = #{elderId}</if>
+            <if test="coreSuggestion != null "> and core_suggestion = #{coreSuggestion}</if>
+            <if test="checkInStatus != null "> and check_in_status = #{checkInStatus}</if>
+            <if test="evaluationProgress != null "> and evaluation_progress = #{evaluationProgress}</if>
+        </where>
+    </select>
+    
+    <select id="selectHealthAssessmentById" parameterType="Long" resultMap="HealthAssessmentResult">
+        <include refid="selectHealthAssessmentVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHealthAssessment" parameterType="HealthAssessment" useGeneratedKeys="true" keyProperty="id">
+        insert into health_assessment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="elderName != null and elderName != ''">elder_name,</if>
+            <if test="idCard != null and idCard != ''">id_card,</if>
+            <if test="elderId != null">elder_id,</if>
+            <if test="coreSuggestion != null">core_suggestion,</if>
+            <if test="checkInStatus != null">check_in_status,</if>
+            <if test="evaluationProgress != null">evaluation_progress,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="elderName != null and elderName != ''">#{elderName},</if>
+            <if test="idCard != null and idCard != ''">#{idCard},</if>
+            <if test="elderId != null">#{elderId},</if>
+            <if test="coreSuggestion != null">#{coreSuggestion},</if>
+            <if test="checkInStatus != null">#{checkInStatus},</if>
+            <if test="evaluationProgress != null">#{evaluationProgress},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHealthAssessment" parameterType="HealthAssessment">
+        update health_assessment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="elderName != null and elderName != ''">elder_name = #{elderName},</if>
+            <if test="idCard != null and idCard != ''">id_card = #{idCard},</if>
+            <if test="elderId != null">elder_id = #{elderId},</if>
+            <if test="coreSuggestion != null">core_suggestion = #{coreSuggestion},</if>
+            <if test="checkInStatus != null">check_in_status = #{checkInStatus},</if>
+            <if test="evaluationProgress != null">evaluation_progress = #{evaluationProgress},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHealthAssessmentById" parameterType="Long">
+        delete from health_assessment where id = #{id}
+    </delete>
+
+    <delete id="deleteHealthAssessmentByIds" parameterType="String">
+        delete from health_assessment where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
