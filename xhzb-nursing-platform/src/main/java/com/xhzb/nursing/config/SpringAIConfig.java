@@ -6,9 +6,13 @@ import com.xhzb.nursing.tool.NursingProjectTool;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.transformer.splitter.TextSplitter;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,6 +24,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SpringAIConfig {
 
+    @Autowired
+    private VectorStore vectorStore;
+
     /**
      *
      * @param openAiChatModel springAI会读取你配置文件中大模型信息封装的大模型数据对象
@@ -28,13 +35,24 @@ public class SpringAIConfig {
     @Bean
     public ChatClient chatClient(OpenAiChatModel openAiChatModel, NursingProjectTool nursingProjectTool, RedisChatMemoryService redisChatMemoryService){
 
+        //检索rag数据配置
+        QuestionAnswerAdvisor questionAnswerAdvisor = QuestionAnswerAdvisor
+                .builder(vectorStore)
+                .searchRequest(SearchRequest.builder()
+                        .similarityThreshold(0.7D)
+                        .topK(10)
+                        .build())
+                .build();
+
+
         //创建调用大模型的客户端对象
         return ChatClient.builder(openAiChatModel)
                 .defaultSystem(SystemConstants.prompt)
                 .defaultTools(nursingProjectTool)
                 .defaultAdvisors(
                         new SimpleLoggerAdvisor(),
-                        MessageChatMemoryAdvisor.builder(redisChatMemoryService).build()//创建ChatMemoryAdvisor给到大模型，去实现会话聊天记忆
+                        MessageChatMemoryAdvisor.builder(redisChatMemoryService).build(),//创建ChatMemoryAdvisor给到大模型，去实现会话聊天记忆
+                        questionAnswerAdvisor
                 )
                 .build();
     }
