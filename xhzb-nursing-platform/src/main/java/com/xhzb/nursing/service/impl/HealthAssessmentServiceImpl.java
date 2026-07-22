@@ -36,9 +36,9 @@ public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMap
      * @return 健康评估记录
      */
     @Override
-    public HealthAssessment selectHealthAssessmentById(Long id)
+    public HealthAssessmentDataCollection selectHealthAssessmentById(Long id)
     {
-        return getById(id);
+        return healthAssessmentDataCollectionService.getById(id);
     }
 
     /**

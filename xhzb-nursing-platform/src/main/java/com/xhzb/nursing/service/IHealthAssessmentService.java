@@ -2,6 +2,7 @@ package com.xhzb.nursing.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xhzb.nursing.domain.HealthAssessment;
+import com.xhzb.nursing.domain.HealthAssessmentDataCollection;
 import com.xhzb.nursing.domain.dto.health.ElderAssessmentDto;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public interface IHealthAssessmentService extends IService<HealthAssessment>
      * @param id 健康评估记录主键
      * @return 健康评估记录
      */
-    public HealthAssessment selectHealthAssessmentById(Long id);
+    public HealthAssessmentDataCollection selectHealthAssessmentById(Long id);
 
     /**
      * 查询健康评估记录列表
