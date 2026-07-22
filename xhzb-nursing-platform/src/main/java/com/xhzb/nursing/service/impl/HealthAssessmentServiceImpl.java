@@ -1,19 +1,34 @@
 package com.xhzb.nursing.service.impl;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xhzb.common.exception.ServiceException;
 import com.xhzb.common.exception.base.BaseException;
 import com.xhzb.common.utils.DateUtils;
+import com.xhzb.common.utils.PDFUtil;
+import com.xhzb.common.utils.StringUtils;
+import com.xhzb.nursing.constants.AssessmentPromptConstants;
 import com.xhzb.nursing.domain.HealthAssessment;
 import com.xhzb.nursing.domain.HealthAssessmentDataCollection;
+import com.xhzb.nursing.domain.HealthAssessmentReport;
 import com.xhzb.nursing.domain.dto.health.ElderAssessmentDto;
+import com.xhzb.nursing.domain.dto.health.HealthAssessmentDto;
 import com.xhzb.nursing.mapper.HealthAssessmentMapper;
 import com.xhzb.nursing.service.IHealthAssessmentDataCollectionService;
+import com.xhzb.nursing.service.IHealthAssessmentReportService;
 import com.xhzb.nursing.service.IHealthAssessmentService;
+import com.xhzb.oss.client.OSSAliyunFileStorageService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,11 +38,25 @@ import java.util.List;
  * @author ruoyi
  * @date 2026-07-10
  */
+@Slf4j
 @Service
 public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMapper, HealthAssessment> implements IHealthAssessmentService
 {
     @Autowired
     private HealthAssessmentMapper healthAssessmentMapper;
+
+    @Autowired
+    private IHealthAssessmentDataCollectionService healthAssessmentDataCollectionService;
+
+    @Autowired
+    private IHealthAssessmentReportService healthAssessmentReportService;
+
+    @Autowired
+    private OSSAliyunFileStorageService ossAliyunFileStorageService;
+
+    @Autowired
+    @Qualifier("chatClientByAssessment")
+    private ChatClient assessmentChatClient;
 
     /**
      * 查询健康评估记录
@@ -52,9 +81,6 @@ public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMap
     {
         return healthAssessmentMapper.selectHealthAssessmentList(healthAssessment);
     }
-
-    @Autowired
-    private IHealthAssessmentDataCollectionService healthAssessmentDataCollectionService;
 
     /**
      * 新增健康评估记录
@@ -150,7 +176,7 @@ public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMap
 
     /**
      * 删除健康评估记录信息
-     * 
+     *
      * @param id 健康评估记录主键
      * @return 结果
      */
@@ -158,5 +184,230 @@ public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMap
     public int deleteHealthAssessmentById(Long id)
     {
         return removeById(id)? 1 : 0;
+    }
+
+    /**
+     * AI评估分析：保存评估数据并进行两阶段AI分析
+     *
+     * @param dto 评估数据
+     * @return 评估ID
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Long assessmentData(ElderAssessmentDto dto) {
+        // 1. 更新保存评估基础数据
+        Long assessmentId = saveOrUpdateHealthAssessment(dto);
+
+        try {
+            // 2. 提取各项能力等级
+            String dailyActivityLevel = dto.getDailyLivingActivities().getAbilityRating();
+            String mentalStatusLevel = dto.getMentalState().getAbilityRating();
+            String perceptionLevel = dto.getPerceptionAndCommunication().getAbilityRating();
+            String socialLevel = dto.getSocialParticipation().getAbilityRating();
+
+            // 提取30天内意外事件数据
+            HealthAssessmentDto.Recent30Days recent30Days = dto.getHealthAssessmentDto().getRecent30Days();
+            int fallCount = recent30Days.getFall() != null ? recent30Days.getFall() : 0;
+            int lostCount = recent30Days.getLost() != null ? recent30Days.getLost() : 0;
+            int chokingCount = recent30Days.getChoking() != null ? recent30Days.getChoking() : 0;
+            int suicideCount = recent30Days.getSuicideAttempt() != null ? recent30Days.getSuicideAttempt() : 0;
+            int comaCount = recent30Days.getComa() != null ? recent30Days.getComa() : 0;
+
+            // 提取疾病诊断信息
+            HealthAssessmentDto.DiseaseDiagnosis diseaseDiagnosis = dto.getHealthAssessmentDto().getDiseaseDiagnosis();
+            int dementia = convertToFlag(diseaseDiagnosis.getDementia());
+            int mentalIllness = convertToFlag(diseaseDiagnosis.getMentalIllness());
+
+            // 是否确诊认知障碍（clockDrawingTest.result == 2 表示确诊认知障碍）
+            Integer clockResult = dto.getMentalState().getClockDrawingTest() != null
+                    ? dto.getMentalState().getClockDrawingTest().getResult() : 0;
+            int cognitiveImpairment = (clockResult != null && clockResult == 2) ? 1 : 0;
+
+            // 3. 第一阶段AI分析：多维度能力评估
+            log.info("开始第一阶段AI分析（能力评估），评估ID: {}", assessmentId);
+            String abilityPrompt = AssessmentPromptConstants.buildAbilityAssessmentPrompt(
+                    dailyActivityLevel, mentalStatusLevel, perceptionLevel, socialLevel,
+                    fallCount, chokingCount, suicideCount, lostCount, comaCount,
+                    dementia, mentalIllness, cognitiveImpairment);
+
+            String abilityResult = assessmentChatClient.prompt().user(abilityPrompt).call().content();
+            log.info("第一阶段AI分析完成，评估ID: {}, 返回内容: {}", assessmentId, abilityResult);
+
+            // 解析能力评估JSON结果
+            JSONObject abilityJson = parseJsonObject(abilityResult);
+            String preLevel = abilityJson.getStr("preLevel");
+            String finalLevel = abilityJson.getStr("finalLevel");
+            String levelChangeReason = abilityJson.getStr("reason");
+
+            // 4. 第二阶段AI分析：体检报告评估
+            String medicalReportUrl = recent30Days.getMedicalReport();
+            String healthScore = null;
+            String riskLevel = null;
+            String reportSummary = null;
+            String abnormalAnalysis = null;
+            String systemScore = null;
+
+            if (StringUtils.isNotEmpty(medicalReportUrl)) {
+                log.info("开始第二阶段AI分析（体检报告评估），评估ID: {}, 报告URL: {}", assessmentId, medicalReportUrl);
+
+                // 从OSS下载体检报告PDF
+                InputStream inputStream = ossAliyunFileStorageService.download(medicalReportUrl);
+                if (inputStream == null) {
+                    log.warn("体检报告PDF下载失败，URL: {}", medicalReportUrl);
+                } else {
+                    // 提取PDF文本内容
+                    String pdfContent = extractPdfText(inputStream);
+                    log.info("PDF文本提取完成，评估ID: {}, 文本长度: {}", assessmentId,
+                            pdfContent != null ? pdfContent.length() : 0);
+
+                    if (StringUtils.isNotEmpty(pdfContent)) {
+                        // 组装老人健康评估Prompt
+                        String healthPrompt = AssessmentPromptConstants.buildHealthAssessmentPrompt(pdfContent);
+
+                        // AI分析体检报告
+                        String healthResult = assessmentChatClient.prompt().user(healthPrompt).call().content();
+                        log.info("第二阶段AI分析完成，评估ID: {}, 返回内容: {}", assessmentId, healthResult);
+
+                        // 解析体检报告评估JSON结果
+                        JSONObject healthJson = parseJsonObject(healthResult);
+                        healthScore = healthJson.getStr("healthScore");
+                        riskLevel = healthJson.getStr("riskLevel");
+                        reportSummary = healthJson.getStr("summarize");
+
+                        // 解析异常分析数组
+                        JSONArray abnormalArray = healthJson.getJSONArray("abnormalData");
+                        if (abnormalArray != null && !abnormalArray.isEmpty()) {
+                            abnormalAnalysis = abnormalArray.toString();
+                        }
+
+                        // 解析健康系统分值
+                        JSONObject systemScoreObj = healthJson.getJSONObject("systemScore");
+                        if (systemScoreObj != null) {
+                            systemScore = systemScoreObj.toString();
+                        }
+                    }
+                }
+            } else {
+                log.info("未提供体检报告URL，跳过第二阶段AI分析，评估ID: {}", assessmentId);
+            }
+
+            // 5. 保存到评估结果表
+            HealthAssessmentReport report = new HealthAssessmentReport();
+            report.setHealthAssessmentId(assessmentId);
+            report.setAssessmentTime(LocalDateTime.now());
+            report.setDailyActivityLevel(dailyActivityLevel);
+            report.setMentalStatusLevel(mentalStatusLevel);
+            report.setPerceptionCommunicationLevel(perceptionLevel);
+            report.setSocialParticipationLevel(socialLevel);
+            report.setInitialAbilityLevel(preLevel);
+            report.setFinalAbilityLevel(finalLevel);
+            report.setLevelChangeReason(levelChangeReason);
+            report.setHealthScore(healthScore);
+            report.setRiskLevel(riskLevel);
+            report.setReportSummary(reportSummary);
+            report.setAbnormalAnalysis(abnormalAnalysis);
+            report.setSystemScore(systemScore);
+            report.setCreateTime(DateUtils.getNowDate());
+            healthAssessmentReportService.save(report);
+            log.info("评估报告保存完成，报告ID: {}", report.getId());
+
+            // 6. 更新评估信息状态和入住建议
+            HealthAssessment assessment = getById(assessmentId);
+            if (assessment != null) {
+                assessment.setEvaluationProgress(1); // 评估完成
+                // healthScore超过60才建议入住
+                if (StringUtils.isNotEmpty(healthScore)) {
+                    try {
+                        double score = Double.parseDouble(healthScore);
+                        assessment.setCoreSuggestion(score > 60 ? 1 : 0);
+                    } catch (NumberFormatException e) {
+                        log.warn("健康评分解析失败: {}", healthScore);
+                    }
+                }
+                assessment.setUpdateTime(DateUtils.getNowDate());
+                updateById(assessment);
+            }
+            log.info("评估状态更新完成，评估ID: {}, evaluationProgress=1", assessmentId);
+
+            // 7. 返回评估ID
+            return assessmentId;
+
+        } catch (Exception e) {
+            log.error("AI评估分析失败，评估ID: {}", assessmentId, e);
+            throw new ServiceException("AI分析失败");
+        }
+    }
+
+    /**
+     * 根据评估ID查询评估报告
+     *
+     * @param healthAssessmentId 健康评估ID
+     * @return 评估报告
+     */
+    @Override
+    public HealthAssessmentReport selectReportByAssessmentId(Long healthAssessmentId) {
+        HealthAssessmentReport queryParam = new HealthAssessmentReport();
+        queryParam.setHealthAssessmentId(healthAssessmentId);
+        List<HealthAssessmentReport> list = healthAssessmentReportService.selectHealthAssessmentReportList(queryParam);
+        if (list != null && !list.isEmpty()) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 将字符串标志转换为整数标志（"无"→0，其他→1）
+     */
+    private int convertToFlag(String value) {
+        if (StringUtils.isEmpty(value) || "无".equals(value.trim())) {
+            return 0;
+        }
+        return 1;
+    }
+
+    /**
+     * 从PDF输入流中提取文本内容
+     */
+    private String extractPdfText(InputStream inputStream) {
+        try {
+            String content = PDFUtil.pdfToString(inputStream);
+            return content;
+        } catch (Exception e) {
+            log.error("PDF文本提取失败", e);
+            throw new ServiceException("体检报告PDF解析失败");
+        }
+    }
+
+    /**
+     * 从AI返回内容中提取并解析JSON对象
+     * 处理AI可能返回的markdown代码块包裹或其他额外文本
+     */
+    private JSONObject parseJsonObject(String aiResponse) {
+        if (StringUtils.isEmpty(aiResponse)) {
+            throw new ServiceException("AI返回内容为空");
+        }
+        String jsonStr = aiResponse.trim();
+        // 去除markdown代码块包裹
+        if (jsonStr.startsWith("```")) {
+            int startIndex = jsonStr.indexOf("\n");
+            if (startIndex > 0) {
+                jsonStr = jsonStr.substring(startIndex + 1);
+            }
+            if (jsonStr.endsWith("```")) {
+                jsonStr = jsonStr.substring(0, jsonStr.length() - 3);
+            }
+        }
+        // 尝试找到JSON对象的起止位置
+        int braceStart = jsonStr.indexOf("{");
+        int braceEnd = jsonStr.lastIndexOf("}");
+        if (braceStart >= 0 && braceEnd > braceStart) {
+            jsonStr = jsonStr.substring(braceStart, braceEnd + 1);
+        }
+        try {
+            return JSONUtil.parseObj(jsonStr);
+        } catch (Exception e) {
+            log.error("JSON解析失败，原始内容: {}", aiResponse, e);
+            throw new ServiceException("AI返回结果解析失败");
+        }
     }
 }

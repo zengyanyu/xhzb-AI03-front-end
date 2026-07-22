@@ -107,4 +107,25 @@ public class HealthAssessmentController extends BaseController
     {
         return toAjax(healthAssessmentService.deleteHealthAssessmentByIds(ids));
     }
+
+    /**
+     * AI评估分析：保存评估数据并进行两阶段AI分析
+     */
+    @Log(title = "AI评估分析", businessType = BusinessType.INSERT)
+    @PostMapping("/assessmentData")
+    @Operation(summary = "AI评估分析接口")
+    public AjaxResult assessmentData(@RequestBody ElderAssessmentDto dto) {
+        Long assessmentId = healthAssessmentService.assessmentData(dto);
+        return success(assessmentId);
+    }
+
+    /**
+     * 查看评估详情（评估结果）
+     */
+    @GetMapping("/report/{id}")
+    @Operation(summary = "查看评估详情（评估结果）")
+    public AjaxResult report(@Schema(name = "评估ID", requiredMode = Schema.RequiredMode.REQUIRED)
+            @PathVariable("id") Long id) {
+        return success(healthAssessmentService.selectReportByAssessmentId(id));
+    }
 }

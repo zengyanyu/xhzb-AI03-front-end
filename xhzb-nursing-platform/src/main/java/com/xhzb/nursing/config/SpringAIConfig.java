@@ -57,6 +57,17 @@ public class SpringAIConfig {
                 .build();
     }
 
+    //这个springAI客户端专门用于评估分析操作
+    @Bean
+    public ChatClient chatClientByAssessment(OpenAiChatModel openAiChatModel) {
+
+        return ChatClient
+                .builder(openAiChatModel)
+                .defaultSystem("你是一个健康评估专家，专门用来评估老人的健康情况")
+                .defaultAdvisors(new SimpleLoggerAdvisor())
+                .build();
+    }
+
     // @Bean
     // public ChatClient chatClient(OllamaChatModel ollamaChatModel){
     //
