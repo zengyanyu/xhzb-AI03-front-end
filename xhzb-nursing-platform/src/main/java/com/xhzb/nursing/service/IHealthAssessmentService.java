@@ -42,10 +42,10 @@ public interface IHealthAssessmentService extends IService<HealthAssessment>
     /**
      * 修改健康评估记录
      * 
-     * @param healthAssessment 健康评估记录
+     * @param dto 健康评估记录
      * @return 结果
      */
-    public int updateHealthAssessment(HealthAssessment healthAssessment);
+    public Long updateHealthAssessment(ElderAssessmentDto dto);
 
     /**
      * 批量删除健康评估记录

@@ -67,6 +67,10 @@ public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMap
     @Override
     public Long insertHealthAssessment(ElderAssessmentDto dto)
     {
+       return saveOrUpdateHealthAssessment(dto);
+    }
+
+    private Long saveOrUpdateHealthAssessment(ElderAssessmentDto dto) {
         //1.新增数据到健康评估记录表
         //1.1 新建健康评估记录表实体类对象
         HealthAssessment healthAssessment = new HealthAssessment();
@@ -122,13 +126,14 @@ public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMap
     /**
      * 修改健康评估记录
      * 
-     * @param healthAssessment 健康评估记录
+     * @param dto 健康评估记录
      * @return 结果
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public int updateHealthAssessment(HealthAssessment healthAssessment)
+    public Long updateHealthAssessment(ElderAssessmentDto dto)
     {
-        return updateById(healthAssessment)? 1 : 0;
+        return saveOrUpdateHealthAssessment(dto);
     }
 
     /**
