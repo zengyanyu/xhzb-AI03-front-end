@@ -1,0 +1,105 @@
+package com.xhzb.nursing.domain;
+
+import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.xhzb.common.annotation.Excel;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import com.xhzb.common.core.domain.BaseEntity;
+
+/**
+ * 合同对象 contract
+ * 
+ * @author ruoyi
+ * @date 2026-07-10
+ */
+@Data
+@Schema(description = "合同对象")
+public class Contract extends BaseEntity
+{
+    private static final long serialVersionUID = 1L;
+
+    /** 主键ID */
+    @Schema(title = "主键ID")
+    private Long id;
+
+    /** 老人ID */
+    @Schema(title = "老人ID")
+    @Excel(name = "老人ID")
+    private Long elderId;
+
+    /** 合同名称 */
+    @Schema(title = "合同名称")
+    @Excel(name = "合同名称")
+    private String contractName;
+
+    /** 合同编号 */
+    @Schema(title = "合同编号")
+    @Excel(name = "合同编号")
+    private String contractNumber;
+
+    /** 协议地址（文件路径或URL） */
+    @Schema(title = "协议地址（文件路径或URL）")
+    @Excel(name = "协议地址", readConverterExp = "文=件路径或URL")
+    private String agreementPath;
+
+    /** 丙方手机号 */
+    @Schema(title = "丙方手机号")
+    @Excel(name = "丙方手机号")
+    private String thirdPartyPhone;
+
+    /** 丙方姓名 */
+    @Schema(title = "丙方姓名")
+    @Excel(name = "丙方姓名")
+    private String thirdPartyName;
+
+    /** 老人姓名 */
+    @Schema(title = "老人姓名")
+    @Excel(name = "老人姓名")
+    private String elderName;
+
+    /** 开始时间 */
+    @Schema(title = "开始时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private LocalDateTime startDate;
+
+    /** 结束时间 */
+    @Schema(title = "结束时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "结束时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private LocalDateTime endDate;
+
+    /** 状态 (0: 未生效, 1: 已生效, 2: 已过期, 3: 已失效) */
+    @Schema(title = "状态 (0: 未生效, 1: 已生效, 2: 已过期, 3: 已失效)")
+    @Excel(name = "状态 (0: 未生效, 1: 已生效, 2: 已过期, 3: 已失效)")
+    private Integer status;
+
+    /** 签约日期 */
+    @Schema(title = "签约日期")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "签约日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private LocalDateTime signDate;
+
+    /** 解除提交人 */
+    @Schema(title = "解除提交人")
+    @Excel(name = "解除提交人")
+    private Long terminationSubmitter;
+
+    /** 解除日期 */
+    @Schema(title = "解除日期")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "解除日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private LocalDateTime terminationDate;
+
+    /** 解除协议地址（文件路径或URL） */
+    @Schema(title = "解除协议地址（文件路径或URL）")
+    @Excel(name = "解除协议地址", readConverterExp = "文=件路径或URL")
+    private String terminationAgreementPath;
+
+    /** 排序编号 */
+    @Schema(title = "排序编号")
+    @Excel(name = "排序编号")
+    private Integer sortOrder;
+
+}
