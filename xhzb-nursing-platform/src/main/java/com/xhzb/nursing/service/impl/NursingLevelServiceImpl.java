@@ -84,7 +84,7 @@ public class NursingLevelServiceImpl extends ServiceImpl<NursingLevelMapper,Nurs
 
     /**
      * 删除护理等级信息
-     * 
+     *
      * @param id 护理等级主键
      * @return 结果
      */
@@ -92,6 +92,16 @@ public class NursingLevelServiceImpl extends ServiceImpl<NursingLevelMapper,Nurs
     public int deleteNursingLevelById(Long id)
     {
         return nursingLevelMapper.deleteNursingLevelById(id);
+    }
+
+    /**
+     * 查询所有启用的护理等级
+     *
+     * @return 护理等级集合
+     */
+    @Override
+    public List<NursingLevel> listAll() {
+        return nursingLevelMapper.selectAllEnabled();
     }
 
 }

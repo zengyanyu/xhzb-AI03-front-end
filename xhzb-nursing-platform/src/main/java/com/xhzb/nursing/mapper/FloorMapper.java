@@ -65,4 +65,12 @@ public interface FloorMapper extends BaseMapper<Floor>
     public int deleteFloorByIds(Long[] ids);
 
     List<Floor> selectAllByNur();
+
+    /**
+     * 根据床位状态查询楼层-房间-床位树形数据
+     *
+     * @param bedStatus 床位状态（0:未入住 1:已入住）
+     * @return 楼层列表（用于树形展示）
+     */
+    List<Floor> selectFloorsWithRoomAndBedByStatus(Integer bedStatus);
 }

@@ -13,8 +13,10 @@ import com.xhzb.nursing.constants.AssessmentPromptConstants;
 import com.xhzb.nursing.domain.HealthAssessment;
 import com.xhzb.nursing.domain.HealthAssessmentDataCollection;
 import com.xhzb.nursing.domain.HealthAssessmentReport;
+import com.xhzb.nursing.domain.dto.health.BasicInfo;
 import com.xhzb.nursing.domain.dto.health.ElderAssessmentDto;
 import com.xhzb.nursing.domain.dto.health.HealthAssessmentDto;
+import com.xhzb.nursing.domain.vo.ElderInfoVo;
 import com.xhzb.nursing.mapper.HealthAssessmentMapper;
 import com.xhzb.nursing.service.IHealthAssessmentDataCollectionService;
 import com.xhzb.nursing.service.IHealthAssessmentReportService;
@@ -353,6 +355,47 @@ public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMap
             return list.get(0);
         }
         return null;
+    }
+
+    /**
+     * 根据评估ID获取老人基本信息（入住字段填充）
+     *
+     * @param assessmentId 评估ID
+     * @return 老人信息VO
+     */
+    @Override
+    public ElderInfoVo getElderInfoByAssessmentId(Long assessmentId) {
+        // 1. 从健康评估记录表获取核心建议
+        HealthAssessment assessment = getById(assessmentId);
+        if (assessment == null) {
+            throw new ServiceException("评估记录不存在");
+        }
+
+        // 2. 从健康评估数据采集表获取基本信息
+        HealthAssessmentDataCollection dataCollection = healthAssessmentDataCollectionService.getById(assessmentId);
+        if (dataCollection == null || StringUtils.isEmpty(dataCollection.getBasicInfo())) {
+            throw new ServiceException("评估数据不存在");
+        }
+
+        // 3. 解析基本信息JSON
+        BasicInfo basicInfo = JSONUtil.toBean(dataCollection.getBasicInfo(), BasicInfo.class);
+
+        // 4. 组装返回VO
+        ElderInfoVo vo = new ElderInfoVo();
+        vo.setPhone(basicInfo.getElderContact());
+        vo.setMedicalPaymentMethod(basicInfo.getMedicalPaymentMethod());
+        vo.setCoreSuggestion(assessment.getCoreSuggestion());
+        vo.setNation(basicInfo.getNation());
+        vo.setEducationLevel(basicInfo.getEducationLevel());
+        vo.setIdCardNo(basicInfo.getIdCard());
+        vo.setName(basicInfo.getElderName());
+        vo.setSocialSecurityCard(basicInfo.getSocialSecurityCard());
+        vo.setLivingSituation(basicInfo.getLivingSituation());
+        vo.setReligiousBelief(basicInfo.getReligiousBelief());
+        vo.setEconomicSource(basicInfo.getEconomicSource());
+        vo.setMaritalStatus(basicInfo.getMaritalStatus());
+
+        return vo;
     }
 
     /**

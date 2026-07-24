@@ -128,4 +128,14 @@ public class HealthAssessmentController extends BaseController
             @PathVariable("id") Long id) {
         return success(healthAssessmentService.selectReportByAssessmentId(id));
     }
+
+    /**
+     * 查看老人信息详情（入住字段填充）
+     */
+    @GetMapping("/elder/{id}")
+    @Operation(summary = "查看老人信息详情（入住字段填充）")
+    public AjaxResult getElderInfo(@Schema(name = "评估ID", requiredMode = Schema.RequiredMode.REQUIRED)
+            @PathVariable("id") Long id) {
+        return success(healthAssessmentService.getElderInfoByAssessmentId(id));
+    }
 }

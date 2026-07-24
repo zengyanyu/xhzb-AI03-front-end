@@ -170,9 +170,47 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteRoomByIds" parameterType="String">
-        delete from room where id in 
+        delete from room where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectRoomDetailById" parameterType="Long" resultType="com.xhzb.nursing.domain.vo.RoomVo">
+        select r.id          as id,
+               r.code        as code,
+               f.name        as floorName,
+               f.id          as floorId,
+               r.id          as roomId,
+               rt.price      as price
+        from room r
+                 left join floor f on f.id = r.floor_id
+                 left join room_type rt on rt.name = r.type_name
+        where r.id = #{id}
+    </select>
+
+    <select id="selectByFloorIdAndBedStatus" resultMap="roomVoResultMap">
+        select r.*,
+               f.name  as fname,
+               rt.*,
+               b.id    as bid,
+               b.bed_number,
+               b.sort,
+               b.bed_status,
+               b.room_id,
+               b.create_by,
+               b.update_by,
+               b.remark,
+               b.create_time,
+               b.update_time,
+               e.name  as ename,
+               e.id    as eid
+        from room r
+                 left join floor f on f.id = r.floor_id
+                 left join room_type rt on rt.name = r.type_name
+                 inner join bed b on b.room_id = r.id and b.bed_status = #{bedStatus}
+                 left join elder e on b.id = e.bed_id
+        where r.floor_id = #{floorId}
+        order by r.sort, r.create_time desc
+    </select>
 </mapper>

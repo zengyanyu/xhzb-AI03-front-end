@@ -5,6 +5,7 @@ import com.xhzb.nursing.domain.HealthAssessment;
 import com.xhzb.nursing.domain.HealthAssessmentDataCollection;
 import com.xhzb.nursing.domain.HealthAssessmentReport;
 import com.xhzb.nursing.domain.dto.health.ElderAssessmentDto;
+import com.xhzb.nursing.domain.vo.ElderInfoVo;
 
 import java.util.List;
 
@@ -79,4 +80,12 @@ public interface IHealthAssessmentService extends IService<HealthAssessment>
      * @return 评估报告
      */
     public HealthAssessmentReport selectReportByAssessmentId(Long healthAssessmentId);
+
+    /**
+     * 根据评估ID获取老人基本信息（入住字段填充）
+     *
+     * @param assessmentId 评估ID
+     * @return 老人信息VO
+     */
+    public ElderInfoVo getElderInfoByAssessmentId(Long assessmentId);
 }

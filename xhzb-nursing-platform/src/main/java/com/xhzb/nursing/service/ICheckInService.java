@@ -2,11 +2,13 @@ package com.xhzb.nursing.service;
 
 import java.util.List;
 import com.xhzb.nursing.domain.CheckIn;
+import com.xhzb.nursing.domain.dto.CheckInApplyDto;
+import com.xhzb.nursing.domain.vo.CheckInDetailVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * 入住Service接口
- * 
+ *
  * @author ruoyi
  * @date 2026-07-10
  */
@@ -54,9 +56,25 @@ public interface ICheckInService extends IService<CheckIn>
 
     /**
      * 删除入住信息
-     * 
+     *
      * @param id 入住主键
      * @return 结果
      */
     public int deleteCheckInById(Long id);
+
+    /**
+     * 申请入住（核心业务逻辑）
+     *
+     * @param dto 申请入住请求DTO
+     * @return 结果
+     */
+    public void apply(CheckInApplyDto dto);
+
+    /**
+     * 查询入住详情
+     *
+     * @param id 入住ID
+     * @return 入住详情VO
+     */
+    public CheckInDetailVo getCheckInDetail(Long id);
 }

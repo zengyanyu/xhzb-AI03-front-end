@@ -102,9 +102,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteNursingLevelByIds" parameterType="String">
-        delete from nursing_level where id in 
+        delete from nursing_level where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectAllEnabled" resultMap="NursingLevelResult">
+        <include refid="selectNursingLevelVo"/>
+        where status = 1
+        order by id
+    </select>
 </mapper>

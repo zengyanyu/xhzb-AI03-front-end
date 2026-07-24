@@ -106,4 +106,14 @@ public class RoomController extends BaseController
         return toAjax(roomService.deleteRoomByIds(ids));
     }
 
+    /**
+     * 查询房间数据（楼层、房间、价格）
+     */
+    @GetMapping("/one/{id}")
+    @Operation(summary = "查询房间数据(楼层、房间、价格)")
+    public AjaxResult getRoomDetail(@Schema(name = "房间ID", requiredMode = Schema.RequiredMode.REQUIRED)
+            @PathVariable("id") Long id) {
+        return success(roomService.getRoomDetailById(id));
+    }
+
 }

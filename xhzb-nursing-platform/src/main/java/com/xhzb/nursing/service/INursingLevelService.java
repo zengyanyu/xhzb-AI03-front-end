@@ -56,10 +56,17 @@ public interface INursingLevelService  extends IService<NursingLevel>
 
     /**
      * 删除护理等级信息
-     * 
+     *
      * @param id 护理等级主键
      * @return 结果
      */
     public int deleteNursingLevelById(Long id);
+
+    /**
+     * 查询所有启用的护理等级
+     *
+     * @return 护理等级集合
+     */
+    public List<NursingLevel> listAll();
 
 }

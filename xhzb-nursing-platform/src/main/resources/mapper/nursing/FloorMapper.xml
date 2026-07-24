@@ -43,6 +43,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by code, create_time desc
     </select>
 
+    <select id="selectFloorsWithRoomAndBedByStatus" parameterType="Integer" resultType="com.xhzb.nursing.domain.Floor">
+        select f.*
+        from floor f
+                 inner join room r on r.floor_id = f.id and r.is_deleted = 0
+                 inner join bed b on b.room_id = r.id and b.bed_status = #{bedStatus}
+        group by f.id
+        order by f.code
+    </select>
+
     <insert id="insertFloor" parameterType="Floor" useGeneratedKeys="true" keyProperty="id">
         insert into floor
         <trim prefix="(" suffix=")" suffixOverrides=",">
