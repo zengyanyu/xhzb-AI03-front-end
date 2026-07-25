@@ -1,7 +1,9 @@
 package com.xhzb.framework.config;
 
-import java.util.concurrent.TimeUnit;
-
+import com.xhzb.common.config.RuoYiConfig;
+import com.xhzb.common.constant.Constants;
+import com.xhzb.framework.interceptor.MemberInterceptor;
+import com.xhzb.framework.interceptor.RepeatSubmitInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +14,8 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import com.xhzb.common.config.RuoYiConfig;
-import com.xhzb.common.constant.Constants;
-import com.xhzb.framework.interceptor.RepeatSubmitInterceptor;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * 通用配置
@@ -26,6 +27,9 @@ public class ResourcesConfig implements WebMvcConfigurer
 {
     @Autowired
     private RepeatSubmitInterceptor repeatSubmitInterceptor;
+
+    @Autowired
+    private MemberInterceptor memberInterceptor;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry)
@@ -40,6 +44,10 @@ public class ResourcesConfig implements WebMvcConfigurer
                 .setCacheControl(CacheControl.maxAge(5, TimeUnit.HOURS).cachePublic());
     }
 
+    private static final String[] EXCLUDE_PATH_PATTERNS = new String[]{
+            "/member/user/login",//登录不拦截
+            "/member/roomTypes"//房间类型查询不拦截
+    };
     /**
      * 自定义拦截规则
      */
@@ -47,6 +55,10 @@ public class ResourcesConfig implements WebMvcConfigurer
     public void addInterceptors(InterceptorRegistry registry)
     {
         registry.addInterceptor(repeatSubmitInterceptor).addPathPatterns("/**");
+
+        //配置小程序拦截器
+        registry.addInterceptor(memberInterceptor).addPathPatterns("/member/**")
+                .excludePathPatterns(EXCLUDE_PATH_PATTERNS);
     }
 
     /**

@@ -1,14 +1,5 @@
 package com.xhzb.framework.web.service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import com.xhzb.common.constant.CacheConstants;
 import com.xhzb.common.constant.Constants;
 import com.xhzb.common.core.domain.model.LoginUser;
@@ -22,6 +13,16 @@ import eu.bitwalker.useragentutils.UserAgent;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * token验证处理
@@ -121,6 +122,7 @@ public class TokenService
         Map<String, Object> claims = new HashMap<>();
         claims.put(Constants.LOGIN_USER_KEY, token);
         claims.put(Constants.JWT_USERNAME, loginUser.getUsername());
+        claims.put(Constants.JWT_USERID,loginUser.getUserId());
         return createToken(claims);
     }
 
