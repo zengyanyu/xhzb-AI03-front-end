@@ -2,6 +2,8 @@ package com.xhzb.nursing.service;
 
 import java.util.List;
 import com.xhzb.nursing.domain.FamilyMember;
+import com.xhzb.nursing.domain.dto.WechatLoginDto;
+import com.xhzb.nursing.domain.vo.WechatLoginVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -54,9 +56,17 @@ public interface IFamilyMemberService extends IService<FamilyMember>
 
     /**
      * 删除老人家属信息
-     * 
+     *
      * @param id 老人家属主键
      * @return 结果
      */
     public int deleteFamilyMemberById(Long id);
+
+    /**
+     * 微信小程序登录
+     *
+     * @param dto 登录请求参数
+     * @return 登录结果（token和昵称）
+     */
+    public WechatLoginVo login(WechatLoginDto dto);
 }

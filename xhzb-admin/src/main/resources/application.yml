@@ -42,6 +42,11 @@ user:
     # 密码锁定时间（默认10分钟）
     lockTime: 10
 
+# 微信小程序配置
+wechat:
+  appid: wx303f82722d016224
+  secret: 2e89059f81c4bf3902f1c1b48b88dcb6
+
 # token配置
 token:
   # 令牌自定义标识
