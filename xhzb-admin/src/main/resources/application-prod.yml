@@ -1,7 +1,7 @@
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为8080
-  port: 8080
+  port: 9000
   servlet:
     # 应用的访问路径
     context-path: /
@@ -20,10 +20,18 @@ server:
 logging:
   level:
     com.xhzb: info
-    org.springframework: warn
+    org.springframework: info
+    org.springframework.ai: info
 
 # Spring配置
 spring:
+  ai:
+    deepseek:
+      base-url: https://api.deepseek.com
+      api-key: ${DEEPSEEK_API_KEY}
+      chat:
+        options:
+          model: deepseek-chat
   # 资源信息
   messages:
     # 国际化资源文件路径
@@ -39,17 +47,17 @@ spring:
   devtools:
     restart:
       # 热部署开关
-      enabled: true
+      enabled: false
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/xhzb?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    url: jdbc:mysql://192.168.100.168:3306/xhzb?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
     username: root
-    password: 1234
+    password: heima123
   # redis 配置
   data:
     redis:
       # 地址
-      host: localhost
+      host: 192.168.100.168
       # 端口，默认为6379
       port: 6379
       # 数据库索引
@@ -61,9 +69,22 @@ spring:
       jedis:
         pool:
           enabled: true
+# Springdoc配置
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: false
+    path: /swagger-ui.html
+    tags-sorter: alpha
+  group-configs:
+    - group: 'default'
+      display-name: '测试模块'
+      paths-to-match: '/**'
+      packages-to-scan: com.xhzb
 # oss的配置，要根据自己实际情况来进行修改
 oss:
-  endpoint: oss-cn-beijing.aliyuncs.com
+  endpoint: oss-cn-beijing.aliyuncs.com # 注意如果是广州的将beijing修改为guangzhou
   accessKeyId: ${OSS_ACCESS_KEY_ID}
   accessKeySecret: ${OSS_ACCESS_KEY_SECRET}
-  bucketName: itheim
+  bucketName: itheimaweb # 换成你自己的

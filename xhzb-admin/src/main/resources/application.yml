@@ -16,7 +16,7 @@ ruoyi:
 # 激活环境
 spring:
   profiles:
-    active: dev
+    active: prod
   ai:
     openai:
       api-key: ${OPENAI_API_KEY}
