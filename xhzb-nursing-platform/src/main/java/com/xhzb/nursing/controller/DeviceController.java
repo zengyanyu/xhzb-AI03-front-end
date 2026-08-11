@@ -4,14 +4,17 @@ import com.xhzb.common.core.controller.BaseController;
 import com.xhzb.common.core.domain.AjaxResult;
 import com.xhzb.common.core.page.TableDataInfo;
 import com.xhzb.nursing.domain.Device;
+import com.xhzb.nursing.domain.dto.RegisterDeviceDto;
 import com.xhzb.nursing.domain.vo.ProductVo;
 import com.xhzb.nursing.service.IDeviceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -64,6 +67,20 @@ public class DeviceController extends BaseController
     public AjaxResult allProduct() {
         List<ProductVo> productVos =  deviceService.allProduct();
         return success(productVos);
+    }
+
+    /**
+     * 注册设备
+     *
+     * @param dto 注册设备请求参数
+     * @return 结果
+     */
+    @PreAuthorize("@ss.hasPermi('nursing:device:add')")
+    @PostMapping("/register")
+    @Operation(summary = "注册设备")
+    public AjaxResult register(@Validated @RequestBody RegisterDeviceDto dto) {
+        deviceService.registerDevice(dto);
+        return success();
     }
 
 }
