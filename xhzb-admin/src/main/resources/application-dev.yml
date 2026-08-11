@@ -88,3 +88,16 @@ oss:
   accessKeyId: ${OSS_ACCESS_KEY_ID}
   accessKeySecret: ${OSS_ACCESS_KEY_SECRET}
   bucketName: itheimaweb # 换成你自己的
+
+huaweicloud:
+  ak: E0SGN0Z7KZXHQ3FHY312
+  sk: BZHNPHTXuJeuWefG7apv2sPrDVeNh5TwhEkAmjio
+  #如果是上海一，请填写"cn-east-3"；如果是北京四，请填写"cn-north-4";
+  regionId: cn-north-4
+  endpoint: 6e8baa3c5a.st1.iotda-app.cn-north-4.myhuaweicloud.com
+  projectId: 088ec8a2f2fe45c6bc03d88e8cb8cdc9
+  #amqp相关配置
+  host: 6e8baa3c5a.st1.iotda-app.cn-north-4.myhuaweicloud.com
+  accessKey: b9bmr0Ie
+  accessCode: oT3jWuH5VmetGoMu41pXklTXvNmVV6b8
+  queueName: DefaultQueue
