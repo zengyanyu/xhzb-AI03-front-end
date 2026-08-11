@@ -1,8 +1,9 @@
 package com.xhzb.nursing.service;
 
-import java.util.List;
-import com.xhzb.nursing.domain.Device;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xhzb.nursing.domain.Device;
+
+import java.util.List;
 
 /**
  * 设备管理Service接口
@@ -59,4 +60,9 @@ public interface IDeviceService extends IService<Device>
      * @return 结果
      */
     public int deleteDeviceById(Long id);
+
+    /**
+     * 同步产品列表
+     */
+    void syncProductList();
 }

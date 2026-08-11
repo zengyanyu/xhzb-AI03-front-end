@@ -1,14 +1,22 @@
 package com.xhzb.nursing.service.impl;
 
-import java.util.List;
-import com.xhzb.common.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.xhzb.nursing.mapper.DeviceMapper;
-import com.xhzb.nursing.domain.Device;
-import com.xhzb.nursing.service.IDeviceService;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.huaweicloud.sdk.iotda.v5.IoTDAClient;
+import com.huaweicloud.sdk.iotda.v5.model.ListProductsRequest;
+import com.huaweicloud.sdk.iotda.v5.model.ListProductsResponse;
+import com.huaweicloud.sdk.iotda.v5.model.ProductSummary;
+import com.xhzb.common.constant.CacheConstants;
+import com.xhzb.common.exception.base.BaseException;
+import com.xhzb.nursing.domain.Device;
+import com.xhzb.nursing.mapper.DeviceMapper;
+import com.xhzb.nursing.service.IDeviceService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 设备管理Service业务层处理
@@ -92,5 +100,35 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     public int deleteDeviceById(Long id)
     {
         return removeById(id)? 1 : 0;
+    }
+
+    @Autowired
+    private IoTDAClient ioTDAClient;
+
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
+
+    /**
+     * 同步产品列表
+     */
+    @Override
+    public void syncProductList() {
+        //调用华为云查询产品列表
+        //1.构建产品列表查询请求对象
+        ListProductsRequest request = new ListProductsRequest();
+        request.setLimit(50);
+
+        //2.通过客户端调用并返回结果
+        ListProductsResponse response = ioTDAClient.listProducts(request);
+
+        if(response.getHttpStatusCode()!=200){
+            throw new BaseException("设备管理-同步产品列表失败");
+        }
+
+        //3.打印结果
+        List<ProductSummary> products = response.getProducts();
+        //写入redis
+        redisTemplate.opsForValue().set(CacheConstants.IOT_ALL_PRODUCT_LIST, JSONUtil.toJsonStr(products));
+
     }
 }
