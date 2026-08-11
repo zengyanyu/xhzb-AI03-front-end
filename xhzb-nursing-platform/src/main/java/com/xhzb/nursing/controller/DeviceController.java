@@ -4,6 +4,7 @@ import com.xhzb.common.core.controller.BaseController;
 import com.xhzb.common.core.domain.AjaxResult;
 import com.xhzb.common.core.page.TableDataInfo;
 import com.xhzb.nursing.domain.Device;
+import com.xhzb.nursing.domain.vo.ProductVo;
 import com.xhzb.nursing.service.IDeviceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -54,5 +55,15 @@ public class DeviceController extends BaseController
         return success();
     }
 
+    /**
+     * 同步华为IOT产品列表到redis中
+     * @return
+     */
+    @GetMapping("/allProduct")
+    @Operation(summary = "从物联网平台同步产品列表")
+    public AjaxResult allProduct() {
+        List<ProductVo> productVos =  deviceService.allProduct();
+        return success(productVos);
+    }
 
 }

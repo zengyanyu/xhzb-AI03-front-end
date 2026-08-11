@@ -2,6 +2,7 @@ package com.xhzb.nursing.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xhzb.nursing.domain.Device;
+import com.xhzb.nursing.domain.vo.ProductVo;
 
 import java.util.List;
 
@@ -65,4 +66,10 @@ public interface IDeviceService extends IService<Device>
      * 同步产品列表
      */
     void syncProductList();
+
+    /**
+     * 查询所有产品列表
+     * @return
+     */
+    List<ProductVo> allProduct();
 }

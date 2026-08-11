@@ -8,7 +8,9 @@ import com.huaweicloud.sdk.iotda.v5.model.ListProductsResponse;
 import com.huaweicloud.sdk.iotda.v5.model.ProductSummary;
 import com.xhzb.common.constant.CacheConstants;
 import com.xhzb.common.exception.base.BaseException;
+import com.xhzb.common.utils.StringUtils;
 import com.xhzb.nursing.domain.Device;
+import com.xhzb.nursing.domain.vo.ProductVo;
 import com.xhzb.nursing.mapper.DeviceMapper;
 import com.xhzb.nursing.service.IDeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,5 +132,26 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
         //写入redis
         redisTemplate.opsForValue().set(CacheConstants.IOT_ALL_PRODUCT_LIST, JSONUtil.toJsonStr(products));
 
+    }
+
+    /**
+     * 查询所有产品列表
+     *
+     * @return
+     */
+    @Override
+    public List<ProductVo> allProduct() {
+
+        //1.到redis中查询数据得到json字符串，key=CacheConstants.IOT_ALL_PRODUCT_LIST
+        String json = redisTemplate.opsForValue().get(CacheConstants.IOT_ALL_PRODUCT_LIST);
+        if(StringUtils.isEmpty(json)){
+            return null;
+        }
+
+        //2.将json数据封装为List<ProductVo>
+        List<ProductVo> productVos = JSONUtil.toList(json, ProductVo.class);
+
+        //3.返回数据
+        return productVos;
     }
 }
