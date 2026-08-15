@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.xhzb.nursing.domain.Device;
 import com.xhzb.nursing.domain.dto.RegisterDeviceDto;
 import com.xhzb.nursing.domain.vo.DeviceDetailVo;
+import com.xhzb.nursing.domain.vo.DevicePropertiesVo;
 import com.xhzb.nursing.domain.vo.ProductVo;
 
 import java.util.List;
@@ -93,4 +94,16 @@ public interface IDeviceService extends IService<Device>
      * @return 设备详细数据
      */
     DeviceDetailVo getDeviceDetail(String iotId);
+
+    /**
+     * 查询设备上报的数据（服务属性）
+     *
+     * 步骤：1.根据设备ID(iotId)调用华为云查询设备影子数据
+     *       2.遍历上报的属性数据，组装为接口文档需要的数据
+     *       3.将上报时间由世界时间(UTC)转为北京时间
+     *
+     * @param iotId 设备ID
+     * @return 设备上报的数据列表
+     */
+    List<DevicePropertiesVo> queryServiceProperties(String iotId);
 }

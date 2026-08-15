@@ -1,6 +1,7 @@
 package com.xhzb.nursing.service.impl;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,11 +10,15 @@ import com.huaweicloud.sdk.iotda.v5.model.AddDevice;
 import com.huaweicloud.sdk.iotda.v5.model.AddDeviceRequest;
 import com.huaweicloud.sdk.iotda.v5.model.AddDeviceResponse;
 import com.huaweicloud.sdk.iotda.v5.model.AuthInfo;
+import com.huaweicloud.sdk.iotda.v5.model.DeviceShadowData;
+import com.huaweicloud.sdk.iotda.v5.model.DeviceShadowProperties;
 import com.huaweicloud.sdk.iotda.v5.model.ListProductsRequest;
 import com.huaweicloud.sdk.iotda.v5.model.ListProductsResponse;
 import com.huaweicloud.sdk.iotda.v5.model.ProductSummary;
 import com.huaweicloud.sdk.iotda.v5.model.ShowDeviceRequest;
 import com.huaweicloud.sdk.iotda.v5.model.ShowDeviceResponse;
+import com.huaweicloud.sdk.iotda.v5.model.ShowDeviceShadowRequest;
+import com.huaweicloud.sdk.iotda.v5.model.ShowDeviceShadowResponse;
 import com.xhzb.common.constant.CacheConstants;
 import com.xhzb.common.core.domain.entity.SysUser;
 import com.xhzb.common.exception.ServiceException;
@@ -22,6 +27,7 @@ import com.xhzb.common.utils.StringUtils;
 import com.xhzb.nursing.domain.Device;
 import com.xhzb.nursing.domain.dto.RegisterDeviceDto;
 import com.xhzb.nursing.domain.vo.DeviceDetailVo;
+import com.xhzb.nursing.domain.vo.DevicePropertiesVo;
 import com.xhzb.nursing.domain.vo.ProductVo;
 import com.xhzb.nursing.mapper.DeviceMapper;
 import com.xhzb.nursing.service.IDeviceService;
@@ -32,9 +38,13 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * 设备管理Service业务层处理
@@ -332,6 +342,93 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
         } catch (Exception e) {
             //时间格式解析失败时返回原始字符串
             return iotTime;
+        }
+    }
+
+    /**
+     * 查询设备上报的数据（服务属性）
+     *
+     * 步骤：1.根据设备ID(iotId)调用华为云查询设备影子数据
+     *       2.遍历每个服务上报的属性数据，组装为接口文档需要的数据
+     *       3.将上报时间由世界时间(UTC)转为北京时间
+     *
+     * @param iotId 设备ID
+     * @return 设备上报的数据列表
+     */
+    @Override
+    public List<DevicePropertiesVo> queryServiceProperties(String iotId) {
+        //1.根据设备ID(iotId)从MySQL查询设备数据，确认设备已注册
+        Device device = getOne(new LambdaQueryWrapper<Device>().eq(Device::getIotId, iotId));
+        if (device == null) {
+            throw new ServiceException("设备【" + iotId + "】不存在");
+        }
+
+        //2.根据设备ID调用华为云查询设备影子数据
+        //2.1 构建查询设备影子请求对象
+        ShowDeviceShadowRequest request = new ShowDeviceShadowRequest().withDeviceId(iotId);
+
+        //2.2 通过客户端调用华为云查询设备影子
+        ShowDeviceShadowResponse response = ioTDAClient.showDeviceShadow(request);
+        if (response.getHttpStatusCode() != 200) {
+            throw new BaseException("设备管理-查询设备上报的数据失败");
+        }
+
+        //3.遍历每个服务上报的属性数据，组装为接口文档需要的数据
+        List<DevicePropertiesVo> result = new ArrayList<>();
+        List<DeviceShadowData> shadowList = response.getShadow();
+        if (shadowList == null || shadowList.isEmpty()) {
+            return result;
+        }
+        for (DeviceShadowData shadowData : shadowList) {
+            //3.1 获取服务上报的数据，无上报数据则跳过
+            DeviceShadowProperties reported = shadowData.getReported();
+            if (reported == null || reported.getProperties() == null) {
+                continue;
+            }
+
+            //3.2 将上报时间由世界时间(UTC)转为北京时间
+            String eventTime = formatEventTime(reported.getEventTime());
+
+            //3.3 遍历服务下的每个上报属性，一个属性组装一条数据
+            JSONObject propertiesJson = JSONUtil.parseObj(reported.getProperties());
+            for (Map.Entry<String, Object> entry : propertiesJson.entrySet()) {
+                DevicePropertiesVo vo = new DevicePropertiesVo();
+                //功能ID取属性名
+                vo.setFunctionId(entry.getKey());
+                //上报时间（北京时间）
+                vo.setEventTime(eventTime);
+                //上报值
+                vo.setValue(entry.getValue());
+                result.add(vo);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 将华为云返回的上报时间（世界时间UTC，如 20250219T070424Z）转为北京时间并格式化
+     * 格式：yyyy-MM-dd'T'HH:mm:ss
+     *
+     * @param eventTime 华为云返回的世界时间字符串
+     * @return 格式化后的北京时间字符串
+     */
+    private String formatEventTime(String eventTime) {
+        if (StringUtils.isEmpty(eventTime)) {
+            return null;
+        }
+        try {
+            //1.将世界时间(UTC)解析为Date
+            SimpleDateFormat utcFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
+            utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date utcDate = utcFormat.parse(eventTime);
+
+            //2.转换为北京时间并格式化输出
+            SimpleDateFormat beijingFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            beijingFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+            return beijingFormat.format(utcDate);
+        } catch (Exception e) {
+            //时间格式解析失败时返回原始字符串
+            return eventTime;
         }
     }
 }

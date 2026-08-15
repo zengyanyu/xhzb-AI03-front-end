@@ -5,6 +5,7 @@ import com.xhzb.common.core.domain.AjaxResult;
 import com.xhzb.common.core.page.TableDataInfo;
 import com.xhzb.nursing.domain.Device;
 import com.xhzb.nursing.domain.dto.RegisterDeviceDto;
+import com.xhzb.nursing.domain.vo.DevicePropertiesVo;
 import com.xhzb.nursing.domain.vo.ProductVo;
 import com.xhzb.nursing.service.IDeviceService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -95,6 +96,19 @@ public class DeviceController extends BaseController
     @Operation(summary = "查询设备详细数据")
     public AjaxResult getInfo(@PathVariable("iotId") String iotId) {
         return success(deviceService.getDeviceDetail(iotId));
+    }
+
+    /**
+     * 查询设备上报的数据
+     *
+     * @param iotId 设备ID
+     * @return 设备上报的数据
+     */
+    @PreAuthorize("@ss.hasPermi('nursing:device:query')")
+    @GetMapping(value = "/queryServiceProperties/{iotId}")
+    @Operation(summary = "查询设备上报的数据")
+    public AjaxResult queryServiceProperties(@PathVariable("iotId") String iotId) {
+        return success(deviceService.queryServiceProperties(iotId));
     }
 
 }
