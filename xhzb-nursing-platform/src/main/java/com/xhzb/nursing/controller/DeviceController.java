@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -81,6 +82,19 @@ public class DeviceController extends BaseController
     public AjaxResult register(@Validated @RequestBody RegisterDeviceDto dto) {
         deviceService.registerDevice(dto);
         return success();
+    }
+
+    /**
+     * 查询设备详细数据
+     *
+     * @param iotId 设备ID
+     * @return 设备详细数据
+     */
+    @PreAuthorize("@ss.hasPermi('nursing:device:query')")
+    @GetMapping(value = "/{iotId}")
+    @Operation(summary = "查询设备详细数据")
+    public AjaxResult getInfo(@PathVariable("iotId") String iotId) {
+        return success(deviceService.getDeviceDetail(iotId));
     }
 
 }

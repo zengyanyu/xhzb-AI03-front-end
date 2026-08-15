@@ -3,6 +3,7 @@ package com.xhzb.nursing.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xhzb.nursing.domain.Device;
 import com.xhzb.nursing.domain.dto.RegisterDeviceDto;
+import com.xhzb.nursing.domain.vo.DeviceDetailVo;
 import com.xhzb.nursing.domain.vo.ProductVo;
 
 import java.util.List;
@@ -80,4 +81,16 @@ public interface IDeviceService extends IService<Device>
      * @param dto 注册设备请求参数
      */
     void registerDevice(RegisterDeviceDto dto);
+
+    /**
+     * 查询设备详细数据
+     *
+     * 步骤：1.根据设备ID(iotId)从MySQL查询设备数据
+     *       2.根据设备ID调用华为云查询设备详情，补全设备状态、激活时间等
+     *       3.合并两种数据并返回
+     *
+     * @param iotId 设备ID
+     * @return 设备详细数据
+     */
+    DeviceDetailVo getDeviceDetail(String iotId);
 }

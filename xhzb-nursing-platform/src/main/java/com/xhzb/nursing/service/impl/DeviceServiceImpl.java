@@ -1,5 +1,6 @@
 package com.xhzb.nursing.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -11,34 +12,45 @@ import com.huaweicloud.sdk.iotda.v5.model.AuthInfo;
 import com.huaweicloud.sdk.iotda.v5.model.ListProductsRequest;
 import com.huaweicloud.sdk.iotda.v5.model.ListProductsResponse;
 import com.huaweicloud.sdk.iotda.v5.model.ProductSummary;
+import com.huaweicloud.sdk.iotda.v5.model.ShowDeviceRequest;
+import com.huaweicloud.sdk.iotda.v5.model.ShowDeviceResponse;
 import com.xhzb.common.constant.CacheConstants;
+import com.xhzb.common.core.domain.entity.SysUser;
 import com.xhzb.common.exception.ServiceException;
 import com.xhzb.common.exception.base.BaseException;
 import com.xhzb.common.utils.StringUtils;
 import com.xhzb.nursing.domain.Device;
 import com.xhzb.nursing.domain.dto.RegisterDeviceDto;
+import com.xhzb.nursing.domain.vo.DeviceDetailVo;
 import com.xhzb.nursing.domain.vo.ProductVo;
 import com.xhzb.nursing.mapper.DeviceMapper;
 import com.xhzb.nursing.service.IDeviceService;
+import com.xhzb.system.service.ISysUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
  * 设备管理Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2026-07-18
  */
+@Slf4j
 @Service
 public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> implements IDeviceService
 {
     @Autowired
     private DeviceMapper deviceMapper;
+
+    @Autowired
+    private ISysUserService sysUserService;
 
     /**
      * 查询设备管理
@@ -238,5 +250,88 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
         device.setRemark(dto.getRemark());
         device.setHaveEntranceGuard(0);
         save(device);
+    }
+
+    /**
+     * 查询设备详细数据
+     *
+     * 步骤：1.根据设备ID(iotId)从MySQL查询设备数据
+     *       2.根据设备ID调用华为云查询设备详情，补全设备状态、激活时间等
+     *       3.合并两种数据并返回
+     *
+     * @param iotId 设备ID
+     * @return 设备详细数据
+     */
+    @Override
+    public DeviceDetailVo getDeviceDetail(String iotId) {
+        //1.根据设备ID(iotId)从MySQL查询设备数据
+        Device device = getOne(new LambdaQueryWrapper<Device>().eq(Device::getIotId, iotId));
+        if (device == null) {
+            throw new ServiceException("设备【" + iotId + "】不存在");
+        }
+
+        //2.根据设备ID调用华为云查询设备详情，补全设备状态、激活时间等
+        //2.1 构建查询设备详情请求对象
+        ShowDeviceRequest request = new ShowDeviceRequest().withDeviceId(iotId);
+        ShowDeviceResponse showDeviceResponse = null;
+        try {
+            //2.2 通过客户端调用华为云查询设备详情
+            showDeviceResponse = ioTDAClient.showDevice(request);
+        } catch (Exception e) {
+            //华为云查询设备详情失败，不影响本地数据的返回，仅记录日志
+            log.error("查询设备【{}】华为云详情失败", iotId, e);
+        }
+
+        //3.合并MySQL数据与华为云数据，组装响应VO
+        //3.1 拷贝MySQL中设备数据
+        DeviceDetailVo vo = new DeviceDetailVo();
+        vo.setId(device.getId());
+        vo.setIotId(device.getIotId());
+        vo.setDeviceName(device.getDeviceName());
+        vo.setNodeId(device.getNodeId());
+        vo.setSecret(device.getSecret());
+        vo.setProductKey(device.getProductKey());
+        vo.setProductName(device.getProductName());
+        vo.setLocationType(device.getLocationType());
+        vo.setBindingLocation(device.getBindingLocation());
+        vo.setRemark(device.getRemark());
+        vo.setCreateTime(device.getCreateTime());
+        if (StringUtils.isNotEmpty(device.getCreateBy())) {
+            vo.setCreateBy(Long.valueOf(device.getCreateBy()));
+        }
+
+        //3.2 合并华为云数据：设备状态、激活时间
+        if (showDeviceResponse != null) {
+            vo.setDeviceStatus(showDeviceResponse.getStatus());
+            vo.setActiveTime(formatIotTime(showDeviceResponse.getActiveTime()));
+        }
+
+        //3.3 根据创建人id查询创建人昵称
+        if (StringUtils.isNotEmpty(device.getCreateBy())) {
+            SysUser sysUser = sysUserService.selectUserById(Long.valueOf(device.getCreateBy()));
+            if (sysUser != null) {
+                vo.setCreator(sysUser.getNickName());
+            }
+        }
+        return vo;
+    }
+
+    /**
+     * 将华为云返回的时间字符串（如 20170306T185107Z）格式化为 yyyy-MM-dd HH:mm:ss
+     *
+     * @param iotTime 华为云返回的时间字符串
+     * @return 格式化后的时间字符串
+     */
+    private String formatIotTime(String iotTime) {
+        if (StringUtils.isEmpty(iotTime)) {
+            return null;
+        }
+        try {
+            Date date = DateUtil.parse(iotTime, "yyyyMMdd'T'HHmmss'Z'");
+            return DateUtil.format(date, "yyyy-MM-dd HH:mm:ss");
+        } catch (Exception e) {
+            //时间格式解析失败时返回原始字符串
+            return iotTime;
+        }
     }
 }
