@@ -99,5 +99,5 @@ huaweicloud:
   #amqp相关配置
   host: 6e8baa3c5a.st1.iotda-app.cn-north-4.myhuaweicloud.com
   accessKey: b9bmr0Ie
-  accessCode: oT3jWuH5VmetGoMu41pXklTXvNmVV6b8
+  accessCode: KVw6O9pOTFjwv5lUJPPSA6YoKpJ5p2o2
   queueName: DefaultQueue
