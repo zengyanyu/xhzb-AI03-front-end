@@ -2,6 +2,7 @@ package com.xhzb.nursing.job;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import com.xhzb.framework.config.properties.HuaWeiIotConfigProperties;
+import com.xhzb.nursing.service.IDeviceDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.qpid.jms.*;
 import org.apache.qpid.jms.message.JmsInboundMessageDispatch;
@@ -33,6 +34,9 @@ public class AmqpClient implements ApplicationRunner {
 
     @Autowired
     private HuaWeiIotConfigProperties huaWeiIotConfigProperties;
+
+    @Autowired
+    private IDeviceDataService deviceDataService;
 
     //业务处理异步线程池，线程池参数可以根据您的业务特点调整，或者您也可以用其他异步方式处理接收到的消息。
     @Autowired
@@ -188,6 +192,12 @@ public class AmqpClient implements ApplicationRunner {
             throw new RuntimeException("服务器错误");
         }
 
+        //处理上报的设备数据，单条消息处理失败不影响后续消息的消费
+        try {
+            deviceDataService.handleDeviceData(contentStr);
+        } catch (Exception e) {
+            log.error("处理设备上报数据失败", e);
+        }
     }
 
     private final JmsConnectionListener myJmsConnectionListener = new JmsConnectionListener() {

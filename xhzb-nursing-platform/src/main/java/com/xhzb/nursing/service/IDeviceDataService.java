@@ -54,9 +54,21 @@ public interface IDeviceDataService extends IService<DeviceData>
 
     /**
      * 删除设备数据信息
-     * 
+     *
      * @param id 设备数据主键
      * @return 结果
      */
     public int deleteDeviceDataById(Long id);
+
+    /**
+     * 处理设备上报的数据消息
+     *
+     * 步骤：1.解析消息内容，获取设备ID、上报属性和上报时间
+     *      2.根据设备ID查询设备，设备不存在则直接返回
+     *      3.将上报时间由世界时间(UTC)转为北京时间
+     *      4.根据properties数据批量保存设备数据到数据库
+     *
+     * @param contentStr AMQP上报的消息内容
+     */
+    public void handleDeviceData(String contentStr);
 }
