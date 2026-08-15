@@ -176,7 +176,7 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     public void registerDevice(RegisterDeviceDto dto) {
         // 随身设备没有物理位置，物理位置类型统一为-1
         if (dto.getLocationType() != null && dto.getLocationType() == 0 && dto.getPhysicalLocationType() == null) {
-            dto.setPhysicalLocationType(-1);
+            dto.setPhysicalLocationType(-1);//绑定老人是-1，楼层是0，房间1，床位是2
         }
 
         //1.校验设备名称是否重复
@@ -217,7 +217,7 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
         //4.2 调用华为云接口注册设备
         AddDeviceResponse response = ioTDAClient.addDevice(request);
-        if (response.getHttpStatusCode() != 200) {
+        if (response.getHttpStatusCode() != 201) {
             throw new BaseException("设备管理-注册设备失败");
         }
 
