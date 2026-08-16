@@ -213,4 +213,95 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where r.floor_id = #{floorId}
         order by r.sort, r.create_time desc
     </select>
+
+    <!-- 房间及房间设备VO resultMap -->
+    <resultMap id="roomVoWithDeviceResultMap" type="com.xhzb.nursing.domain.vo.RoomVo">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="floorId" column="floor_id"/>
+        <result property="floorName" column="fname"/>
+        <result column="price" property="price"/>
+        <collection property="deviceVos" ofType="com.xhzb.nursing.domain.vo.DeviceVo"
+                    notNullColumn="device_id">
+            <id column="device_id" property="id"/>
+            <result column="device_iot_id" property="iotId"/>
+            <result column="device_name" property="deviceName"/>
+            <result column="device_product_key" property="productKey"/>
+            <result column="device_product_name" property="productName"/>
+        </collection>
+    </resultMap>
+
+    <!-- 查询指定楼层下所有有设备的房间及其房间级设备 -->
+    <select id="selectRoomsWithDevicesByFloorId" resultMap="roomVoWithDeviceResultMap">
+        SELECT r.id,
+               r.code,
+               r.floor_id,
+               f.name  AS fname,
+               rt.price,
+               d.id    AS device_id,
+               d.iot_id AS device_iot_id,
+               d.device_name,
+               d.product_key AS device_product_key,
+               d.product_name AS device_product_name
+        FROM room r
+        LEFT JOIN floor f ON f.id = r.floor_id
+        LEFT JOIN room_type rt ON rt.name = r.type_name
+        LEFT JOIN device d ON CAST(d.binding_location AS UNSIGNED) = r.id
+            AND d.physical_location_type = 1
+        WHERE r.floor_id = #{floorId}
+          AND r.is_deleted = 0
+          AND EXISTS (
+              SELECT 1 FROM device d1
+              WHERE CAST(d1.binding_location AS UNSIGNED) = r.id
+                AND d1.physical_location_type = 1
+              UNION
+              SELECT 1 FROM bed b2
+              INNER JOIN device d2 ON CAST(d2.binding_location AS UNSIGNED) = b2.id
+                AND d2.physical_location_type = 2
+              WHERE b2.room_id = r.id
+          )
+        ORDER BY r.sort
+    </select>
+
+    <!-- 床位及床位设备VO resultMap -->
+    <resultMap id="bedVoWithDeviceResultMap" type="com.xhzb.nursing.domain.vo.BedVo">
+        <id column="bid" property="id"/>
+        <result column="bed_number" property="bedNumber"/>
+        <result column="bed_status" property="bedStatus"/>
+        <result column="room_id" property="roomId"/>
+        <result column="ename" property="ename"/>
+        <result column="eid" property="elderId"/>
+        <collection property="deviceVos" ofType="com.xhzb.nursing.domain.vo.DeviceVo"
+                    notNullColumn="device_id">
+            <id column="device_id" property="id"/>
+            <result column="device_iot_id" property="iotId"/>
+            <result column="device_name" property="deviceName"/>
+            <result column="device_product_key" property="productKey"/>
+            <result column="device_product_name" property="productName"/>
+        </collection>
+    </resultMap>
+
+    <!-- 查询指定房间下的床位、入住老人、床位级设备 -->
+    <select id="selectBedsWithDevicesByRoomIds" resultMap="bedVoWithDeviceResultMap">
+        SELECT b.id          AS bid,
+               b.bed_number,
+               b.bed_status,
+               b.room_id,
+               e.name        AS ename,
+               e.id          AS eid,
+               d.id          AS device_id,
+               d.iot_id      AS device_iot_id,
+               d.device_name,
+               d.product_key AS device_product_key,
+               d.product_name AS device_product_name
+        FROM bed b
+        LEFT JOIN elder e ON e.bed_id = b.id
+        LEFT JOIN device d ON CAST(d.binding_location AS UNSIGNED) = b.id
+            AND d.physical_location_type = 2
+        WHERE b.room_id IN
+        <foreach collection="roomIds" item="roomId" open="(" separator="," close=")">
+            #{roomId}
+        </foreach>
+        ORDER BY b.sort
+    </select>
 </mapper>

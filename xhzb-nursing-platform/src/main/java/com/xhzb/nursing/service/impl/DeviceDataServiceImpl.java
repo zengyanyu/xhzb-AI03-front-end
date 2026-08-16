@@ -23,6 +23,7 @@ import com.xhzb.nursing.service.IDeviceDataService;
 import com.xhzb.nursing.service.IDeviceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +42,12 @@ public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceD
 
     @Autowired
     private IDeviceService deviceService;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    /** Redis Hash大key，存储设备最新上报数据 */
+    private static final String IOT_DEVICE_LATEST_DATA_KEY = "iot:device_latest_data";
 
     /**
      * 查询设备数据
@@ -193,6 +200,10 @@ public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceD
         if (!deviceDataList.isEmpty()) {
             saveBatch(deviceDataList);
             log.info("设备【{}】上报数据保存成功，共{}条", deviceId, deviceDataList.size());
+
+            //7.存入Redis Hash，大key固定，小key为设备id，每次上报覆盖最新数据
+            stringRedisTemplate.opsForHash().put(IOT_DEVICE_LATEST_DATA_KEY, deviceId, JSONUtil.toJsonStr(deviceDataList));
+            log.info("设备【{}】最新数据已更新到Redis", deviceId);
         }
     }
 

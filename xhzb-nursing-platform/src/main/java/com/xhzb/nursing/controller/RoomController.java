@@ -116,4 +116,15 @@ public class RoomController extends BaseController
         return success(roomService.getRoomDetailById(id));
     }
 
+    /**
+     * 获取指定楼层的房间及其智能设备及数据
+     */
+    @GetMapping("/getRoomsWithDeviceByFloorId/{floorId}")
+    @Operation(summary = "获取指定楼层的房间及其智能设备及数据")
+    public AjaxResult getRoomsWithDeviceByFloorId(
+            @Schema(name = "楼层ID", requiredMode = Schema.RequiredMode.REQUIRED)
+            @PathVariable Long floorId) {
+        return success(roomService.getRoomsWithDeviceByFloorId(floorId));
+    }
+
 }

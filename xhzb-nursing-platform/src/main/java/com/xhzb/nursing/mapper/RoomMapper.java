@@ -2,6 +2,7 @@ package com.xhzb.nursing.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xhzb.nursing.domain.Room;
+import com.xhzb.nursing.domain.vo.BedVo;
 import com.xhzb.nursing.domain.vo.RoomVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -85,4 +86,20 @@ public interface RoomMapper extends BaseMapper<Room>
      * @return 房间VO列表
      */
     List<RoomVo> selectByFloorIdAndBedStatus(@Param("floorId") Long floorId, @Param("bedStatus") Integer bedStatus);
+
+    /**
+     * 查询指定楼层下所有有设备的房间及其房间级设备
+     *
+     * @param floorId 楼层ID
+     * @return 房间VO列表（含房间绑定的设备）
+     */
+    List<RoomVo> selectRoomsWithDevicesByFloorId(Long floorId);
+
+    /**
+     * 查询指定房间下的床位、入住老人、床位级设备
+     *
+     * @param roomIds 房间ID集合
+     * @return 床位VO列表（含床位绑定的设备）
+     */
+    List<BedVo> selectBedsWithDevicesByRoomIds(@Param("roomIds") List<Long> roomIds);
 }

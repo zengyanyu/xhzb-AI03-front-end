@@ -48,4 +48,7 @@ public class BedVo {
     @Schema(title = "护理员")
     private List<SysUser> userVos;
 
+    @Schema(title = "床位上绑定的设备列表")
+    private List<DeviceVo> deviceVos;
+
 }
