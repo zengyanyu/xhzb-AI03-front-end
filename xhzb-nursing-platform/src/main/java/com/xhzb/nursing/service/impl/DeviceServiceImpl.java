@@ -1,25 +1,15 @@
 package com.xhzb.nursing.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huaweicloud.sdk.iotda.v5.IoTDAClient;
-import com.huaweicloud.sdk.iotda.v5.model.AddDevice;
-import com.huaweicloud.sdk.iotda.v5.model.AddDeviceRequest;
-import com.huaweicloud.sdk.iotda.v5.model.AddDeviceResponse;
-import com.huaweicloud.sdk.iotda.v5.model.AuthInfo;
-import com.huaweicloud.sdk.iotda.v5.model.DeviceShadowData;
-import com.huaweicloud.sdk.iotda.v5.model.DeviceShadowProperties;
-import com.huaweicloud.sdk.iotda.v5.model.ListProductsRequest;
-import com.huaweicloud.sdk.iotda.v5.model.ListProductsResponse;
-import com.huaweicloud.sdk.iotda.v5.model.ProductSummary;
-import com.huaweicloud.sdk.iotda.v5.model.ShowDeviceRequest;
-import com.huaweicloud.sdk.iotda.v5.model.ShowDeviceResponse;
-import com.huaweicloud.sdk.iotda.v5.model.ShowDeviceShadowRequest;
-import com.huaweicloud.sdk.iotda.v5.model.ShowDeviceShadowResponse;
+import com.huaweicloud.sdk.iotda.v5.model.*;
 import com.xhzb.common.constant.CacheConstants;
+import com.xhzb.common.core.domain.AjaxResult;
 import com.xhzb.common.core.domain.entity.SysUser;
 import com.xhzb.common.exception.ServiceException;
 import com.xhzb.common.exception.base.BaseException;
@@ -39,12 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * 设备管理Service业务层处理
@@ -430,5 +415,35 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
             //时间格式解析失败时返回原始字符串
             return eventTime;
         }
+    }
+
+    /**
+     * 查询产品详情
+     * @param productKey
+     * @return
+     */
+    @Override
+    public AjaxResult queryProduct(String productKey) {
+        //参数校验
+        if(StringUtils.isEmpty(productKey)){
+            throw new BaseException("请输入正确的参数");
+        }
+        //调用华为云物联网接口
+        ShowProductRequest showProductRequest = new ShowProductRequest();
+        showProductRequest.setProductId(productKey);
+        ShowProductResponse response;
+
+        try {
+            response = ioTDAClient.showProduct(showProductRequest);
+        } catch (Exception e) {
+            throw new BaseException("查询产品详情失败");
+        }
+        //判断是否存在服务数据
+        List<ServiceCapability> serviceCapabilities = response.getServiceCapabilities();
+        if(CollUtil.isEmpty(serviceCapabilities)){
+            return AjaxResult.success(Collections.emptyList());
+        }
+
+        return AjaxResult.success(serviceCapabilities);
     }
 }

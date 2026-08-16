@@ -1,6 +1,7 @@
 package com.xhzb.nursing.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xhzb.common.core.domain.AjaxResult;
 import com.xhzb.nursing.domain.Device;
 import com.xhzb.nursing.domain.dto.RegisterDeviceDto;
 import com.xhzb.nursing.domain.vo.DeviceDetailVo;
@@ -106,4 +107,11 @@ public interface IDeviceService extends IService<Device>
      * @return 设备上报的数据列表
      */
     List<DevicePropertiesVo> queryServiceProperties(String iotId);
+
+    /**
+     * 查询产品详情
+     * @param productKey
+     * @return
+     */
+    AjaxResult queryProduct(String productKey);
 }

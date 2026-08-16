@@ -111,4 +111,8 @@ public class DeviceController extends BaseController
         return success(deviceService.queryServiceProperties(iotId));
     }
 
+    @GetMapping("/queryProduct/{productKey}")
+    public AjaxResult queryProduct(@PathVariable String productKey){
+        return deviceService.queryProduct(productKey);
+    }
 }
