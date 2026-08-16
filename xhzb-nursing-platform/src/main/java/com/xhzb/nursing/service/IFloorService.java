@@ -3,7 +3,6 @@ package com.xhzb.nursing.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xhzb.nursing.domain.Floor;
 import com.xhzb.nursing.domain.vo.FloorRoomBedVo;
-import com.xhzb.nursing.domain.vo.FloorVo;
 
 import java.util.List;
 
@@ -69,4 +68,10 @@ public interface IFloorService extends IService<Floor>
      * @return 楼层树形VO列表
      */
     List<FloorRoomBedVo> getRoomAndBedByBedStatus(Integer bedStatus);
+
+    /**
+     * 获取所有智能设备的楼层列表
+     * @return
+     */
+    List<Floor> getAllFloorsWithDevice();
 }

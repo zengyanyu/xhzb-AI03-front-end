@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xhzb.nursing.domain.Floor;
 import com.xhzb.nursing.domain.vo.BedVo;
 import com.xhzb.nursing.domain.vo.FloorRoomBedVo;
-import com.xhzb.nursing.domain.vo.FloorVo;
 import com.xhzb.nursing.domain.vo.RoomVo;
 import com.xhzb.nursing.mapper.FloorMapper;
 import com.xhzb.nursing.mapper.RoomMapper;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 楼层Service业务层处理
@@ -146,5 +144,15 @@ public class FloorServiceImpl extends ServiceImpl<FloorMapper, Floor> implements
         }
 
         return result;
+    }
+
+    /**
+     * 获取所有智能设备的楼层列表
+     *
+     * @return
+     */
+    @Override
+    public List<Floor> getAllFloorsWithDevice() {
+        return floorMapper.getAllFloorsWithDevice();
     }
 }

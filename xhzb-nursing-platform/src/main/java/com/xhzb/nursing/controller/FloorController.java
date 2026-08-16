@@ -7,7 +7,6 @@ import com.xhzb.common.core.domain.R;
 import com.xhzb.common.enums.BusinessType;
 import com.xhzb.nursing.domain.Floor;
 import com.xhzb.nursing.service.IFloorService;
-import com.xhzb.nursing.domain.vo.FloorVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -105,5 +104,17 @@ public class FloorController extends BaseController
     public AjaxResult getRoomAndBedByBedStatus(@Schema(name = "床位状态", requiredMode = Schema.RequiredMode.REQUIRED)
             @PathVariable("status") Integer status) {
         return success(floorService.getRoomAndBedByBedStatus(status));
+    }
+
+    /**
+     * 查询具有智能设备的楼层列表
+     */
+    @PreAuthorize("@ss.hasPermi('elder:floor:list')")//可用可不用
+    @GetMapping("/getAllFloorsWithDevice")
+    @Operation(summary = "查询所有具有智能设备楼层列表")
+    public R<List<Floor>> getAllFloorsWithDevice()
+    {
+        List<Floor> list = floorService.getAllFloorsWithDevice();
+        return R.ok(list);
     }
 }

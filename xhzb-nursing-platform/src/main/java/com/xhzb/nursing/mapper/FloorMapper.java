@@ -2,7 +2,6 @@ package com.xhzb.nursing.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xhzb.nursing.domain.Floor;
-import com.xhzb.nursing.domain.vo.FloorVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -73,4 +72,10 @@ public interface FloorMapper extends BaseMapper<Floor>
      * @return 楼层列表（用于树形展示）
      */
     List<Floor> selectFloorsWithRoomAndBedByStatus(Integer bedStatus);
+
+    /**
+     * 查询拥有智能设备楼层列表
+     * @return
+     */
+    List<Floor> getAllFloorsWithDevice();
 }

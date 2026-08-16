@@ -51,6 +51,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         group by f.id
         order by f.code
     </select>
+    <select id="getAllFloorsWithDevice" resultType="com.xhzb.nursing.domain.Floor">
+        -- 查询所有拥有智能设备的楼层信息（id,name,code）
+        select distinct f.id,f.name,f.code from floor f
+                                                    left join room r on r.floor_id = f.id
+                                                    left join bed b on b.room_id = r.id
+        where
+            (-- 判断房间绑定了智能设备
+                r.id in (select distinct binding_location from device where location_type=1 and physical_location_type = 1)
+                    or
+                    -- 判断床位绑定智能设备
+                b.id in (select distinct binding_location from device where location_type=1 and physical_location_type = 2)
+                )
+          and r.is_deleted = 0
+
+    </select>
 
     <insert id="insertFloor" parameterType="Floor" useGeneratedKeys="true" keyProperty="id">
         insert into floor
