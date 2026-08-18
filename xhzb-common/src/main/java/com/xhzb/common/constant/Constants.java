@@ -1,7 +1,8 @@
 package com.xhzb.common.constant;
 
-import java.util.Locale;
 import io.jsonwebtoken.Claims;
+
+import java.util.Locale;
 
 /**
  * 通用常量信息
@@ -163,7 +164,8 @@ public class Constants
     /**
      * 定时任务白名单配置（仅允许访问的包名，如其他需要可以自行添加）
      */
-    public static final String[] JOB_WHITELIST_STR = { "com.xhzb.quartz.task" };
+    public static final String[] JOB_WHITELIST_STR = { "com.xhzb.quartz.task",
+            "com.xhzb.nursing.job" };
 
     /**
      * 定时任务违规的字符
