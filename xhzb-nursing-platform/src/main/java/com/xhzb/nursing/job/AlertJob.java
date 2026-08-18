@@ -4,10 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xhzb.common.utils.StringUtils;
-import com.xhzb.nursing.domain.AlertData;
 import com.xhzb.nursing.domain.AlertRule;
 import com.xhzb.nursing.domain.DeviceData;
-import com.xhzb.nursing.service.IAlertDataService;
 import com.xhzb.nursing.service.IAlertRuleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +31,6 @@ public class AlertJob {
 
     @Autowired
     private IAlertRuleService alertRuleService;
-
-    @Autowired
-    private IAlertDataService alertDataService;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -156,7 +151,8 @@ public class AlertJob {
             stringRedisTemplate.opsForValue().set(getAlertSilentKey(alertRule, deviceData), "1",
                     alertRule.getAlertSilentPeriod(), TimeUnit.MINUTES);
         }
-        saveAlertData(deviceData, alertRule);
+        //调用Service批量保存报警通知数据（每条报警通知数据的userId为对应通知人员ID）
+        alertRuleService.saveAlertData(deviceData, alertRule);
     }
 
     /**
@@ -269,36 +265,6 @@ public class AlertJob {
             log.error("报警生效时段【{}】解析失败", alertEffectivePeriod, e);
             return true;
         }
-    }
-
-    /**
-     * 保存报警数据
-     *
-     * @param deviceData 设备上报数据
-     * @param alertRule 报警规则
-     */
-    private void saveAlertData(DeviceData deviceData, AlertRule alertRule) {
-        AlertData alertData = new AlertData();
-        alertData.setIotId(deviceData.getIotId());
-        alertData.setDeviceName(deviceData.getDeviceName());
-        alertData.setProductKey(deviceData.getProductKey());
-        alertData.setProductName(deviceData.getProductName());
-        alertData.setFunctionId(deviceData.getFunctionId());
-        alertData.setAccessLocation(deviceData.getAccessLocation());
-        alertData.setLocationType(deviceData.getLocationType());
-        alertData.setPhysicalLocationType(deviceData.getPhysicalLocationType());
-        alertData.setDeviceDescription(deviceData.getDeviceDescription());
-        alertData.setDataValue(deviceData.getDataValue());
-        alertData.setAlertRuleId(alertRule.getId());
-        //报警原因格式：功能名称+运算符+阈值+持续周期
-        alertData.setAlertReason(alertRule.getFunctionName() + alertRule.getOperator() + alertRule.getValue()
-                + ",持续" + alertRule.getDuration() + "个周期");
-        alertData.setType(alertRule.getAlertDataType());
-        //状态：0待处理
-        alertData.setStatus(0);
-        alertDataService.save(alertData);
-        log.info("设备【{}】功能【{}】上报数据【{}】触发报警规则【{}】，报警数据已保存",
-                deviceData.getIotId(), deviceData.getFunctionId(), deviceData.getDataValue(), alertRule.getAlertRuleName());
     }
 
     /**

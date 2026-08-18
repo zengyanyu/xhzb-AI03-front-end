@@ -1,11 +1,10 @@
 package com.xhzb.system.mapper;
 
-import java.util.List;
-
+import com.xhzb.common.core.domain.entity.SysUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import com.xhzb.common.core.domain.entity.SysUser;
-import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * 用户表 数据层
@@ -128,5 +127,4 @@ public interface SysUserMapper
      * @return 结果
      */
     public SysUser checkEmailUnique(String email);
-
 }

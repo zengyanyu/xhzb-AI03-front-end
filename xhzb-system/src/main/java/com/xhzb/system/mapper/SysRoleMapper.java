@@ -1,8 +1,9 @@
 package com.xhzb.system.mapper;
 
-import java.util.List;
 import com.xhzb.common.core.domain.entity.SysRole;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * 角色表 数据层
