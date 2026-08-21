@@ -34,6 +34,17 @@ spring:
         options:
           model: deepseek-r1:1.5b
 
+# Dify 智能体配置
+dify:
+  # Dify open-api 地址(带 /v1)
+  base-url: http://192.168.100.128/v1
+  # 应用 API 秘钥
+  api-key: app-TPBAg6vcHXbARqwUap0bnTwG
+  # 普通接口(会话列表/历史消息/删除会话)超时时间(秒)
+  timeout-seconds: 60
+  # 流式聊天接口连接超时时间(秒)
+  stream-connect-timeout-seconds: 15
+
 # 用户配置
 user:
   password:
