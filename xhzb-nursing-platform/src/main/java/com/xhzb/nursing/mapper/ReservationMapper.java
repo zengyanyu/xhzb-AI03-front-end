@@ -1,9 +1,12 @@
 package com.xhzb.nursing.mapper;
 
-import java.util.List;
-import org.apache.ibatis.annotations.Mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xhzb.nursing.domain.Reservation;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 预约信息Mapper接口
@@ -61,4 +64,7 @@ public interface ReservationMapper extends BaseMapper<Reservation>
      * @return 结果
      */
     public int deleteReservationByIds(Long[] ids);
+
+    @Select("select * from reservation where date_format(time,'%Y-%m-%d') = #{now}")
+    List<Reservation> selectByNow(LocalDate now);
 }

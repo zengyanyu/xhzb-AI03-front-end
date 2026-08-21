@@ -1,8 +1,10 @@
 package com.xhzb.nursing.service;
 
-import java.util.List;
-import com.xhzb.nursing.domain.Reservation;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xhzb.nursing.domain.Reservation;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 预约信息Service接口
@@ -59,4 +61,11 @@ public interface IReservationService extends IService<Reservation>
      * @return 结果
      */
     public int deleteReservationById(Long id);
+
+    /**
+     * 根据指定日期查询当前预约信息。
+     * @param dateTime
+     * @return
+     */
+    String getReservationByDay(LocalDate dateTime);
 }

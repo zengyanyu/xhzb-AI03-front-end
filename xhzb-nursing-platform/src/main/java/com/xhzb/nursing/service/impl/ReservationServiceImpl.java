@@ -1,14 +1,19 @@
 package com.xhzb.nursing.service.impl;
 
-import java.util.List;
-import com.xhzb.common.utils.DateUtils;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xhzb.nursing.domain.Reservation;
+import com.xhzb.nursing.domain.vo.ElderVisitInfoVO;
+import com.xhzb.nursing.mapper.ReservationMapper;
+import com.xhzb.nursing.service.IReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.xhzb.nursing.mapper.ReservationMapper;
-import com.xhzb.nursing.domain.Reservation;
-import com.xhzb.nursing.service.IReservationService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 预约信息Service业务层处理
@@ -92,5 +97,36 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
     public int deleteReservationById(Long id)
     {
         return removeById(id)? 1 : 0;
+    }
+
+    /**
+     * 根据指定日期查询当前预约信息。
+     *
+     * @param dateTime
+     * @return
+     */
+    @Override
+    public String getReservationByDay(LocalDate dateTime) {
+
+        if(ObjectUtil.isEmpty(dateTime)){
+            dateTime = LocalDate.now();
+        }
+
+        List<Reservation> list = reservationMapper.selectByNow(dateTime);
+        if(null != list && !list.isEmpty()){
+
+            List<ElderVisitInfoVO> resultList = new ArrayList<>();
+            for (Reservation reservation : list) {
+                ElderVisitInfoVO vo = new ElderVisitInfoVO();
+                String dateStr = reservation.getTime().toString();
+                vo.setVisitTime(dateStr);
+                vo.setVisitor(reservation.getName());
+                vo.setName(reservation.getVisitor());
+                resultList.add(vo);
+            }
+            return JSONUtil.toJsonStr(resultList);
+        }
+
+        return null;
     }
 }
