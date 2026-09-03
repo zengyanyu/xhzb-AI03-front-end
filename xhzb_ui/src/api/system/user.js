@@ -137,7 +137,7 @@ export function deptTreeSelect() {
 // 根据部门编号，查询员工列表
 export function getAllUserList(data) {
   return request({
-    url: '/system/user/' + data.deptId,
+    url: '/system/user/listByDeptId?deptId=' + data.deptId,
     method: 'get',
   });
 }
