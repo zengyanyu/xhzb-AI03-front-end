@@ -1,7 +1,7 @@
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为8080
-  port: 8080
+  port: 8083
   servlet:
     # 应用的访问路径
     context-path: /
@@ -50,20 +50,20 @@ spring:
       enabled: false
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.100.168:3306/xhzb?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    url: jdbc:mysql://localhost:3306/xhzb?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
     username: root
-    password: heima123
+    password: admin
   # redis 配置
   data:
     redis:
       # 地址
-      host: 192.168.100.168
+      host: localhost
       # 端口，默认为6379
       port: 6379
       # 数据库索引
       database: 0
       # 密码
-      password: 123456
+      password:
       # 连接超时时间
       timeout: 10s
       jedis:

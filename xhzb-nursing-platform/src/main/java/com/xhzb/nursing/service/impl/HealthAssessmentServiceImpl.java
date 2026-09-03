@@ -36,14 +36,13 @@ import java.util.List;
 
 /**
  * 健康评估记录Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2026-07-10
  */
 @Slf4j
 @Service
-public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMapper, HealthAssessment> implements IHealthAssessmentService
-{
+public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMapper, HealthAssessment> implements IHealthAssessmentService {
     @Autowired
     private HealthAssessmentMapper healthAssessmentMapper;
 
@@ -56,46 +55,43 @@ public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMap
     @Autowired
     private OSSAliyunFileStorageService ossAliyunFileStorageService;
 
-    @Autowired
+    @Autowired(required = false)
     @Qualifier("chatClientByAssessment")
     private ChatClient assessmentChatClient;
 
     /**
      * 查询健康评估记录
-     * 
+     *
      * @param id 健康评估记录主键
      * @return 健康评估记录
      */
     @Override
-    public HealthAssessmentDataCollection selectHealthAssessmentById(Long id)
-    {
+    public HealthAssessmentDataCollection selectHealthAssessmentById(Long id) {
         return healthAssessmentDataCollectionService.getById(id);
     }
 
     /**
      * 查询健康评估记录列表
-     * 
+     *
      * @param healthAssessment 健康评估记录
      * @return 健康评估记录
      */
     @Override
-    public List<HealthAssessment> selectHealthAssessmentList(HealthAssessment healthAssessment)
-    {
+    public List<HealthAssessment> selectHealthAssessmentList(HealthAssessment healthAssessment) {
         return healthAssessmentMapper.selectHealthAssessmentList(healthAssessment);
     }
 
     /**
      * 新增健康评估记录
-     * 
+     *
      * @param dto 健康评估记录
      * @return 结果
      * 新增或修改请求参数都是ElderAssessmentDto封装，区别有id代表进行修改，没有id代表进行新增
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Long insertHealthAssessment(ElderAssessmentDto dto)
-    {
-       return saveOrUpdateHealthAssessment(dto);
+    public Long insertHealthAssessment(ElderAssessmentDto dto) {
+        return saveOrUpdateHealthAssessment(dto);
     }
 
     private Long saveOrUpdateHealthAssessment(ElderAssessmentDto dto) {
@@ -103,11 +99,11 @@ public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMap
         //1.1 新建健康评估记录表实体类对象
         HealthAssessment healthAssessment = new HealthAssessment();
         //1.2 判断前端是否传递有效健康评估id过来
-        if(dto.getId()!=null) {
+        if (dto.getId() != null) {
             //1.2.1 如果传递过来，根据id查询数据库的数据，在此基础上修改
             healthAssessment = getById(dto.getId());
             //判断是否评估完成，如果评估完成不可以修改
-            if(healthAssessment!=null && healthAssessment.getEvaluationProgress()!=0){
+            if (healthAssessment != null && healthAssessment.getEvaluationProgress() != 0) {
                 //来到这里是不可以修改评估数据，所以结束程序
                 throw new BaseException("评估结束，不可以再次修改");
             }
@@ -153,27 +149,25 @@ public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMap
 
     /**
      * 修改健康评估记录
-     * 
+     *
      * @param dto 健康评估记录
      * @return 结果
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Long updateHealthAssessment(ElderAssessmentDto dto)
-    {
+    public Long updateHealthAssessment(ElderAssessmentDto dto) {
         return saveOrUpdateHealthAssessment(dto);
     }
 
     /**
      * 批量删除健康评估记录
-     * 
+     *
      * @param ids 需要删除的健康评估记录主键
      * @return 结果
      */
     @Override
-    public int deleteHealthAssessmentByIds(Long[] ids)
-    {
-        return removeByIds(Arrays.asList(ids))? 1 : 0;
+    public int deleteHealthAssessmentByIds(Long[] ids) {
+        return removeByIds(Arrays.asList(ids)) ? 1 : 0;
     }
 
     /**
@@ -183,9 +177,8 @@ public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMap
      * @return 结果
      */
     @Override
-    public int deleteHealthAssessmentById(Long id)
-    {
-        return removeById(id)? 1 : 0;
+    public int deleteHealthAssessmentById(Long id) {
+        return removeById(id) ? 1 : 0;
     }
 
     /**

@@ -24,37 +24,34 @@ import java.util.List;
 
 /**
  * 知识库主Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2026-07-21
  */
 @Service
-public class KnowledgeBaseServiceImpl extends ServiceImpl<KnowledgeBaseMapper, KnowledgeBase> implements IKnowledgeBaseService
-{
+public class KnowledgeBaseServiceImpl extends ServiceImpl<KnowledgeBaseMapper, KnowledgeBase> implements IKnowledgeBaseService {
     @Autowired
     private KnowledgeBaseMapper knowledgeBaseMapper;
 
     /**
      * 查询知识库主
-     * 
+     *
      * @param id 知识库主主键
      * @return 知识库主
      */
     @Override
-    public KnowledgeBase selectKnowledgeBaseById(Long id)
-    {
+    public KnowledgeBase selectKnowledgeBaseById(Long id) {
         return getById(id);
     }
 
     /**
      * 查询知识库主列表
-     * 
+     *
      * @param knowledgeBase 知识库主
      * @return 知识库主
      */
     @Override
-    public List<KnowledgeBase> selectKnowledgeBaseList(KnowledgeBase knowledgeBase)
-    {
+    public List<KnowledgeBase> selectKnowledgeBaseList(KnowledgeBase knowledgeBase) {
         return knowledgeBaseMapper.selectKnowledgeBaseList(knowledgeBase);
     }
 
@@ -67,22 +64,20 @@ public class KnowledgeBaseServiceImpl extends ServiceImpl<KnowledgeBaseMapper, K
     private TextSplitter textSplitter;
 
     //导入向量存储对象
-    @Autowired
-    private VectorStore vectorStore;
+//    @Autowired
+//    private VectorStore vectorStore;
 
     /**
      * 新增知识库主
-     * 
+     *
      * @param knowledgeBase 知识库主
      * @return 结果
      */
     @Override
-    public int insertKnowledgeBase(KnowledgeBase knowledgeBase)
-    {
-
+    public int insertKnowledgeBase(KnowledgeBase knowledgeBase) {
         //1.从oss下载文档获取输入流数据
         InputStream inputStream = ossAliyunFileStorageService.download(knowledgeBase.getDocumentUrl());
-        if(inputStream == null){
+        if (inputStream == null) {
             throw new BaseException("上传的文件知识库文档不存在！");
         }
 
@@ -103,19 +98,19 @@ public class KnowledgeBaseServiceImpl extends ServiceImpl<KnowledgeBaseMapper, K
         List<Document> documentSmallList = textSplitter.apply(documentBigList);
 
         //4.给每个小数据库块文档添加自定义扩展属性file=文档名字
-        documentSmallList.forEach(document -> document.getMetadata().put("filename",knowledgeBase.getTitle()));
+        documentSmallList.forEach(document -> document.getMetadata().put("filename", knowledgeBase.getTitle()));
 
         //5.将小块文档列表抽取id集合，便于后面写入数据库
         List<String> idList = documentSmallList.stream().map(document -> document.getId()).toList();
 
         //6.批量添加到向量数据库
         int batchSize = 10;
-        for (int i = 0; i < documentSmallList.size(); i+=batchSize) {
+        for (int i = 0; i < documentSmallList.size(); i += batchSize) {
             //从文档集合中提取部分元素（10个元素）
             List<Document> subList = documentSmallList.subList(i, Math.min(i + 10, documentSmallList.size()));
             //批量添加到向量数据库
-            vectorStore.add(subList);
-            System.out.println("已添加批次: " + (i / batchSize+1) + ", 数量: " + subList.size());
+//            vectorStore.add(subList);
+            System.out.println("已添加批次: " + (i / batchSize + 1) + ", 数量: " + subList.size());
         }
 
         //7封装补全实体类KnowledgeBase数据（创建时间，），插入到数据库
@@ -124,42 +119,39 @@ public class KnowledgeBaseServiceImpl extends ServiceImpl<KnowledgeBaseMapper, K
         //remark(小文档的id列表，json字符串格式)
         knowledgeBase.setRemark(JSONUtil.toJsonStr(idList));
         //插入数据库
-        return save(knowledgeBase)? 1 : 0;
+        return save(knowledgeBase) ? 1 : 0;
     }
 
     /**
      * 修改知识库主
-     * 
+     *
      * @param knowledgeBase 知识库主
      * @return 结果
      */
     @Override
-    public int updateKnowledgeBase(KnowledgeBase knowledgeBase)
-    {
-        return updateById(knowledgeBase)? 1 : 0;
+    public int updateKnowledgeBase(KnowledgeBase knowledgeBase) {
+        return updateById(knowledgeBase) ? 1 : 0;
     }
 
     /**
      * 批量删除知识库主
-     * 
+     *
      * @param ids 需要删除的知识库主主键
      * @return 结果
      */
     @Override
-    public int deleteKnowledgeBaseByIds(Long[] ids)
-    {
-        return removeByIds(Arrays.asList(ids))? 1 : 0;
+    public int deleteKnowledgeBaseByIds(Long[] ids) {
+        return removeByIds(Arrays.asList(ids)) ? 1 : 0;
     }
 
     /**
      * 删除知识库主信息
-     * 
+     *
      * @param id 知识库主主键
      * @return 结果
      */
     @Override
-    public int deleteKnowledgeBaseById(Long id)
-    {
+    public int deleteKnowledgeBaseById(Long id) {
         //根据id查询知识库对象
         KnowledgeBase knowledgeBase = getById(id);
 
@@ -171,9 +163,9 @@ public class KnowledgeBaseServiceImpl extends ServiceImpl<KnowledgeBaseMapper, K
         List<String> documentIds = JSONUtil.toList(json, String.class);
 
         //向量数据库删除delete(List<String>), 向量数据库里面存储的key=doc:文档id,删除这个可以只需要提供文档id接口，向量存储对象会自动设置前缀doc:
-        vectorStore.delete(documentIds);
+//        vectorStore.delete(documentIds);
 
         //删除数据库的知识库数据
-        return removeById(id)? 1 : 0;
+        return removeById(id) ? 1 : 0;
     }
 }

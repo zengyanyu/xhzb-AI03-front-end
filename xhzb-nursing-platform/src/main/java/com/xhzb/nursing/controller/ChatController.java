@@ -1,6 +1,7 @@
 package com.xhzb.nursing.controller;
 
 import com.xhzb.nursing.service.ChatHistoryService;
+import jakarta.annotation.Resource;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,23 +19,24 @@ import reactor.core.publisher.Flux;
 @RequestMapping("/ai")
 public class ChatController {
 
-    @Autowired
+    @Resource
     private ChatHistoryService chatHistoryService;
 
 
-    @Autowired
+    @Autowired(required = false)
     private ChatClient chatClient;
 
     /**
      * 处理大模型聊天请求
+     *
      * @return String
-     *    注意：如果controller直接String，默认返回中文会乱码，因为默认返回编码是gbk
-     *         返回对象（非字符串），@ResponseBody默认会将对象（非字符串）转换为json字符串并会设置码表utf-8
-     *            由于这里是字符串不转了并且也不设置编码了
-     *         解决方案：produces = "text/html;charset=utf-8" 手动设置响应数据类型与码表
+     * 注意：如果controller直接String，默认返回中文会乱码，因为默认返回编码是gbk
+     * 返回对象（非字符串），@ResponseBody默认会将对象（非字符串）转换为json字符串并会设置码表utf-8
+     * 由于这里是字符串不转了并且也不设置编码了
+     * 解决方案：produces = "text/html;charset=utf-8" 手动设置响应数据类型与码表
      */
-    @PostMapping(value = "/chat",produces = "text/html;charset=utf-8")
-    public Flux<String> chat(String prompt,String chatId){//prompt用户提示词
+    @PostMapping(value = "/chat", produces = "text/html;charset=utf-8")
+    public Flux<String> chat(String prompt, String chatId) {//prompt用户提示词
 
         //将会话id写入登录用户的会话id的redis的set集合中
         chatHistoryService.save(chatId);
@@ -42,7 +44,7 @@ public class ChatController {
         //使用大模型客户端调用调用大模型聊天接口发送提示词并返回大模型输出的结果
         return chatClient.prompt()
                 .user(prompt) //设置用户提示词
-                .advisors(a->a.param(ChatMemory.CONVERSATION_ID,chatId))//将会话id给到SpringAI，底层是Map存储会话id，与Request对象绑定
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, chatId))//将会话id给到SpringAI，底层是Map存储会话id，与Request对象绑定
                 // .call() //同步调用，非流式输出，等待大模型输出所有结果在返回
                 .stream() //流式输出
                 .content();//得到大模型输出内容
