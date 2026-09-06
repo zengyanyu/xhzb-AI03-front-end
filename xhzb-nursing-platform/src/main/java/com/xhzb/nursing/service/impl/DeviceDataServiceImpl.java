@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -35,8 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Service
-public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceData> implements IDeviceDataService
-{
+public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceData> implements IDeviceDataService {
     @Autowired
     private DeviceDataMapper deviceDataMapper;
 
@@ -46,7 +46,9 @@ public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceD
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-    /** Redis Hash大key，存储设备最新上报数据 */
+    /**
+     * Redis Hash大key，存储设备最新上报数据
+     */
     private static final String IOT_DEVICE_LATEST_DATA_KEY = "iot:device_latest_data";
 
     /**
@@ -56,8 +58,7 @@ public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceD
      * @return 设备数据
      */
     @Override
-    public DeviceData selectDeviceDataById(Long id)
-    {
+    public DeviceData selectDeviceDataById(Long id) {
         return getById(id);
     }
 
@@ -68,8 +69,7 @@ public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceD
      * @return 设备数据集合
      */
     @Override
-    public List<DeviceData> selectDeviceDataList(DeviceData deviceData)
-    {
+    public List<DeviceData> selectDeviceDataList(DeviceData deviceData) {
         return deviceDataMapper.selectDeviceDataList(deviceData);
     }
 
@@ -80,9 +80,8 @@ public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceD
      * @return 结果
      */
     @Override
-    public int insertDeviceData(DeviceData deviceData)
-    {
-        return save(deviceData)? 1 : 0;
+    public int insertDeviceData(DeviceData deviceData) {
+        return save(deviceData) ? 1 : 0;
     }
 
     /**
@@ -92,9 +91,8 @@ public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceD
      * @return 结果
      */
     @Override
-    public int updateDeviceData(DeviceData deviceData)
-    {
-        return updateById(deviceData)? 1 : 0;
+    public int updateDeviceData(DeviceData deviceData) {
+        return updateById(deviceData) ? 1 : 0;
     }
 
     /**
@@ -104,9 +102,8 @@ public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceD
      * @return 结果
      */
     @Override
-    public int deleteDeviceDataByIds(Long[] ids)
-    {
-        return removeByIds(Arrays.asList(ids))? 1 : 0;
+    public int deleteDeviceDataByIds(Long[] ids) {
+        return removeByIds(Arrays.asList(ids)) ? 1 : 0;
     }
 
     /**
@@ -116,18 +113,17 @@ public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceD
      * @return 结果
      */
     @Override
-    public int deleteDeviceDataById(Long id)
-    {
-        return removeById(id)? 1 : 0;
+    public int deleteDeviceDataById(Long id) {
+        return removeById(id) ? 1 : 0;
     }
 
     /**
      * 处理设备上报的数据消息
-     *
+     * <p>
      * 步骤：1.解析消息内容，获取设备ID、上报属性和上报时间
-     *      2.根据设备ID查询设备，设备不存在则直接返回
-     *      3.将上报时间由世界时间(UTC)转为北京时间
-     *      4.根据properties数据批量保存设备数据到数据库
+     * 2.根据设备ID查询设备，设备不存在则直接返回
+     * 3.将上报时间由世界时间(UTC)转为北京时间
+     * 4.根据properties数据批量保存设备数据到数据库
      *
      * @param contentStr AMQP上报的消息内容
      */

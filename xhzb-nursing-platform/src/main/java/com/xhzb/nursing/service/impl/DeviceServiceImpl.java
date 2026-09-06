@@ -39,8 +39,7 @@ import java.util.*;
  */
 @Slf4j
 @Service
-public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> implements IDeviceService
-{
+public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> implements IDeviceService {
     @Autowired
     private DeviceMapper deviceMapper;
 
@@ -49,81 +48,75 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
     /**
      * 查询设备管理
-     * 
+     *
      * @param id 设备管理主键
      * @return 设备管理
      */
     @Override
-    public Device selectDeviceById(Long id)
-    {
+    public Device selectDeviceById(Long id) {
         return getById(id);
     }
 
     /**
      * 查询设备管理列表
-     * 
+     *
      * @param device 设备管理
      * @return 设备管理
      */
     @Override
-    public List<Device> selectDeviceList(Device device)
-    {
+    public List<Device> selectDeviceList(Device device) {
         return deviceMapper.selectDeviceList(device);
     }
 
     /**
      * 新增设备管理
-     * 
+     *
      * @param device 设备管理
      * @return 结果
      */
     @Override
-    public int insertDevice(Device device)
-    {
-        return save(device)? 1 : 0;
+    public int insertDevice(Device device) {
+        return save(device) ? 1 : 0;
     }
 
     /**
      * 修改设备管理
-     * 
+     *
      * @param device 设备管理
      * @return 结果
      */
     @Override
-    public int updateDevice(Device device)
-    {
-        return updateById(device)? 1 : 0;
+    public int updateDevice(Device device) {
+        return updateById(device) ? 1 : 0;
     }
 
     /**
      * 批量删除设备管理
-     * 
+     *
      * @param ids 需要删除的设备管理主键
      * @return 结果
      */
     @Override
-    public int deleteDeviceByIds(Long[] ids)
-    {
-        return removeByIds(Arrays.asList(ids))? 1 : 0;
+    public int deleteDeviceByIds(Long[] ids) {
+        return removeByIds(Arrays.asList(ids)) ? 1 : 0;
     }
 
     /**
      * 删除设备管理信息
-     * 
+     *
      * @param id 设备管理主键
      * @return 结果
      */
     @Override
-    public int deleteDeviceById(Long id)
-    {
-        return removeById(id)? 1 : 0;
+    public int deleteDeviceById(Long id) {
+        return removeById(id) ? 1 : 0;
     }
 
     @Autowired
     private IoTDAClient ioTDAClient;
 
     @Autowired
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     /**
      * 同步产品列表
@@ -138,7 +131,7 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
         //2.通过客户端调用并返回结果
         ListProductsResponse response = ioTDAClient.listProducts(request);
 
-        if(response.getHttpStatusCode()!=200){
+        if (response.getHttpStatusCode() != 200) {
             throw new BaseException("设备管理-同步产品列表失败");
         }
 
@@ -159,7 +152,7 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
         //1.到redis中查询数据得到json字符串，key=CacheConstants.IOT_ALL_PRODUCT_LIST
         String json = redisTemplate.opsForValue().get(CacheConstants.IOT_ALL_PRODUCT_LIST);
-        if(StringUtils.isEmpty(json)){
+        if (StringUtils.isEmpty(json)) {
             return null;
         }
 
@@ -172,9 +165,9 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
     /**
      * 注册设备
-     *
+     * <p>
      * 步骤：1.校验设备名称是否重复 2.校验设备标识符(nodeId)是否重复
-     *      3.校验同一位置是否已绑定相同产品 4.调用华为云IoT注册设备 5.插入本地设备表
+     * 3.校验同一位置是否已绑定相同产品 4.调用华为云IoT注册设备 5.插入本地设备表
      *
      * @param dto 注册设备请求参数
      */
@@ -249,10 +242,10 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
     /**
      * 查询设备详细数据
-     *
+     * <p>
      * 步骤：1.根据设备ID(iotId)从MySQL查询设备数据
-     *       2.根据设备ID调用华为云查询设备详情，补全设备状态、激活时间等
-     *       3.合并两种数据并返回
+     * 2.根据设备ID调用华为云查询设备详情，补全设备状态、激活时间等
+     * 3.合并两种数据并返回
      *
      * @param iotId 设备ID
      * @return 设备详细数据
@@ -332,10 +325,10 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
     /**
      * 查询设备上报的数据（服务属性）
-     *
+     * <p>
      * 步骤：1.根据设备ID(iotId)调用华为云查询设备影子数据
-     *       2.遍历每个服务上报的属性数据，组装为接口文档需要的数据
-     *       3.将上报时间由世界时间(UTC)转为北京时间
+     * 2.遍历每个服务上报的属性数据，组装为接口文档需要的数据
+     * 3.将上报时间由世界时间(UTC)转为北京时间
      *
      * @param iotId 设备ID
      * @return 设备上报的数据列表
@@ -419,13 +412,14 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
     /**
      * 查询产品详情
+     *
      * @param productKey
      * @return
      */
     @Override
     public AjaxResult queryProduct(String productKey) {
         //参数校验
-        if(StringUtils.isEmpty(productKey)){
+        if (StringUtils.isEmpty(productKey)) {
             throw new BaseException("请输入正确的参数");
         }
         //调用华为云物联网接口
@@ -440,7 +434,7 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
         }
         //判断是否存在服务数据
         List<ServiceCapability> serviceCapabilities = response.getServiceCapabilities();
-        if(CollUtil.isEmpty(serviceCapabilities)){
+        if (CollUtil.isEmpty(serviceCapabilities)) {
             return AjaxResult.success(Collections.emptyList());
         }
 

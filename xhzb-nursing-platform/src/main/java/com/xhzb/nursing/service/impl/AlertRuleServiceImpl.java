@@ -38,12 +38,15 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class AlertRuleServiceImpl extends ServiceImpl<AlertRuleMapper, AlertRule> implements IAlertRuleService
-{
-    /** 角色名称：行政（设备异常数据通知人员） */
+public class AlertRuleServiceImpl extends ServiceImpl<AlertRuleMapper, AlertRule> implements IAlertRuleService {
+    /**
+     * 角色名称：行政（设备异常数据通知人员）
+     */
     private static final String ROLE_NAME_ADMIN = "行政";
 
-    /** 角色名称：超级管理员（所有报警场景均通知人员） */
+    /**
+     * 角色名称：超级管理员（所有报警场景均通知人员）
+     */
     private static final String ROLE_NAME_SUPER_ADMIN = "超级管理员";
 
     @Autowired
@@ -66,62 +69,57 @@ public class AlertRuleServiceImpl extends ServiceImpl<AlertRuleMapper, AlertRule
 
     /**
      * 查询报警规则
-     * 
+     *
      * @param id 报警规则主键
      * @return 报警规则
      */
     @Override
-    public AlertRule selectAlertRuleById(Long id)
-    {
+    public AlertRule selectAlertRuleById(Long id) {
         return getById(id);
     }
 
     /**
      * 查询报警规则列表
-     * 
+     *
      * @param alertRule 报警规则
      * @return 报警规则
      */
     @Override
-    public List<AlertRule> selectAlertRuleList(AlertRule alertRule)
-    {
+    public List<AlertRule> selectAlertRuleList(AlertRule alertRule) {
         return alertRuleMapper.selectAlertRuleList(alertRule);
     }
 
     /**
      * 新增报警规则
-     * 
+     *
      * @param alertRule 报警规则
      * @return 结果
      */
     @Override
-    public int insertAlertRule(AlertRule alertRule)
-    {
-        return save(alertRule)? 1 : 0;
+    public int insertAlertRule(AlertRule alertRule) {
+        return save(alertRule) ? 1 : 0;
     }
 
     /**
      * 修改报警规则
-     * 
+     *
      * @param alertRule 报警规则
      * @return 结果
      */
     @Override
-    public int updateAlertRule(AlertRule alertRule)
-    {
-        return updateById(alertRule)? 1 : 0;
+    public int updateAlertRule(AlertRule alertRule) {
+        return updateById(alertRule) ? 1 : 0;
     }
 
     /**
      * 批量删除报警规则
-     * 
+     *
      * @param ids 需要删除的报警规则主键
      * @return 结果
      */
     @Override
-    public int deleteAlertRuleByIds(Long[] ids)
-    {
-        return removeByIds(Arrays.asList(ids))? 1 : 0;
+    public int deleteAlertRuleByIds(Long[] ids) {
+        return removeByIds(Arrays.asList(ids)) ? 1 : 0;
     }
 
     /**
@@ -131,36 +129,32 @@ public class AlertRuleServiceImpl extends ServiceImpl<AlertRuleMapper, AlertRule
      * @return 结果
      */
     @Override
-    public int deleteAlertRuleById(Long id)
-    {
-        return removeById(id)? 1 : 0;
+    public int deleteAlertRuleById(Long id) {
+        return removeById(id) ? 1 : 0;
     }
 
     /**
      * 保存报警数据（批量保存报警通知数据）
-     *
+     * <p>
      * 步骤：1.根据报警规则筛选出需要通知的全部相关人员ID
-     *      2.批量插入报警通知数据，每条数据的userId赋值为对应人员ID
+     * 2.批量插入报警通知数据，每条数据的userId赋值为对应人员ID
      *
      * @param deviceData 设备上报数据
-     * @param alertRule 报警规则
+     * @param alertRule  报警规则
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveAlertData(DeviceData deviceData, AlertRule alertRule)
-    {
+    public void saveAlertData(DeviceData deviceData, AlertRule alertRule) {
         //一、筛选出需要通知的全部相关人员ID
         List<Long> userIds = queryNotifyUserIds(deviceData, alertRule);
-        if (CollUtil.isEmpty(userIds))
-        {
+        if (CollUtil.isEmpty(userIds)) {
             log.warn("报警规则【{}】未查询到需要通知的人员，跳过报警数据保存", alertRule.getAlertRuleName());
             return;
         }
 
         //二、批量插入报警通知数据，每条数据的userId赋值为对应人员ID
         List<AlertData> alertDataList = new ArrayList<>();
-        for (Long userId : userIds)
-        {
+        for (Long userId : userIds) {
             AlertData alertData = buildAlertData(deviceData, alertRule);
             alertData.setUserId(userId);
             alertDataList.add(alertData);
@@ -173,58 +167,48 @@ public class AlertRuleServiceImpl extends ServiceImpl<AlertRuleMapper, AlertRule
 
     /**
      * 查询需要通知的全部相关人员ID
-     *
+     * <p>
      * 步骤：1.根据报警规则中的alertDataType判定当前报警设备是否关联老人
-     *         0：老人异常数据（设备关联老人），1：设备异常数据（设备不关联老人）
-     *      2.设备不关联老人：根据角色名称「行政」查询人员ID
-     *      3.设备关联老人：根据locationType区分固定设备和随身设备
-     *         固定设备physicalLocationType=2时accessLocation为床位id，通过床位--老人--护理人员关系找到护理人员ID
-     *         随身设备accessLocation为老人id，直接通过老人和护理人员的关系找到护理人员ID
-     *      4.所有场景下，根据角色名称「超级管理员」查询人员ID
-     *      5.整合全部人员ID并去重
+     * 0：老人异常数据（设备关联老人），1：设备异常数据（设备不关联老人）
+     * 2.设备不关联老人：根据角色名称「行政」查询人员ID
+     * 3.设备关联老人：根据locationType区分固定设备和随身设备
+     * 固定设备physicalLocationType=2时accessLocation为床位id，通过床位--老人--护理人员关系找到护理人员ID
+     * 随身设备accessLocation为老人id，直接通过老人和护理人员的关系找到护理人员ID
+     * 4.所有场景下，根据角色名称「超级管理员」查询人员ID
+     * 5.整合全部人员ID并去重
      *
      * @param deviceData 设备上报数据
-     * @param alertRule 报警规则
+     * @param alertRule  报警规则
      * @return 需要通知的人员ID集合
      */
-    private List<Long> queryNotifyUserIds(DeviceData deviceData, AlertRule alertRule)
-    {
+    private List<Long> queryNotifyUserIds(DeviceData deviceData, AlertRule alertRule) {
         try {
             List<Long> userIds = new ArrayList<>();
 
             //1.根据报警规则中的alertDataType判定当前报警设备是否关联老人
             boolean isElderAlert = alertRule.getAlertDataType() != null && alertRule.getAlertDataType() == 0;
-            if (isElderAlert)
-            {
+            if (isElderAlert) {
                 //设备关联老人：根据位置类型区分固定设备和随身设备
                 Integer locationType = deviceData.getLocationType();
-                if (locationType != null && locationType == 0)
-                {
+                if (locationType != null && locationType == 0) {
                     //3.1 随身设备：accessLocation中的值就是老人id，直接老人和护理人员的关系找到对应护理人员ID
                     Long elderId = Convert.toLong(deviceData.getAccessLocation());
-                    if (elderId != null)
-                    {
+                    if (elderId != null) {
                         userIds.addAll(nursingElderService.selectNursingIdsByElderId(elderId));
                     }
-                }
-                else if (deviceData.getPhysicalLocationType() != null && deviceData.getPhysicalLocationType() == 2)
-                {
+                } else if (deviceData.getPhysicalLocationType() != null && deviceData.getPhysicalLocationType() == 2) {
                     //3.2 固定设备且物理位置类型为床位（0楼层 1房间 2床位）：accessLocation中的值就是床位id
                     Long bedId = Convert.toLong(deviceData.getAccessLocation());
-                    if (bedId != null)
-                    {
+                    if (bedId != null) {
                         //3.3 床位--老人
                         Elder elder = elderService.getOne(new LambdaQueryWrapper<Elder>().eq(Elder::getBedId, bedId).last("limit 1"));
-                        if (elder != null)
-                        {
+                        if (elder != null) {
                             //3.4 老人--护理人员
                             userIds.addAll(nursingElderService.selectNursingIdsByElderId(elder.getId()));
                         }
                     }
                 }
-            }
-            else
-            {
+            } else {
                 //2.设备不关联老人：根据角色名称「行政」查询人员ID
                 userIds.addAll(queryUserIdsByRoleName(ROLE_NAME_ADMIN));
             }
@@ -235,7 +219,7 @@ public class AlertRuleServiceImpl extends ServiceImpl<AlertRuleMapper, AlertRule
             //5.整合全部人员ID并去重
             return userIds.stream().distinct().collect(Collectors.toList());
         } catch (Exception e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
         return null;
     }
@@ -246,10 +230,8 @@ public class AlertRuleServiceImpl extends ServiceImpl<AlertRuleMapper, AlertRule
      * @param roleName 角色名称
      * @return 人员ID集合
      */
-    private List<Long> queryUserIdsByRoleName(String roleName)
-    {
-        if (StringUtils.isEmpty(roleName))
-        {
+    private List<Long> queryUserIdsByRoleName(String roleName) {
+        if (StringUtils.isEmpty(roleName)) {
             return new ArrayList<>();
         }
         LoginUser loginUser = new LoginUser();
@@ -266,20 +248,17 @@ public class AlertRuleServiceImpl extends ServiceImpl<AlertRuleMapper, AlertRule
                 .filter(role -> roleName.equals(role.getRoleName()))
                 .map(SysRole::getRoleId)
                 .collect(Collectors.toList());
-        if (CollUtil.isEmpty(roleIds))
-        {
+        if (CollUtil.isEmpty(roleIds)) {
             return new ArrayList<>();
         }
 
         //2.根据角色ID查询该角色下的全部人员ID
         List<Long> userIds = new ArrayList<>();
-        for (Long roleId : roleIds)
-        {
+        for (Long roleId : roleIds) {
             SysUser queryUser = new SysUser();
             queryUser.setRoleId(roleId);
             List<SysUser> users = sysUserService.selectAllocatedList(queryUser);
-            if (CollUtil.isNotEmpty(users))
-            {
+            if (CollUtil.isNotEmpty(users)) {
                 userIds.addAll(users.stream().map(SysUser::getUserId).collect(Collectors.toList()));
             }
         }
@@ -291,11 +270,10 @@ public class AlertRuleServiceImpl extends ServiceImpl<AlertRuleMapper, AlertRule
      * 组装报警数据
      *
      * @param deviceData 设备上报数据
-     * @param alertRule 报警规则
+     * @param alertRule  报警规则
      * @return 报警数据（userId未设置，由调用方赋值）
      */
-    private AlertData buildAlertData(DeviceData deviceData, AlertRule alertRule)
-    {
+    private AlertData buildAlertData(DeviceData deviceData, AlertRule alertRule) {
         AlertData alertData = new AlertData();
         alertData.setIotId(deviceData.getIotId());
         alertData.setDeviceName(deviceData.getDeviceName());

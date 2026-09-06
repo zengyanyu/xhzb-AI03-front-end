@@ -40,30 +40,46 @@ public class FamilyMemberServiceImpl extends ServiceImpl<FamilyMemberMapper, Fam
     @Autowired
     private TokenService tokenService;
 
-    /** 微信小程序appid */
+    /**
+     * 微信小程序appid
+     */
     @Value("${wechat.appid}")
     private String appid;
 
-    /** 微信小程序secret */
+    /**
+     * 微信小程序secret
+     */
     @Value("${wechat.secret}")
     private String secret;
 
-    /** 微信code2Session接口地址 */
+    /**
+     * 微信code2Session接口地址
+     */
     private static final String CODE2SESSION_URL = "https://api.weixin.qq.com/sns/jscode2session";
 
-    /** 微信获取access_token接口地址 */
+    /**
+     * 微信获取access_token接口地址
+     */
     private static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";
 
-    /** 微信获取手机号接口地址 */
+    /**
+     * 微信获取手机号接口地址
+     */
     private static final String GET_PHONE_URL = "https://api.weixin.qq.com/wxa/business/getuserphonenumber";
 
-    /** 随机名称用中文字符起始Unicode */
+    /**
+     * 随机名称用中文字符起始Unicode
+     */
     private static final int CHINESE_CHAR_START = 0x4E00;
 
-    /** 随机名称用中文字符结束Unicode */
+    /**
+     * 随机名称用中文字符结束Unicode
+     */
     private static final int CHINESE_CHAR_END = 0x9FA5;
 
-    /** 随机名称字数 */
+    /**
+     * 随机名称字数
+     */
     private static final int RANDOM_NAME_LENGTH = 4;
 
     /**

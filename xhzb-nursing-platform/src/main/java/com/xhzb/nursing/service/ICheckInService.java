@@ -1,10 +1,11 @@
 package com.xhzb.nursing.service;
 
-import java.util.List;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.xhzb.nursing.domain.CheckIn;
 import com.xhzb.nursing.domain.dto.CheckInApplyDto;
 import com.xhzb.nursing.domain.vo.CheckInDetailVo;
-import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * 入住Service接口
@@ -12,47 +13,46 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author ruoyi
  * @date 2026-07-10
  */
-public interface ICheckInService extends IService<CheckIn>
-{
+public interface ICheckInService extends IService<CheckIn> {
     /**
      * 查询入住
-     * 
+     *
      * @param id 入住主键
      * @return 入住
      */
-    public CheckIn selectCheckInById(Long id);
+    CheckIn selectCheckInById(Long id);
 
     /**
      * 查询入住列表
-     * 
+     *
      * @param checkIn 入住
      * @return 入住集合
      */
-    public List<CheckIn> selectCheckInList(CheckIn checkIn);
+    List<CheckIn> selectCheckInList(CheckIn checkIn);
 
     /**
      * 新增入住
-     * 
+     *
      * @param checkIn 入住
      * @return 结果
      */
-    public int insertCheckIn(CheckIn checkIn);
+    int insertCheckIn(CheckIn checkIn);
 
     /**
      * 修改入住
-     * 
+     *
      * @param checkIn 入住
      * @return 结果
      */
-    public int updateCheckIn(CheckIn checkIn);
+    int updateCheckIn(CheckIn checkIn);
 
     /**
      * 批量删除入住
-     * 
+     *
      * @param ids 需要删除的入住主键集合
      * @return 结果
      */
-    public int deleteCheckInByIds(Long[] ids);
+    int deleteCheckInByIds(Long[] ids);
 
     /**
      * 删除入住信息
@@ -60,7 +60,7 @@ public interface ICheckInService extends IService<CheckIn>
      * @param id 入住主键
      * @return 结果
      */
-    public int deleteCheckInById(Long id);
+    int deleteCheckInById(Long id);
 
     /**
      * 申请入住（核心业务逻辑）
@@ -68,7 +68,7 @@ public interface ICheckInService extends IService<CheckIn>
      * @param dto 申请入住请求DTO
      * @return 结果
      */
-    public void apply(CheckInApplyDto dto);
+    void apply(CheckInApplyDto dto);
 
     /**
      * 查询入住详情
@@ -76,5 +76,5 @@ public interface ICheckInService extends IService<CheckIn>
      * @param id 入住ID
      * @return 入住详情VO
      */
-    public CheckInDetailVo getCheckInDetail(Long id);
+    CheckInDetailVo getCheckInDetail(Long id);
 }

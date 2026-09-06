@@ -12,85 +12,78 @@ import java.util.List;
 
 /**
  * 床位Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2025-03-28
  */
 @Service
-public class BedServiceImpl extends ServiceImpl<BedMapper, Bed> implements IBedService
-{
+public class BedServiceImpl extends ServiceImpl<BedMapper, Bed> implements IBedService {
     @Autowired
     private BedMapper bedMapper;
 
     /**
      * 查询床位
-     * 
+     *
      * @param id 床位主键
      * @return 床位
      */
     @Override
-    public Bed selectBedById(Long id)
-    {
+    public Bed selectBedById(Long id) {
         return getById(id);
     }
 
     /**
      * 查询床位列表
-     * 
+     *
      * @param bed 床位
      * @return 床位
      */
     @Override
-    public List<Bed> selectBedList(Bed bed)
-    {
+    public List<Bed> selectBedList(Bed bed) {
         return bedMapper.selectBedList(bed);
     }
 
     /**
      * 新增床位
-     * 
+     *
      * @param bed 床位
      * @return 结果
      */
     @Override
-    public int insertBed(Bed bed)
-    {
+    public int insertBed(Bed bed) {
         return save(bed) ? 1 : 0;
     }
 
     /**
      * 修改床位
-     * 
+     *
      * @param bed 床位
      * @return 结果
      */
     @Override
-    public int updateBed(Bed bed)
-    {
+    public int updateBed(Bed bed) {
         return updateById(bed) ? 1 : 0;
     }
 
     /**
      * 批量删除床位
-     * 
+     *
      * @param ids 需要删除的床位主键
      * @return 结果
      */
     @Override
-    public int deleteBedByIds(Long[] ids)
-    {
+    public int deleteBedByIds(Long[] ids) {
         return removeByIds(Arrays.asList(ids)) ? 1 : 0;
     }
 
     /**
      * 删除床位信息
-     * 
+     *
      * @param id 床位主键
      * @return 结果
      */
     @Override
-    public int deleteBedById(Long id)
-    {
+    public int deleteBedById(Long id) {
         return removeById(id) ? 1 : 0;
     }
 }

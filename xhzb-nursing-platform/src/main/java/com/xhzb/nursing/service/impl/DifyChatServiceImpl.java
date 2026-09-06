@@ -9,7 +9,6 @@ import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -47,17 +46,23 @@ public class DifyChatServiceImpl implements DifyChatService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    /** 流式转发线程池(IO密集型) */
+    /**
+     * 流式转发线程池(IO密集型)
+     */
     private final ExecutorService streamExecutor = Executors.newFixedThreadPool(8, r -> {
         Thread t = new Thread(r, "dify-sse-forward");
         t.setDaemon(true);
         return t;
     });
 
-    /** 普通请求专用 HttpClient(带响应超时) */
+    /**
+     * 普通请求专用 HttpClient(带响应超时)
+     */
     private volatile HttpClient normalClient;
 
-    /** 流式请求专用 HttpClient(读取不超时) */
+    /**
+     * 流式请求专用 HttpClient(读取不超时)
+     */
     private volatile HttpClient streamClient;
 
     private HttpClient normalClient() {
@@ -347,7 +352,9 @@ public class DifyChatServiceImpl implements DifyChatService {
         }
     }
 
-    /** 日志截断, 避免超长响应刷爆日志 */
+    /**
+     * 日志截断, 避免超长响应刷爆日志
+     */
     private String truncate(String s) {
         if (s == null) {
             return null;

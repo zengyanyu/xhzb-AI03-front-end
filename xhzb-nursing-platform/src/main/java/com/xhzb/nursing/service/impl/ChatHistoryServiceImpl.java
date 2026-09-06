@@ -19,9 +19,10 @@ import java.util.Set;
 public class ChatHistoryServiceImpl implements ChatHistoryService {
 
     @Autowired
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     private static final String HISTORY_PREFIX = "chat:history:";
+
     /**
      * 将会话写入数据库
      *
@@ -35,13 +36,14 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
         Long userId = SecurityUtils.getUserId();//原理：通过SpringSecurity权限认证框架获取（以后讲解）
 
         //写入redis
-        redisTemplate.opsForSet().add(HISTORY_PREFIX+userId,chatId);
+        redisTemplate.opsForSet().add(HISTORY_PREFIX + userId, chatId);
 
     }
 
     /**
      * 获取登录用户会话历史列表
      * ctrl+i 快速重写方法
+     *
      * @return
      */
     @Override
@@ -54,7 +56,7 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
         Set<String> members = redisTemplate.opsForSet().members(HISTORY_PREFIX + userId);
 
         //2.判空
-        if(CollectionUtils.isEmpty(members)){
+        if (CollectionUtils.isEmpty(members)) {
             return List.of();
         }
 
@@ -79,6 +81,6 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
         redisChatMemoryService.clear(chatId);
 
         //删除登录用户的会话id的set中对应的会话id
-        redisTemplate.opsForSet().remove(HISTORY_PREFIX+SecurityUtils.getUserId(),chatId);
+        redisTemplate.opsForSet().remove(HISTORY_PREFIX + SecurityUtils.getUserId(), chatId);
     }
 }

@@ -20,7 +20,7 @@ import java.util.List;
 public class RedisChatMemoryService implements ChatMemory {
 
     @Autowired
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     private static final String PREFIX = "chat:memory:";//redis的key前缀都使用“:”隔开
 
@@ -32,7 +32,7 @@ public class RedisChatMemoryService implements ChatMemory {
     public void add(String conversationId, List<Message> messages) {
 
         //判断messages是否为空，为空直接返回
-        if(messages==null || messages.size()==0){
+        if (messages == null || messages.size() == 0) {
             return;
         }
         //目标：List<Message> 转化为 List<Msg>
@@ -42,19 +42,19 @@ public class RedisChatMemoryService implements ChatMemory {
         List<String> strList = msgList.stream().map(msg -> JSONUtil.toJsonStr(msg)).toList();
 
         //写入redis
-        redisTemplate.opsForList().leftPushAll(PREFIX+conversationId,strList);//向列表中左侧添加多个元素,每个元素是String(Msg转换的json字符串)
+        redisTemplate.opsForList().leftPushAll(PREFIX + conversationId, strList);//向列表中左侧添加多个元素,每个元素是String(Msg转换的json字符串)
     }
 
     //获取历史消息
     //springAI使用AOP前置拦截调用
     @Override
     public List<Message> get(String conversationId) {
-        
+
         //1.先从缓存获取对应的数据
         List<String> strList = redisTemplate.opsForList().range(PREFIX + conversationId, 0, -1);//获取所有元素
         //["一个msg的json字符串","一个msg的json字符串","一个msg的json字符串",...]
 
-        if(strList==null || strList.size()==0){
+        if (strList == null || strList.size() == 0) {
             return List.of();
         }
 
@@ -70,6 +70,6 @@ public class RedisChatMemoryService implements ChatMemory {
 
     @Override
     public void clear(String conversationId) {
-        redisTemplate.delete(PREFIX+conversationId);
+        redisTemplate.delete(PREFIX + conversationId);
     }
 }

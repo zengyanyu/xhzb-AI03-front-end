@@ -38,7 +38,9 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements IR
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-    /** Redis Hash大key，存储设备最新上报数据 */
+    /**
+     * Redis Hash大key，存储设备最新上报数据
+     */
     private static final String IOT_DEVICE_LATEST_DATA_KEY = "iot:device_latest_data";
 
     /**

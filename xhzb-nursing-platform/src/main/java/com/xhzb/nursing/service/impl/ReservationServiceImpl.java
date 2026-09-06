@@ -17,86 +17,79 @@ import java.util.List;
 
 /**
  * 预约信息Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2026-08-21
  */
 @Service
-public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reservation> implements IReservationService
-{
+public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reservation> implements IReservationService {
     @Autowired
     private ReservationMapper reservationMapper;
 
     /**
      * 查询预约信息
-     * 
+     *
      * @param id 预约信息主键
      * @return 预约信息
      */
     @Override
-    public Reservation selectReservationById(Long id)
-    {
+    public Reservation selectReservationById(Long id) {
         return getById(id);
     }
 
     /**
      * 查询预约信息列表
-     * 
+     *
      * @param reservation 预约信息
      * @return 预约信息
      */
     @Override
-    public List<Reservation> selectReservationList(Reservation reservation)
-    {
+    public List<Reservation> selectReservationList(Reservation reservation) {
         return reservationMapper.selectReservationList(reservation);
     }
 
     /**
      * 新增预约信息
-     * 
+     *
      * @param reservation 预约信息
      * @return 结果
      */
     @Override
-    public int insertReservation(Reservation reservation)
-    {
-        return save(reservation)? 1 : 0;
+    public int insertReservation(Reservation reservation) {
+        return save(reservation) ? 1 : 0;
     }
 
     /**
      * 修改预约信息
-     * 
+     *
      * @param reservation 预约信息
      * @return 结果
      */
     @Override
-    public int updateReservation(Reservation reservation)
-    {
-        return updateById(reservation)? 1 : 0;
+    public int updateReservation(Reservation reservation) {
+        return updateById(reservation) ? 1 : 0;
     }
 
     /**
      * 批量删除预约信息
-     * 
+     *
      * @param ids 需要删除的预约信息主键
      * @return 结果
      */
     @Override
-    public int deleteReservationByIds(Long[] ids)
-    {
-        return removeByIds(Arrays.asList(ids))? 1 : 0;
+    public int deleteReservationByIds(Long[] ids) {
+        return removeByIds(Arrays.asList(ids)) ? 1 : 0;
     }
 
     /**
      * 删除预约信息信息
-     * 
+     *
      * @param id 预约信息主键
      * @return 结果
      */
     @Override
-    public int deleteReservationById(Long id)
-    {
-        return removeById(id)? 1 : 0;
+    public int deleteReservationById(Long id) {
+        return removeById(id) ? 1 : 0;
     }
 
     /**
@@ -108,12 +101,12 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
     @Override
     public String getReservationByDay(LocalDate dateTime) {
 
-        if(ObjectUtil.isEmpty(dateTime)){
+        if (ObjectUtil.isEmpty(dateTime)) {
             dateTime = LocalDate.now();
         }
 
         List<Reservation> list = reservationMapper.selectByNow(dateTime);
-        if(null != list && !list.isEmpty()){
+        if (null != list && !list.isEmpty()) {
 
             List<ElderVisitInfoVO> resultList = new ArrayList<>();
             for (Reservation reservation : list) {

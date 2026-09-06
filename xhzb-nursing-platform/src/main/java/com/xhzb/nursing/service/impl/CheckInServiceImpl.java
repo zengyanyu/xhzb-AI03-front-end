@@ -1,25 +1,14 @@
 package com.xhzb.nursing.service.impl;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
-
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xhzb.common.exception.ServiceException;
 import com.xhzb.common.utils.DateUtils;
 import com.xhzb.common.utils.SecurityUtils;
 import com.xhzb.common.utils.StringUtils;
 import com.xhzb.nursing.domain.*;
-import com.xhzb.nursing.domain.dto.CheckInApplyDto;
-import com.xhzb.nursing.domain.dto.CheckInConfigDto;
-import com.xhzb.nursing.domain.dto.CheckInContractDto;
-import com.xhzb.nursing.domain.dto.CheckInElderDto;
-import com.xhzb.nursing.domain.dto.ElderFamilyDto;
+import com.xhzb.nursing.domain.dto.*;
 import com.xhzb.nursing.domain.vo.*;
 import com.xhzb.nursing.mapper.CheckInConfigMapper;
 import com.xhzb.nursing.mapper.CheckInMapper;
@@ -27,8 +16,15 @@ import com.xhzb.nursing.mapper.ContractMapper;
 import com.xhzb.nursing.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 入住Service业务层处理
@@ -37,8 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2026-07-10
  */
 @Service
-public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> implements ICheckInService
-{
+public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> implements ICheckInService {
     @Autowired
     private CheckInMapper checkInMapper;
 
@@ -73,8 +68,7 @@ public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> impl
      * @return 入住
      */
     @Override
-    public CheckIn selectCheckInById(Long id)
-    {
+    public CheckIn selectCheckInById(Long id) {
         return getById(id);
     }
 
@@ -85,8 +79,7 @@ public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> impl
      * @return 入住
      */
     @Override
-    public List<CheckIn> selectCheckInList(CheckIn checkIn)
-    {
+    public List<CheckIn> selectCheckInList(CheckIn checkIn) {
         return checkInMapper.selectCheckInList(checkIn);
     }
 
@@ -97,9 +90,8 @@ public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> impl
      * @return 结果
      */
     @Override
-    public int insertCheckIn(CheckIn checkIn)
-    {
-        return save(checkIn)? 1 : 0;
+    public int insertCheckIn(CheckIn checkIn) {
+        return save(checkIn) ? 1 : 0;
     }
 
     /**
@@ -109,9 +101,8 @@ public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> impl
      * @return 结果
      */
     @Override
-    public int updateCheckIn(CheckIn checkIn)
-    {
-        return updateById(checkIn)? 1 : 0;
+    public int updateCheckIn(CheckIn checkIn) {
+        return updateById(checkIn) ? 1 : 0;
     }
 
     /**
@@ -121,9 +112,8 @@ public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> impl
      * @return 结果
      */
     @Override
-    public int deleteCheckInByIds(Long[] ids)
-    {
-        return removeByIds(Arrays.asList(ids))? 1 : 0;
+    public int deleteCheckInByIds(Long[] ids) {
+        return removeByIds(Arrays.asList(ids)) ? 1 : 0;
     }
 
     /**
@@ -133,9 +123,8 @@ public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> impl
      * @return 结果
      */
     @Override
-    public int deleteCheckInById(Long id)
-    {
-        return removeById(id)? 1 : 0;
+    public int deleteCheckInById(Long id) {
+        return removeById(id) ? 1 : 0;
     }
 
     /**

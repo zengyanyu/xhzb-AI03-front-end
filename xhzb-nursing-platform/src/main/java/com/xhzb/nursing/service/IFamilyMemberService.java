@@ -1,58 +1,58 @@
 package com.xhzb.nursing.service;
 
-import java.util.List;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.xhzb.nursing.domain.FamilyMember;
 import com.xhzb.nursing.domain.dto.WechatLoginDto;
 import com.xhzb.nursing.domain.vo.WechatLoginVo;
-import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * 老人家属Service接口
- * 
+ *
  * @author ruoyi
  * @date 2026-07-24
  */
-public interface IFamilyMemberService extends IService<FamilyMember>
-{
+public interface IFamilyMemberService extends IService<FamilyMember> {
     /**
      * 查询老人家属
-     * 
+     *
      * @param id 老人家属主键
      * @return 老人家属
      */
-    public FamilyMember selectFamilyMemberById(Long id);
+    FamilyMember selectFamilyMemberById(Long id);
 
     /**
      * 查询老人家属列表
-     * 
+     *
      * @param familyMember 老人家属
      * @return 老人家属集合
      */
-    public List<FamilyMember> selectFamilyMemberList(FamilyMember familyMember);
+    List<FamilyMember> selectFamilyMemberList(FamilyMember familyMember);
 
     /**
      * 新增老人家属
-     * 
+     *
      * @param familyMember 老人家属
      * @return 结果
      */
-    public int insertFamilyMember(FamilyMember familyMember);
+    int insertFamilyMember(FamilyMember familyMember);
 
     /**
      * 修改老人家属
-     * 
+     *
      * @param familyMember 老人家属
      * @return 结果
      */
-    public int updateFamilyMember(FamilyMember familyMember);
+    int updateFamilyMember(FamilyMember familyMember);
 
     /**
      * 批量删除老人家属
-     * 
+     *
      * @param ids 需要删除的老人家属主键集合
      * @return 结果
      */
-    public int deleteFamilyMemberByIds(Long[] ids);
+    int deleteFamilyMemberByIds(Long[] ids);
 
     /**
      * 删除老人家属信息
@@ -60,7 +60,7 @@ public interface IFamilyMemberService extends IService<FamilyMember>
      * @param id 老人家属主键
      * @return 结果
      */
-    public int deleteFamilyMemberById(Long id);
+    int deleteFamilyMemberById(Long id);
 
     /**
      * 微信小程序登录
@@ -68,5 +68,5 @@ public interface IFamilyMemberService extends IService<FamilyMember>
      * @param dto 登录请求参数
      * @return 登录结果（token和昵称）
      */
-    public WechatLoginVo login(WechatLoginDto dto);
+    WechatLoginVo login(WechatLoginDto dto);
 }
