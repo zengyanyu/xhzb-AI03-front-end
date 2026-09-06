@@ -11,6 +11,5 @@ import com.xhzb.nursing.domain.NursingElder;
  * @date 2026-08-18
  */
 @Mapper
-public interface NursingElderMapper extends BaseMapper<NursingElder>
-{
+public interface NursingElderMapper extends BaseMapper<NursingElder> {
 }

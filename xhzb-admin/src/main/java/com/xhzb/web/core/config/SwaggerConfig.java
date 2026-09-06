@@ -17,9 +17,10 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
  * @author ruoyi
  */
 @Configuration
-public class SwaggerConfig
-{
-    /** 系统基础配置 */
+public class SwaggerConfig {
+    /**
+     * 系统基础配置
+     */
     @Autowired
     private RuoYiConfig ruoyiConfig;
 
@@ -27,18 +28,16 @@ public class SwaggerConfig
      * 自定义的 OpenAPI 对象
      */
     @Bean
-    public OpenAPI customOpenApi()
-    {
+    public OpenAPI customOpenApi() {
         return new OpenAPI().components(new Components()
-                        // 设置认证的请求头
-                        .addSecuritySchemes("apikey", securityScheme()))
+                // 设置认证的请求头
+                .addSecuritySchemes("apikey", securityScheme()))
                 .addSecurityItem(new SecurityRequirement().addList("apikey"))
                 .info(getApiInfo());
     }
 
     @Bean
-    public SecurityScheme securityScheme()
-    {
+    public SecurityScheme securityScheme() {
         return new SecurityScheme()
                 .type(SecurityScheme.Type.APIKEY)
                 .name("Authorization")
@@ -49,8 +48,7 @@ public class SwaggerConfig
     /**
      * 添加摘要信息
      */
-    public Info getApiInfo()
-    {
+    public Info getApiInfo() {
         return new Info()
                 // 设置标题
                 .title("标题：星海智伴管理系统_接口文档")

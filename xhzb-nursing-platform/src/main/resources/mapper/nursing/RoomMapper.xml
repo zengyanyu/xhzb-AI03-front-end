@@ -1,38 +1,49 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xhzb.nursing.mapper.RoomMapper">
-    
+
     <resultMap type="Room" id="RoomResult">
-        <result property="id"    column="id"    />
-        <result property="code"    column="code"    />
-        <result property="sort"    column="sort"    />
-        <result property="typeName"    column="type_name"    />
-        <result property="floorId"    column="floor_id"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="isDeleted"    column="is_deleted"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="remark"    column="remark"    />
+        <result property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="sort" column="sort"/>
+        <result property="typeName" column="type_name"/>
+        <result property="floorId" column="floor_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="remark" column="remark"/>
     </resultMap>
 
     <sql id="selectRoomVo">
-        select id, code, sort, type_name, floor_id, create_time, update_time, is_deleted, create_by, update_by, remark from room
+        select id,
+               code,
+               sort,
+               type_name,
+               floor_id,
+               create_time,
+               update_time,
+               is_deleted,
+               create_by,
+               update_by,
+               remark
+        from room
     </sql>
 
     <select id="selectRoomList" parameterType="Room" resultMap="RoomResult">
         <include refid="selectRoomVo"/>
-        <where>  
-            <if test="code != null  and code != ''"> and code = #{code}</if>
-            <if test="sort != null "> and sort = #{sort}</if>
-            <if test="typeName != null  and typeName != ''"> and type_name like concat('%', #{typeName}, '%')</if>
-            <if test="floorId != null "> and floor_id = #{floorId}</if>
-            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        <where>
+            <if test="code != null  and code != ''">and code = #{code}</if>
+            <if test="sort != null ">and sort = #{sort}</if>
+            <if test="typeName != null  and typeName != ''">and type_name like concat('%', #{typeName}, '%')</if>
+            <if test="floorId != null ">and floor_id = #{floorId}</if>
+            <if test="isDeleted != null ">and is_deleted = #{isDeleted}</if>
         </where>
     </select>
-    
+
     <select id="selectRoomById" parameterType="Long" resultMap="RoomResult">
         <include refid="selectRoomVo"/>
         where id = #{id}
@@ -57,9 +68,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectByFloorId" resultMap="roomVoResultMap">
         select r.*,
-               f.name  as fname,
+               f.name as fname,
                rt.*,
-               b.id    as bid,
+               b.id   as bid,
                b.bed_number,
                b.sort,
                b.bed_status,
@@ -69,8 +80,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                b.remark,
                b.create_time,
                b.update_time,
-               e.name  as ename,
-               e.id    as eid
+               e.name as ename,
+               e.id   as eid
         from room r
                  left join floor f on f.id = r.floor_id
                  left join room_type rt on rt.name = r.type_name
@@ -79,7 +90,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where r.floor_id = #{floorId}
         order by r.sort, r.create_time desc
     </select>
-
 
 
     <resultMap id="roomVoWithNurResultMap" type="com.xhzb.nursing.domain.vo.RoomVo">
@@ -133,7 +143,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createBy != null">create_by,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="remark != null">remark,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="code != null">#{code},</if>
             <if test="sort != null">#{sort},</if>
@@ -145,7 +155,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createBy != null">#{createBy},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="remark != null">#{remark},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateRoom" parameterType="Room">
@@ -166,7 +176,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteRoomById" parameterType="Long">
-        delete from room where id = #{id}
+        delete
+        from room
+        where id = #{id}
     </delete>
 
     <delete id="deleteRoomByIds" parameterType="String">
@@ -177,12 +189,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <select id="selectRoomDetailById" parameterType="Long" resultType="com.xhzb.nursing.domain.vo.RoomVo">
-        select r.id          as id,
-               r.code        as code,
-               f.name        as floorName,
-               f.id          as floorId,
-               r.id          as roomId,
-               rt.price      as price
+        select r.id     as id,
+               r.code   as code,
+               f.name   as floorName,
+               f.id     as floorId,
+               r.id     as roomId,
+               rt.price as price
         from room r
                  left join floor f on f.id = r.floor_id
                  left join room_type rt on rt.name = r.type_name
@@ -191,9 +203,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectByFloorIdAndBedStatus" resultMap="roomVoResultMap">
         select r.*,
-               f.name  as fname,
+               f.name as fname,
                rt.*,
-               b.id    as bid,
+               b.id   as bid,
                b.bed_number,
                b.sort,
                b.bed_status,
@@ -203,8 +215,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                b.remark,
                b.create_time,
                b.update_time,
-               e.name  as ename,
-               e.id    as eid
+               e.name as ename,
+               e.id   as eid
         from room r
                  left join floor f on f.id = r.floor_id
                  left join room_type rt on rt.name = r.type_name
@@ -236,30 +248,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT r.id,
                r.code,
                r.floor_id,
-               f.name  AS fname,
+               f.name         AS fname,
                rt.price,
-               d.id    AS device_id,
-               d.iot_id AS device_iot_id,
+               d.id           AS device_id,
+               d.iot_id       AS device_iot_id,
                d.device_name,
-               d.product_key AS device_product_key,
+               d.product_key  AS device_product_key,
                d.product_name AS device_product_name
         FROM room r
-        LEFT JOIN floor f ON f.id = r.floor_id
-        LEFT JOIN room_type rt ON rt.name = r.type_name
-        LEFT JOIN device d ON CAST(d.binding_location AS UNSIGNED) = r.id
+                 LEFT JOIN floor f ON f.id = r.floor_id
+                 LEFT JOIN room_type rt ON rt.name = r.type_name
+                 LEFT JOIN device d ON CAST(d.binding_location AS UNSIGNED) = r.id
             AND d.physical_location_type = 1
         WHERE r.floor_id = #{floorId}
           AND r.is_deleted = 0
-          AND EXISTS (
-              SELECT 1 FROM device d1
-              WHERE CAST(d1.binding_location AS UNSIGNED) = r.id
-                AND d1.physical_location_type = 1
-              UNION
-              SELECT 1 FROM bed b2
-              INNER JOIN device d2 ON CAST(d2.binding_location AS UNSIGNED) = b2.id
-                AND d2.physical_location_type = 2
-              WHERE b2.room_id = r.id
-          )
+          AND EXISTS(
+                SELECT 1
+                FROM device d1
+                WHERE CAST(d1.binding_location AS UNSIGNED) = r.id
+                  AND d1.physical_location_type = 1
+                UNION
+                SELECT 1
+                FROM bed b2
+                         INNER JOIN device d2 ON CAST(d2.binding_location AS UNSIGNED) = b2.id
+                    AND d2.physical_location_type = 2
+                WHERE b2.room_id = r.id
+            )
         ORDER BY r.sort
     </select>
 
@@ -283,21 +297,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 查询指定房间下的床位、入住老人、床位级设备 -->
     <select id="selectBedsWithDevicesByRoomIds" resultMap="bedVoWithDeviceResultMap">
-        SELECT b.id          AS bid,
-               b.bed_number,
-               b.bed_status,
-               b.room_id,
-               e.name        AS ename,
-               e.id          AS eid,
-               d.id          AS device_id,
-               d.iot_id      AS device_iot_id,
-               d.device_name,
-               d.product_key AS device_product_key,
-               d.product_name AS device_product_name
+        SELECT b.id AS bid,
+        b.bed_number,
+        b.bed_status,
+        b.room_id,
+        e.name AS ename,
+        e.id AS eid,
+        d.id AS device_id,
+        d.iot_id AS device_iot_id,
+        d.device_name,
+        d.product_key AS device_product_key,
+        d.product_name AS device_product_name
         FROM bed b
         LEFT JOIN elder e ON e.bed_id = b.id
         LEFT JOIN device d ON CAST(d.binding_location AS UNSIGNED) = b.id
-            AND d.physical_location_type = 2
+        AND d.physical_location_type = 2
         WHERE b.room_id IN
         <foreach collection="roomIds" item="roomId" open="(" separator="," close=")">
             #{roomId}

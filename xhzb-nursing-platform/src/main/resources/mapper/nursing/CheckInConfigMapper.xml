@@ -1,52 +1,72 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xhzb.nursing.mapper.CheckInConfigMapper">
-    
+
     <resultMap type="CheckInConfig" id="CheckInConfigResult">
-        <result property="id"    column="id"    />
-        <result property="checkInId"    column="check_in_id"    />
-        <result property="nursingLevelId"    column="nursing_level_id"    />
-        <result property="nursingLevelName"    column="nursing_level_name"    />
-        <result property="feeStartDate"    column="fee_start_date"    />
-        <result property="feeEndDate"    column="fee_end_date"    />
-        <result property="deposit"    column="deposit"    />
-        <result property="nursingFee"    column="nursing_fee"    />
-        <result property="bedFee"    column="bed_fee"    />
-        <result property="insurancePayment"    column="insurance_payment"    />
-        <result property="governmentSubsidy"    column="government_subsidy"    />
-        <result property="otherFees"    column="other_fees"    />
-        <result property="sortOrder"    column="sort_order"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="remark"    column="remark"    />
+        <result property="id" column="id"/>
+        <result property="checkInId" column="check_in_id"/>
+        <result property="nursingLevelId" column="nursing_level_id"/>
+        <result property="nursingLevelName" column="nursing_level_name"/>
+        <result property="feeStartDate" column="fee_start_date"/>
+        <result property="feeEndDate" column="fee_end_date"/>
+        <result property="deposit" column="deposit"/>
+        <result property="nursingFee" column="nursing_fee"/>
+        <result property="bedFee" column="bed_fee"/>
+        <result property="insurancePayment" column="insurance_payment"/>
+        <result property="governmentSubsidy" column="government_subsidy"/>
+        <result property="otherFees" column="other_fees"/>
+        <result property="sortOrder" column="sort_order"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="remark" column="remark"/>
     </resultMap>
 
     <sql id="selectCheckInConfigVo">
-        select id, check_in_id, nursing_level_id, nursing_level_name, fee_start_date, fee_end_date, deposit, nursing_fee, bed_fee, insurance_payment, government_subsidy, other_fees, sort_order, create_time, update_time, create_by, update_by, remark from check_in_config
+        select id,
+               check_in_id,
+               nursing_level_id,
+               nursing_level_name,
+               fee_start_date,
+               fee_end_date,
+               deposit,
+               nursing_fee,
+               bed_fee,
+               insurance_payment,
+               government_subsidy,
+               other_fees,
+               sort_order,
+               create_time,
+               update_time,
+               create_by,
+               update_by,
+               remark
+        from check_in_config
     </sql>
 
     <select id="selectCheckInConfigList" parameterType="CheckInConfig" resultMap="CheckInConfigResult">
         <include refid="selectCheckInConfigVo"/>
-        <where>  
-            <if test="checkInId != null "> and check_in_id = #{checkInId}</if>
-            <if test="nursingLevelId != null "> and nursing_level_id = #{nursingLevelId}</if>
-            <if test="nursingLevelName != null  and nursingLevelName != ''"> and nursing_level_name like concat('%', #{nursingLevelName}, '%')</if>
-            <if test="feeStartDate != null "> and fee_start_date = #{feeStartDate}</if>
-            <if test="feeEndDate != null "> and fee_end_date = #{feeEndDate}</if>
-            <if test="deposit != null "> and deposit = #{deposit}</if>
-            <if test="nursingFee != null "> and nursing_fee = #{nursingFee}</if>
-            <if test="bedFee != null "> and bed_fee = #{bedFee}</if>
-            <if test="insurancePayment != null "> and insurance_payment = #{insurancePayment}</if>
-            <if test="governmentSubsidy != null "> and government_subsidy = #{governmentSubsidy}</if>
-            <if test="otherFees != null "> and other_fees = #{otherFees}</if>
-            <if test="sortOrder != null "> and sort_order = #{sortOrder}</if>
+        <where>
+            <if test="checkInId != null ">and check_in_id = #{checkInId}</if>
+            <if test="nursingLevelId != null ">and nursing_level_id = #{nursingLevelId}</if>
+            <if test="nursingLevelName != null  and nursingLevelName != ''">and nursing_level_name like concat('%',
+                #{nursingLevelName}, '%')
+            </if>
+            <if test="feeStartDate != null ">and fee_start_date = #{feeStartDate}</if>
+            <if test="feeEndDate != null ">and fee_end_date = #{feeEndDate}</if>
+            <if test="deposit != null ">and deposit = #{deposit}</if>
+            <if test="nursingFee != null ">and nursing_fee = #{nursingFee}</if>
+            <if test="bedFee != null ">and bed_fee = #{bedFee}</if>
+            <if test="insurancePayment != null ">and insurance_payment = #{insurancePayment}</if>
+            <if test="governmentSubsidy != null ">and government_subsidy = #{governmentSubsidy}</if>
+            <if test="otherFees != null ">and other_fees = #{otherFees}</if>
+            <if test="sortOrder != null ">and sort_order = #{sortOrder}</if>
         </where>
     </select>
-    
+
     <select id="selectCheckInConfigById" parameterType="Long" resultMap="CheckInConfigResult">
         <include refid="selectCheckInConfigVo"/>
         where id = #{id}
@@ -72,7 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createBy != null">create_by,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="remark != null">remark,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="checkInId != null">#{checkInId},</if>
             <if test="nursingLevelId != null">#{nursingLevelId},</if>
@@ -91,7 +111,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createBy != null">#{createBy},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="remark != null">#{remark},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateCheckInConfig" parameterType="CheckInConfig">
@@ -99,7 +119,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="checkInId != null">check_in_id = #{checkInId},</if>
             <if test="nursingLevelId != null">nursing_level_id = #{nursingLevelId},</if>
-            <if test="nursingLevelName != null and nursingLevelName != ''">nursing_level_name = #{nursingLevelName},</if>
+            <if test="nursingLevelName != null and nursingLevelName != ''">nursing_level_name = #{nursingLevelName},
+            </if>
             <if test="feeStartDate != null">fee_start_date = #{feeStartDate},</if>
             <if test="feeEndDate != null">fee_end_date = #{feeEndDate},</if>
             <if test="deposit != null">deposit = #{deposit},</if>
@@ -119,11 +140,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteCheckInConfigById" parameterType="Long">
-        delete from check_in_config where id = #{id}
+        delete
+        from check_in_config
+        where id = #{id}
     </delete>
 
     <delete id="deleteCheckInConfigByIds" parameterType="String">
-        delete from check_in_config where id in 
+        delete from check_in_config where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

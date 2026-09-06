@@ -22,7 +22,6 @@ public class ChatController {
     @Resource
     private ChatHistoryService chatHistoryService;
 
-
     @Autowired(required = false)
     private ChatClient chatClient;
 

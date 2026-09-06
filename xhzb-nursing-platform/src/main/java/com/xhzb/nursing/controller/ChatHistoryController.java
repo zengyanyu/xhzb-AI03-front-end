@@ -25,7 +25,7 @@ public class ChatHistoryController extends BaseController {
     private ChatHistoryService chatHistoryService;
 
     @GetMapping("/history")
-    public AjaxResult history(){
+    public AjaxResult history() {
         //调用业务层获取登录用户会话列表
         List<String> list = chatHistoryService.getHistory();
 
@@ -38,17 +38,18 @@ public class ChatHistoryController extends BaseController {
 
     /**
      * 处理获取聊天记录详情
+     *
      * @param chatId
      * @return
      */
     @GetMapping("/history/{chatId}")
-    public AjaxResult getHistoryDetail(@PathVariable String chatId){
+    public AjaxResult getHistoryDetail(@PathVariable String chatId) {
 
         //1.调用聊天历史业务对象获取指定会话id的历史聊天信息列表
         List<Message> messages = redisChatMemoryService.get(chatId);
 
         //2.判空处理
-        if(CollectionUtils.isEmpty(messages)){
+        if (CollectionUtils.isEmpty(messages)) {
             return success();
         }
 
@@ -63,11 +64,12 @@ public class ChatHistoryController extends BaseController {
 
     /**
      * 处理删除会话及聊天记录
+     *
      * @param chatId
      * @return
      */
     @DeleteMapping("/history/{chatId}")
-    public AjaxResult delete(@PathVariable String chatId){
+    public AjaxResult delete(@PathVariable String chatId) {
         //调用业务处理
         chatHistoryService.delete(chatId);
 

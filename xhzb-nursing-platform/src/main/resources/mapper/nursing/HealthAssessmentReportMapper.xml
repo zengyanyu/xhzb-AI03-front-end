@@ -1,84 +1,147 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xhzb.nursing.mapper.HealthAssessmentReportMapper">
-    
+
     <resultMap type="HealthAssessmentReport" id="HealthAssessmentReportResult">
-        <result property="id"    column="id"    />
-        <result property="healthAssessmentId"    column="health_assessment_id"    />
-        <result property="assessmentTime"    column="assessment_time"    />
-        <result property="assessorName"    column="assessor_name"    />
-        <result property="recommendedRoomType"    column="recommended_room_type"    />
-        <result property="recommendedCareLevel"    column="recommended_care_level"    />
-        <result property="careFocus"    column="care_focus"    />
-        <result property="suggestionDescription"    column="suggestion_description"    />
-        <result property="dailyActivityLevel"    column="daily_activity_level"    />
-        <result property="mentalStatusLevel"    column="mental_status_level"    />
-        <result property="perceptionCommunicationLevel"    column="perception_communication_level"    />
-        <result property="socialParticipationLevel"    column="social_participation_level"    />
-        <result property="initialAbilityLevel"    column="initial_ability_level"    />
-        <result property="finalAbilityLevel"    column="final_ability_level"    />
-        <result property="levelChangeReason"    column="level_change_reason"    />
-        <result property="familyCooperation"    column="family_cooperation"    />
-        <result property="dietSuggestion"    column="diet_suggestion"    />
-        <result property="psychologicalCare"    column="psychological_care"    />
-        <result property="institutionPreparation"    column="institution_preparation"    />
-        <result property="healthScore"    column="health_score"    />
-        <result property="riskLevel"    column="risk_level"    />
-        <result property="reportSummary"    column="report_summary"    />
-        <result property="abnormalAnalysis"    column="abnormal_analysis"    />
-        <result property="systemScore"    column="system_score"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="remark"    column="remark"    />
-        <result property="coreSuggestion"    column="core_suggestion"    />
-        <result property="checkInStatus"    column="check_in_status"    />
+        <result property="id" column="id"/>
+        <result property="healthAssessmentId" column="health_assessment_id"/>
+        <result property="assessmentTime" column="assessment_time"/>
+        <result property="assessorName" column="assessor_name"/>
+        <result property="recommendedRoomType" column="recommended_room_type"/>
+        <result property="recommendedCareLevel" column="recommended_care_level"/>
+        <result property="careFocus" column="care_focus"/>
+        <result property="suggestionDescription" column="suggestion_description"/>
+        <result property="dailyActivityLevel" column="daily_activity_level"/>
+        <result property="mentalStatusLevel" column="mental_status_level"/>
+        <result property="perceptionCommunicationLevel" column="perception_communication_level"/>
+        <result property="socialParticipationLevel" column="social_participation_level"/>
+        <result property="initialAbilityLevel" column="initial_ability_level"/>
+        <result property="finalAbilityLevel" column="final_ability_level"/>
+        <result property="levelChangeReason" column="level_change_reason"/>
+        <result property="familyCooperation" column="family_cooperation"/>
+        <result property="dietSuggestion" column="diet_suggestion"/>
+        <result property="psychologicalCare" column="psychological_care"/>
+        <result property="institutionPreparation" column="institution_preparation"/>
+        <result property="healthScore" column="health_score"/>
+        <result property="riskLevel" column="risk_level"/>
+        <result property="reportSummary" column="report_summary"/>
+        <result property="abnormalAnalysis" column="abnormal_analysis"/>
+        <result property="systemScore" column="system_score"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="coreSuggestion" column="core_suggestion"/>
+        <result property="checkInStatus" column="check_in_status"/>
     </resultMap>
 
     <sql id="selectHealthAssessmentReportVo">
-        select id, health_assessment_id, assessment_time, assessor_name, recommended_room_type, recommended_care_level, care_focus, suggestion_description, daily_activity_level, mental_status_level, perception_communication_level, social_participation_level, initial_ability_level, final_ability_level, level_change_reason, family_cooperation, diet_suggestion, psychological_care, institution_preparation, health_score, risk_level, report_summary, abnormal_analysis, system_score, create_by, create_time, update_by, update_time, remark, core_suggestion, check_in_status from health_assessment_report
+        select id,
+               health_assessment_id,
+               assessment_time,
+               assessor_name,
+               recommended_room_type,
+               recommended_care_level,
+               care_focus,
+               suggestion_description,
+               daily_activity_level,
+               mental_status_level,
+               perception_communication_level,
+               social_participation_level,
+               initial_ability_level,
+               final_ability_level,
+               level_change_reason,
+               family_cooperation,
+               diet_suggestion,
+               psychological_care,
+               institution_preparation,
+               health_score,
+               risk_level,
+               report_summary,
+               abnormal_analysis,
+               system_score,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               remark,
+               core_suggestion,
+               check_in_status
+        from health_assessment_report
     </sql>
 
-    <select id="selectHealthAssessmentReportList" parameterType="HealthAssessmentReport" resultMap="HealthAssessmentReportResult">
+    <select id="selectHealthAssessmentReportList" parameterType="HealthAssessmentReport"
+            resultMap="HealthAssessmentReportResult">
         <include refid="selectHealthAssessmentReportVo"/>
-        <where>  
-            <if test="healthAssessmentId != null "> and health_assessment_id = #{healthAssessmentId}</if>
-            <if test="assessmentTime != null "> and assessment_time = #{assessmentTime}</if>
-            <if test="assessorName != null  and assessorName != ''"> and assessor_name like concat('%', #{assessorName}, '%')</if>
-            <if test="recommendedRoomType != null  and recommendedRoomType != ''"> and recommended_room_type = #{recommendedRoomType}</if>
-            <if test="recommendedCareLevel != null  and recommendedCareLevel != ''"> and recommended_care_level = #{recommendedCareLevel}</if>
-            <if test="careFocus != null  and careFocus != ''"> and care_focus = #{careFocus}</if>
-            <if test="suggestionDescription != null  and suggestionDescription != ''"> and suggestion_description = #{suggestionDescription}</if>
-            <if test="dailyActivityLevel != null  and dailyActivityLevel != ''"> and daily_activity_level = #{dailyActivityLevel}</if>
-            <if test="mentalStatusLevel != null  and mentalStatusLevel != ''"> and mental_status_level = #{mentalStatusLevel}</if>
-            <if test="perceptionCommunicationLevel != null  and perceptionCommunicationLevel != ''"> and perception_communication_level = #{perceptionCommunicationLevel}</if>
-            <if test="socialParticipationLevel != null  and socialParticipationLevel != ''"> and social_participation_level = #{socialParticipationLevel}</if>
-            <if test="initialAbilityLevel != null  and initialAbilityLevel != ''"> and initial_ability_level = #{initialAbilityLevel}</if>
-            <if test="finalAbilityLevel != null  and finalAbilityLevel != ''"> and final_ability_level = #{finalAbilityLevel}</if>
-            <if test="levelChangeReason != null  and levelChangeReason != ''"> and level_change_reason = #{levelChangeReason}</if>
-            <if test="familyCooperation != null  and familyCooperation != ''"> and family_cooperation = #{familyCooperation}</if>
-            <if test="dietSuggestion != null  and dietSuggestion != ''"> and diet_suggestion = #{dietSuggestion}</if>
-            <if test="psychologicalCare != null  and psychologicalCare != ''"> and psychological_care = #{psychologicalCare}</if>
-            <if test="institutionPreparation != null  and institutionPreparation != ''"> and institution_preparation = #{institutionPreparation}</if>
-            <if test="healthScore != null  and healthScore != ''"> and health_score = #{healthScore}</if>
-            <if test="riskLevel != null  and riskLevel != ''"> and risk_level = #{riskLevel}</if>
-            <if test="reportSummary != null  and reportSummary != ''"> and report_summary = #{reportSummary}</if>
-            <if test="abnormalAnalysis != null  and abnormalAnalysis != ''"> and abnormal_analysis = #{abnormalAnalysis}</if>
-            <if test="systemScore != null  and systemScore != ''"> and system_score = #{systemScore}</if>
-            <if test="coreSuggestion != null "> and core_suggestion = #{coreSuggestion}</if>
-            <if test="checkInStatus != null "> and check_in_status = #{checkInStatus}</if>
+        <where>
+            <if test="healthAssessmentId != null ">and health_assessment_id = #{healthAssessmentId}</if>
+            <if test="assessmentTime != null ">and assessment_time = #{assessmentTime}</if>
+            <if test="assessorName != null  and assessorName != ''">and assessor_name like concat('%', #{assessorName},
+                '%')
+            </if>
+            <if test="recommendedRoomType != null  and recommendedRoomType != ''">and recommended_room_type =
+                #{recommendedRoomType}
+            </if>
+            <if test="recommendedCareLevel != null  and recommendedCareLevel != ''">and recommended_care_level =
+                #{recommendedCareLevel}
+            </if>
+            <if test="careFocus != null  and careFocus != ''">and care_focus = #{careFocus}</if>
+            <if test="suggestionDescription != null  and suggestionDescription != ''">and suggestion_description =
+                #{suggestionDescription}
+            </if>
+            <if test="dailyActivityLevel != null  and dailyActivityLevel != ''">and daily_activity_level =
+                #{dailyActivityLevel}
+            </if>
+            <if test="mentalStatusLevel != null  and mentalStatusLevel != ''">and mental_status_level =
+                #{mentalStatusLevel}
+            </if>
+            <if test="perceptionCommunicationLevel != null  and perceptionCommunicationLevel != ''">and
+                perception_communication_level = #{perceptionCommunicationLevel}
+            </if>
+            <if test="socialParticipationLevel != null  and socialParticipationLevel != ''">and
+                social_participation_level = #{socialParticipationLevel}
+            </if>
+            <if test="initialAbilityLevel != null  and initialAbilityLevel != ''">and initial_ability_level =
+                #{initialAbilityLevel}
+            </if>
+            <if test="finalAbilityLevel != null  and finalAbilityLevel != ''">and final_ability_level =
+                #{finalAbilityLevel}
+            </if>
+            <if test="levelChangeReason != null  and levelChangeReason != ''">and level_change_reason =
+                #{levelChangeReason}
+            </if>
+            <if test="familyCooperation != null  and familyCooperation != ''">and family_cooperation =
+                #{familyCooperation}
+            </if>
+            <if test="dietSuggestion != null  and dietSuggestion != ''">and diet_suggestion = #{dietSuggestion}</if>
+            <if test="psychologicalCare != null  and psychologicalCare != ''">and psychological_care =
+                #{psychologicalCare}
+            </if>
+            <if test="institutionPreparation != null  and institutionPreparation != ''">and institution_preparation =
+                #{institutionPreparation}
+            </if>
+            <if test="healthScore != null  and healthScore != ''">and health_score = #{healthScore}</if>
+            <if test="riskLevel != null  and riskLevel != ''">and risk_level = #{riskLevel}</if>
+            <if test="reportSummary != null  and reportSummary != ''">and report_summary = #{reportSummary}</if>
+            <if test="abnormalAnalysis != null  and abnormalAnalysis != ''">and abnormal_analysis =
+                #{abnormalAnalysis}
+            </if>
+            <if test="systemScore != null  and systemScore != ''">and system_score = #{systemScore}</if>
+            <if test="coreSuggestion != null ">and core_suggestion = #{coreSuggestion}</if>
+            <if test="checkInStatus != null ">and check_in_status = #{checkInStatus}</if>
         </where>
     </select>
-    
+
     <select id="selectHealthAssessmentReportById" parameterType="String" resultMap="HealthAssessmentReportResult">
         <include refid="selectHealthAssessmentReportVo"/>
         where id = #{id}
     </select>
 
-    <insert id="insertHealthAssessmentReport" parameterType="HealthAssessmentReport" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertHealthAssessmentReport" parameterType="HealthAssessmentReport" useGeneratedKeys="true"
+            keyProperty="id">
         insert into health_assessment_report
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="healthAssessmentId != null">health_assessment_id,</if>
@@ -111,7 +174,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark,</if>
             <if test="coreSuggestion != null">core_suggestion,</if>
             <if test="checkInStatus != null">check_in_status,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="healthAssessmentId != null">#{healthAssessmentId},</if>
             <if test="assessmentTime != null">#{assessmentTime},</if>
@@ -143,7 +206,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">#{remark},</if>
             <if test="coreSuggestion != null">#{coreSuggestion},</if>
             <if test="checkInStatus != null">#{checkInStatus},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateHealthAssessmentReport" parameterType="HealthAssessmentReport">
@@ -158,7 +221,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="suggestionDescription != null">suggestion_description = #{suggestionDescription},</if>
             <if test="dailyActivityLevel != null">daily_activity_level = #{dailyActivityLevel},</if>
             <if test="mentalStatusLevel != null">mental_status_level = #{mentalStatusLevel},</if>
-            <if test="perceptionCommunicationLevel != null">perception_communication_level = #{perceptionCommunicationLevel},</if>
+            <if test="perceptionCommunicationLevel != null">perception_communication_level =
+                #{perceptionCommunicationLevel},
+            </if>
             <if test="socialParticipationLevel != null">social_participation_level = #{socialParticipationLevel},</if>
             <if test="initialAbilityLevel != null">initial_ability_level = #{initialAbilityLevel},</if>
             <if test="finalAbilityLevel != null">final_ability_level = #{finalAbilityLevel},</if>
@@ -184,11 +249,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteHealthAssessmentReportById" parameterType="String">
-        delete from health_assessment_report where id = #{id}
+        delete
+        from health_assessment_report
+        where id = #{id}
     </delete>
 
     <delete id="deleteHealthAssessmentReportByIds" parameterType="String">
-        delete from health_assessment_report where id in 
+        delete from health_assessment_report where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -1,70 +1,105 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xhzb.nursing.mapper.ElderMapper">
-    
+
     <resultMap type="Elder" id="ElderResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="image"    column="image"    />
-        <result property="idCardNo"    column="id_card_no"    />
-        <result property="sex"    column="sex"    />
-        <result property="status"    column="status"    />
-        <result property="phone"    column="phone"    />
-        <result property="birthday"    column="birthday"    />
-        <result property="address"    column="address"    />
-        <result property="idCardNationalEmblemImg"    column="id_card_national_emblem_img"    />
-        <result property="idCardPortraitImg"    column="id_card_portrait_img"    />
-        <result property="bedNumber"    column="bed_number"    />
-        <result property="bedId"    column="bed_id"    />
-        <result property="nation"    column="nation"    />
-        <result property="educationLevel"    column="education_level"    />
-        <result property="socialSecurityCard"    column="social_security_card"    />
-        <result property="livingSituation"    column="living_situation"    />
-        <result property="religiousBelief"    column="religious_belief"    />
-        <result property="economicSource"    column="economic_source"    />
-        <result property="maritalStatus"    column="marital_status"    />
-        <result property="medicalPaymentMethod"    column="medical_payment_method"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="remark"    column="remark"    />
-        <result property="coreSuggestion"    column="core_suggestion"    />
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="image" column="image"/>
+        <result property="idCardNo" column="id_card_no"/>
+        <result property="sex" column="sex"/>
+        <result property="status" column="status"/>
+        <result property="phone" column="phone"/>
+        <result property="birthday" column="birthday"/>
+        <result property="address" column="address"/>
+        <result property="idCardNationalEmblemImg" column="id_card_national_emblem_img"/>
+        <result property="idCardPortraitImg" column="id_card_portrait_img"/>
+        <result property="bedNumber" column="bed_number"/>
+        <result property="bedId" column="bed_id"/>
+        <result property="nation" column="nation"/>
+        <result property="educationLevel" column="education_level"/>
+        <result property="socialSecurityCard" column="social_security_card"/>
+        <result property="livingSituation" column="living_situation"/>
+        <result property="religiousBelief" column="religious_belief"/>
+        <result property="economicSource" column="economic_source"/>
+        <result property="maritalStatus" column="marital_status"/>
+        <result property="medicalPaymentMethod" column="medical_payment_method"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="remark" column="remark"/>
+        <result property="coreSuggestion" column="core_suggestion"/>
     </resultMap>
 
     <sql id="selectElderVo">
-        select id, name, image, id_card_no, sex, status, phone, birthday, address, id_card_national_emblem_img, id_card_portrait_img, bed_number, bed_id, nation, education_level, social_security_card, living_situation, religious_belief, economic_source, marital_status, medical_payment_method, create_time, update_time, create_by, update_by, remark, core_suggestion from elder
+        select id,
+               name,
+               image,
+               id_card_no,
+               sex,
+               status,
+               phone,
+               birthday,
+               address,
+               id_card_national_emblem_img,
+               id_card_portrait_img,
+               bed_number,
+               bed_id,
+               nation,
+               education_level,
+               social_security_card,
+               living_situation,
+               religious_belief,
+               economic_source,
+               marital_status,
+               medical_payment_method,
+               create_time,
+               update_time,
+               create_by,
+               update_by,
+               remark,
+               core_suggestion
+        from elder
     </sql>
 
     <select id="selectElderList" parameterType="Elder" resultMap="ElderResult">
         <include refid="selectElderVo"/>
-        <where>  
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="image != null  and image != ''"> and image = #{image}</if>
-            <if test="idCardNo != null  and idCardNo != ''"> and id_card_no = #{idCardNo}</if>
-            <if test="sex != null "> and sex = #{sex}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-            <if test="birthday != null "> and birthday = #{birthday}</if>
-            <if test="address != null  and address != ''"> and address = #{address}</if>
-            <if test="idCardNationalEmblemImg != null  and idCardNationalEmblemImg != ''"> and id_card_national_emblem_img = #{idCardNationalEmblemImg}</if>
-            <if test="idCardPortraitImg != null  and idCardPortraitImg != ''"> and id_card_portrait_img = #{idCardPortraitImg}</if>
-            <if test="bedNumber != null  and bedNumber != ''"> and bed_number = #{bedNumber}</if>
-            <if test="bedId != null "> and bed_id = #{bedId}</if>
-            <if test="nation != null  and nation != ''"> and nation = #{nation}</if>
-            <if test="educationLevel != null  and educationLevel != ''"> and education_level = #{educationLevel}</if>
-            <if test="socialSecurityCard != null  and socialSecurityCard != ''"> and social_security_card = #{socialSecurityCard}</if>
-            <if test="livingSituation != null  and livingSituation != ''"> and living_situation = #{livingSituation}</if>
-            <if test="religiousBelief != null  and religiousBelief != ''"> and religious_belief = #{religiousBelief}</if>
-            <if test="economicSource != null  and economicSource != ''"> and economic_source = #{economicSource}</if>
-            <if test="maritalStatus != null  and maritalStatus != ''"> and marital_status = #{maritalStatus}</if>
-            <if test="medicalPaymentMethod != null  and medicalPaymentMethod != ''"> and medical_payment_method = #{medicalPaymentMethod}</if>
-            <if test="coreSuggestion != null  and coreSuggestion != ''"> and core_suggestion = #{coreSuggestion}</if>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="image != null  and image != ''">and image = #{image}</if>
+            <if test="idCardNo != null  and idCardNo != ''">and id_card_no = #{idCardNo}</if>
+            <if test="sex != null ">and sex = #{sex}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="birthday != null ">and birthday = #{birthday}</if>
+            <if test="address != null  and address != ''">and address = #{address}</if>
+            <if test="idCardNationalEmblemImg != null  and idCardNationalEmblemImg != ''">and
+                id_card_national_emblem_img = #{idCardNationalEmblemImg}
+            </if>
+            <if test="idCardPortraitImg != null  and idCardPortraitImg != ''">and id_card_portrait_img =
+                #{idCardPortraitImg}
+            </if>
+            <if test="bedNumber != null  and bedNumber != ''">and bed_number = #{bedNumber}</if>
+            <if test="bedId != null ">and bed_id = #{bedId}</if>
+            <if test="nation != null  and nation != ''">and nation = #{nation}</if>
+            <if test="educationLevel != null  and educationLevel != ''">and education_level = #{educationLevel}</if>
+            <if test="socialSecurityCard != null  and socialSecurityCard != ''">and social_security_card =
+                #{socialSecurityCard}
+            </if>
+            <if test="livingSituation != null  and livingSituation != ''">and living_situation = #{livingSituation}</if>
+            <if test="religiousBelief != null  and religiousBelief != ''">and religious_belief = #{religiousBelief}</if>
+            <if test="economicSource != null  and economicSource != ''">and economic_source = #{economicSource}</if>
+            <if test="maritalStatus != null  and maritalStatus != ''">and marital_status = #{maritalStatus}</if>
+            <if test="medicalPaymentMethod != null  and medicalPaymentMethod != ''">and medical_payment_method =
+                #{medicalPaymentMethod}
+            </if>
+            <if test="coreSuggestion != null  and coreSuggestion != ''">and core_suggestion = #{coreSuggestion}</if>
         </where>
     </select>
-    
+
     <select id="selectElderById" parameterType="Long" resultMap="ElderResult">
         <include refid="selectElderVo"/>
         where id = #{id}
@@ -99,7 +134,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="remark != null">remark,</if>
             <if test="coreSuggestion != null">core_suggestion,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
             <if test="image != null">#{image},</if>
@@ -127,7 +162,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="remark != null">#{remark},</if>
             <if test="coreSuggestion != null">#{coreSuggestion},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateElder" parameterType="Elder">
@@ -164,11 +199,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteElderById" parameterType="Long">
-        delete from elder where id = #{id}
+        delete
+        from elder
+        where id = #{id}
     </delete>
 
     <delete id="deleteElderByIds" parameterType="String">
-        delete from elder where id in 
+        delete from elder where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
