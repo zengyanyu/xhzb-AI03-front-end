@@ -21,10 +21,11 @@ public class NursingProjectTool {
 
     /**
      * 定义工具（AI大模型可以调用工具）
+     *
      * @return
      */
-    @Tool(name = "find_project_tool",description = "查询护理项目")
-    public List<NursingProjectVo> findAllProjectVo(){
+    @Tool(name = "find_project_tool", description = "查询护理项目")
+    public List<NursingProjectVo> findAllProjectVo() {
         return nursingProjectService.listAll();
     }
 }

@@ -17,7 +17,7 @@ public class CodeGenerator {
 
     /**
      * 生成一个16位的合同编号。
-     * 
+     *
      * @return 16位的合同编号字符串。
      */
     public static String generateContractNumber() {
