@@ -23,6 +23,8 @@ public class ChatHistoryController extends BaseController {
 
     @Autowired
     private ChatHistoryService chatHistoryService;
+    @Autowired
+    private RedisChatMemoryService redisChatMemoryService;
 
     @GetMapping("/history")
     public AjaxResult history() {
@@ -32,9 +34,6 @@ public class ChatHistoryController extends BaseController {
         //返回给前端
         return success(list);
     }
-
-    @Autowired
-    private RedisChatMemoryService redisChatMemoryService;
 
     /**
      * 处理获取聊天记录详情
@@ -59,7 +58,6 @@ public class ChatHistoryController extends BaseController {
 
         //3.有数据
         return success(messageVos);
-
     }
 
     /**

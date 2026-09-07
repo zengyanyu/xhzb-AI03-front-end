@@ -16,19 +16,19 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.List;
 
 /**
  * 房型Controller
- * 
+ *
  * @author ruoyi
  * @date 2025-03-28
  */
 @RestController
 @RequestMapping("/elder/roomType")
 @Tag(name = "房型相关接口")
-public class RoomTypeController extends BaseController
-{
+public class RoomTypeController extends BaseController {
     @Autowired
     private IRoomTypeService roomTypeService;
 
@@ -38,8 +38,7 @@ public class RoomTypeController extends BaseController
     @PreAuthorize("@ss.hasPermi('elder:roomType:list')")
     @GetMapping("/list")
     @Operation(summary = "查询房型列表")
-    public TableDataInfo list(RoomType roomType)
-    {
+    public TableDataInfo list(RoomType roomType) {
         startPage();
         List<RoomType> list = roomTypeService.selectRoomTypeList(roomType);
         return getDataTable(list);
@@ -51,8 +50,7 @@ public class RoomTypeController extends BaseController
     @PreAuthorize("@ss.hasPermi('elder:roomType:list')")
     @GetMapping("/listAll")
     @Operation(summary = "查询所有房型列表")
-    public AjaxResult list()
-    {
+    public AjaxResult list() {
         List<RoomType> list = roomTypeService.list();
         return success(list);
     }
@@ -64,8 +62,7 @@ public class RoomTypeController extends BaseController
     @Log(title = "房型", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @Operation(summary = "导出房型列表")
-    public void export(HttpServletResponse response, RoomType roomType)
-    {
+    public void export(HttpServletResponse response, RoomType roomType) {
         List<RoomType> list = roomTypeService.selectRoomTypeList(roomType);
         ExcelUtil<RoomType> util = new ExcelUtil<RoomType>(RoomType.class);
         util.exportExcel(response, list, "房型数据");
@@ -77,8 +74,7 @@ public class RoomTypeController extends BaseController
     @PreAuthorize("@ss.hasPermi('elder:roomType:query')")
     @GetMapping(value = "/{id}")
     @Operation(summary = "获取房型详细信息")
-    public AjaxResult getInfo(@Schema(name = "房型ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@Schema(name = "房型ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable("id") Long id) {
         return success(roomTypeService.selectRoomTypeById(id));
     }
 
@@ -89,8 +85,7 @@ public class RoomTypeController extends BaseController
     @Log(title = "房型", businessType = BusinessType.INSERT)
     @PostMapping
     @Operation(summary = "新增房型")
-    public AjaxResult add(@RequestBody RoomType roomType)
-    {
+    public AjaxResult add(@RequestBody RoomType roomType) {
         return toAjax(roomTypeService.insertRoomType(roomType));
     }
 
@@ -101,8 +96,7 @@ public class RoomTypeController extends BaseController
     @PreAuthorize("@ss.hasPermi('elder:roomType:edit')")
     @Log(title = "房型", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody RoomType roomType)
-    {
+    public AjaxResult edit(@RequestBody RoomType roomType) {
         return toAjax(roomTypeService.updateRoomType(roomType));
     }
 
@@ -112,9 +106,8 @@ public class RoomTypeController extends BaseController
     @Operation(summary = "删除房型")
     @PreAuthorize("@ss.hasPermi('elder:roomType:remove')")
     @Log(title = "房型", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@Schema(name = "房型ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@Schema(name = "房型ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long[] ids) {
         return toAjax(roomTypeService.deleteRoomTypeByIds(ids));
     }
 }

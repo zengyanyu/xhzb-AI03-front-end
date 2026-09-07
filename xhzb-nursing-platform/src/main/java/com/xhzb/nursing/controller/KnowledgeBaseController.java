@@ -23,15 +23,14 @@ import java.util.UUID;
 
 /**
  * 知识库主Controller
- * 
+ *
  * @author ruoyi
  * @date 2026-07-21
  */
 @RestController
 @RequestMapping("/nursing/knowledgeBase")
 @Tag(name = "知识库主相关接口")
-public class KnowledgeBaseController extends BaseController
-{
+public class KnowledgeBaseController extends BaseController {
     @Autowired
     private IKnowledgeBaseService knowledgeBaseService;
 
@@ -41,8 +40,7 @@ public class KnowledgeBaseController extends BaseController
     @PreAuthorize("@ss.hasPermi('nursing:knowledgeBase:list')")
     @GetMapping("/list")
     @Operation(summary = "查询知识库主列表")
-    public TableDataInfo list(KnowledgeBase knowledgeBase)
-    {
+    public TableDataInfo list(KnowledgeBase knowledgeBase) {
         startPage();
         List<KnowledgeBase> list = knowledgeBaseService.selectKnowledgeBaseList(knowledgeBase);
         return getDataTable(list);
@@ -55,8 +53,7 @@ public class KnowledgeBaseController extends BaseController
     @Log(title = "知识库主", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @Operation(summary = "导出知识库主列表")
-    public void export(HttpServletResponse response, KnowledgeBase knowledgeBase)
-    {
+    public void export(HttpServletResponse response, KnowledgeBase knowledgeBase) {
         List<KnowledgeBase> list = knowledgeBaseService.selectKnowledgeBaseList(knowledgeBase);
         ExcelUtil<KnowledgeBase> util = new ExcelUtil<KnowledgeBase>(KnowledgeBase.class);
         util.exportExcel(response, list, "知识库主数据");
@@ -69,8 +66,7 @@ public class KnowledgeBaseController extends BaseController
     @GetMapping(value = "/{id}")
     @Operation(summary = "获取知识库主详细信息")
     public AjaxResult getInfo(@Schema(name = "知识库主ID", requiredMode = Schema.RequiredMode.REQUIRED)
-            @PathVariable("id") Long id)
-    {
+                              @PathVariable("id") Long id) {
         return success(knowledgeBaseService.selectKnowledgeBaseById(id));
     }
 
@@ -81,8 +77,7 @@ public class KnowledgeBaseController extends BaseController
     @Log(title = "知识库主", businessType = BusinessType.INSERT)
     @PostMapping
     @Operation(summary = "新增知识库主")
-    public AjaxResult add(@RequestBody KnowledgeBase knowledgeBase)
-    {
+    public AjaxResult add(@RequestBody KnowledgeBase knowledgeBase) {
         return toAjax(knowledgeBaseService.insertKnowledgeBase(knowledgeBase));
     }
 
@@ -93,8 +88,7 @@ public class KnowledgeBaseController extends BaseController
     @Log(title = "知识库主", businessType = BusinessType.UPDATE)
     @PutMapping
     @Operation(summary = "修改知识库主")
-    public AjaxResult edit(@RequestBody KnowledgeBase knowledgeBase)
-    {
+    public AjaxResult edit(@RequestBody KnowledgeBase knowledgeBase) {
         return toAjax(knowledgeBaseService.updateKnowledgeBase(knowledgeBase));
     }
 
@@ -103,10 +97,9 @@ public class KnowledgeBaseController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('nursing:knowledgeBase:remove')")
     @Log(title = "知识库主", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "删除知识库主")
-    public AjaxResult remove(@Schema(name = "知识库主ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long id)
-    {
+    public AjaxResult remove(@Schema(name = "知识库主ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long id) {
         return toAjax(knowledgeBaseService.deleteKnowledgeBaseById(id));
     }
 

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
 @RestController
 @RequestMapping("/dify/serve")
 public class DifyServeController {
@@ -16,7 +17,7 @@ public class DifyServeController {
     private IReservationService reservationService;
 
     @GetMapping("/getReservationByToday")
-    public String getReservationByDay(String datetime){
+    public String getReservationByDay(String datetime) {
         System.out.println(datetime);
 
         // 定义日期时间格式
@@ -25,7 +26,6 @@ public class DifyServeController {
         LocalDate dateTime = LocalDate.parse(datetime, formatter);
 
         return reservationService.getReservationByDay(dateTime);
-
     }
 
 }

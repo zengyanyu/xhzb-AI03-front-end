@@ -24,15 +24,14 @@ import java.util.List;
 
 /**
  * 设备管理Controller
- * 
+ *
  * @author ruoyi
  * @date 2026-07-18
  */
 @RestController
 @RequestMapping("/nursing/device")
 @Tag(name = "设备管理相关接口")
-public class DeviceController extends BaseController
-{
+public class DeviceController extends BaseController {
     @Autowired
     private IDeviceService deviceService;
 
@@ -42,8 +41,7 @@ public class DeviceController extends BaseController
     @PreAuthorize("@ss.hasPermi('nursing:device:list')")
     @GetMapping("/list")
     @Operation(summary = "查询设备管理列表")
-    public TableDataInfo list(Device device)
-    {
+    public TableDataInfo list(Device device) {
         startPage();
         List<Device> list = deviceService.selectDeviceList(device);
         return getDataTable(list);
@@ -51,6 +49,7 @@ public class DeviceController extends BaseController
 
     /**
      * 同步华为IOT产品列表到redis中
+     *
      * @return
      */
     @PostMapping("/syncProductList")
@@ -62,12 +61,13 @@ public class DeviceController extends BaseController
 
     /**
      * 同步华为IOT产品列表到redis中
+     *
      * @return
      */
     @GetMapping("/allProduct")
     @Operation(summary = "从物联网平台同步产品列表")
     public AjaxResult allProduct() {
-        List<ProductVo> productVos =  deviceService.allProduct();
+        List<ProductVo> productVos = deviceService.allProduct();
         return success(productVos);
     }
 
@@ -112,7 +112,7 @@ public class DeviceController extends BaseController
     }
 
     @GetMapping("/queryProduct/{productKey}")
-    public AjaxResult queryProduct(@PathVariable String productKey){
+    public AjaxResult queryProduct(@PathVariable String productKey) {
         return deviceService.queryProduct(productKey);
     }
 }

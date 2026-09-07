@@ -20,15 +20,14 @@ import java.util.List;
 
 /**
  * 房间Controller
- * 
+ *
  * @author ruoyi
  * @date 2025-03-28
  */
 @RestController
 @RequestMapping("/elder/room")
 @Tag(name = "房间相关接口")
-public class RoomController extends BaseController
-{
+public class RoomController extends BaseController {
     @Autowired
     private IRoomService roomService;
 
@@ -46,14 +45,14 @@ public class RoomController extends BaseController
         List<RoomVo> list = roomService.getRoomsByFloorId(floorId);
         return R.ok(list);
     }
+
     /**
      * 查询房间列表
      */
     @PreAuthorize("@ss.hasPermi('elder:room:list')")
     @GetMapping("/list")
     @Operation(summary = "查询房间列表")
-    public TableDataInfo list(Room room)
-    {
+    public TableDataInfo list(Room room) {
         startPage();
         List<Room> list = roomService.selectRoomList(room);
         return getDataTable(list);
@@ -65,8 +64,7 @@ public class RoomController extends BaseController
     @PreAuthorize("@ss.hasPermi('elder:room:query')")
     @GetMapping(value = "/{id}")
     @Operation(summary = "获取房间详细信息")
-    public R<Room> getInfo(@Schema(name = "房间ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable("id") Long id)
-    {
+    public R<Room> getInfo(@Schema(name = "房间ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable("id") Long id) {
         return R.ok(roomService.selectRoomById(id));
     }
 
@@ -77,8 +75,7 @@ public class RoomController extends BaseController
     @Log(title = "房间", businessType = BusinessType.INSERT)
     @PostMapping
     @Operation(summary = "新增房间")
-    public AjaxResult add(@RequestBody Room room)
-    {
+    public AjaxResult add(@RequestBody Room room) {
         return toAjax(roomService.insertRoom(room));
     }
 
@@ -89,8 +86,7 @@ public class RoomController extends BaseController
     @PreAuthorize("@ss.hasPermi('elder:room:edit')")
     @Log(title = "房间", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Room room)
-    {
+    public AjaxResult edit(@RequestBody Room room) {
         return toAjax(roomService.updateRoom(room));
     }
 
@@ -100,9 +96,8 @@ public class RoomController extends BaseController
     @Operation(summary = "删除房间")
     @PreAuthorize("@ss.hasPermi('elder:room:remove')")
     @Log(title = "房间", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@Schema(name = "房间ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable("ids") Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@Schema(name = "房间ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable("ids") Long[] ids) {
         return toAjax(roomService.deleteRoomByIds(ids));
     }
 
@@ -112,7 +107,7 @@ public class RoomController extends BaseController
     @GetMapping("/one/{id}")
     @Operation(summary = "查询房间数据(楼层、房间、价格)")
     public AjaxResult getRoomDetail(@Schema(name = "房间ID", requiredMode = Schema.RequiredMode.REQUIRED)
-            @PathVariable("id") Long id) {
+                                    @PathVariable("id") Long id) {
         return success(roomService.getRoomDetailById(id));
     }
 

@@ -19,15 +19,14 @@ import java.util.List;
 
 /**
  * 床位Controller
- * 
+ *
  * @author ruoyi
  * @date 2025-03-28
  */
 @RestController
 @RequestMapping("/elder/bed")
 @Tag(name = "床位相关接口")
-public class BedController extends BaseController
-{
+public class BedController extends BaseController {
     @Autowired
     private IBedService bedService;
 
@@ -37,8 +36,7 @@ public class BedController extends BaseController
     @PreAuthorize("@ss.hasPermi('elder:bed:list')")
     @GetMapping("/list")
     @Operation(summary = "查询床位列表")
-    public TableDataInfo list(Bed bed)
-    {
+    public TableDataInfo list(Bed bed) {
         startPage();
         List<Bed> list = bedService.selectBedList(bed);
         return getDataTable(list);
@@ -50,8 +48,7 @@ public class BedController extends BaseController
     @PreAuthorize("@ss.hasPermi('elder:bed:query')")
     @GetMapping(value = "/{id}")
     @Operation(summary = "获取床位详细信息")
-    public R<Bed> getInfo(@Schema(name = "床位ID", requiredMode = Schema.RequiredMode.REQUIRED)  @PathVariable("id") Long id)
-    {
+    public R<Bed> getInfo(@Schema(name = "床位ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable("id") Long id) {
         return R.ok(bedService.selectBedById(id));
     }
 
@@ -62,8 +59,7 @@ public class BedController extends BaseController
     @Log(title = "床位", businessType = BusinessType.INSERT)
     @PostMapping
     @Operation(summary = "新增床位")
-    public AjaxResult add(@RequestBody Bed bed)
-    {
+    public AjaxResult add(@RequestBody Bed bed) {
         return toAjax(bedService.insertBed(bed));
     }
 
@@ -74,8 +70,7 @@ public class BedController extends BaseController
     @PreAuthorize("@ss.hasPermi('elder:bed:edit')")
     @Log(title = "床位", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Bed bed)
-    {
+    public AjaxResult edit(@RequestBody Bed bed) {
         return toAjax(bedService.updateBed(bed));
     }
 
@@ -85,9 +80,8 @@ public class BedController extends BaseController
     @Operation(summary = "删除床位")
     @PreAuthorize("@ss.hasPermi('elder:bed:remove')")
     @Log(title = "床位", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@Schema(name = "床位ID", requiredMode = Schema.RequiredMode.REQUIRED)  @PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@Schema(name = "床位ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long[] ids) {
         return toAjax(bedService.deleteBedByIds(ids));
     }
 }

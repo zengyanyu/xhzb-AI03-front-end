@@ -21,15 +21,14 @@ import java.util.List;
 
 /**
  * 入住Controller
- * 
+ *
  * @author ruoyi
  * @date 2026-07-10
  */
 @RestController
 @RequestMapping("/nursing/checkIn")
 @Tag(name = "入住相关接口")
-public class CheckInController extends BaseController
-{
+public class CheckInController extends BaseController {
     @Autowired
     private ICheckInService checkInService;
 
@@ -39,8 +38,7 @@ public class CheckInController extends BaseController
     @PreAuthorize("@ss.hasPermi('nursing:checkIn:list')")
     @GetMapping("/list")
     @Operation(summary = "查询入住列表")
-    public TableDataInfo list(CheckIn checkIn)
-    {
+    public TableDataInfo list(CheckIn checkIn) {
         startPage();
         List<CheckIn> list = checkInService.selectCheckInList(checkIn);
         return getDataTable(list);
@@ -53,8 +51,7 @@ public class CheckInController extends BaseController
     @Log(title = "入住", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @Operation(summary = "导出入住列表")
-    public void export(HttpServletResponse response, CheckIn checkIn)
-    {
+    public void export(HttpServletResponse response, CheckIn checkIn) {
         List<CheckIn> list = checkInService.selectCheckInList(checkIn);
         ExcelUtil<CheckIn> util = new ExcelUtil<CheckIn>(CheckIn.class);
         util.exportExcel(response, list, "入住数据");
@@ -67,8 +64,7 @@ public class CheckInController extends BaseController
     @GetMapping(value = "/{id}")
     @Operation(summary = "获取入住详细信息")
     public AjaxResult getInfo(@Schema(name = "入住ID", requiredMode = Schema.RequiredMode.REQUIRED)
-            @PathVariable("id") Long id)
-    {
+                              @PathVariable("id") Long id) {
         return success(checkInService.selectCheckInById(id));
     }
 
@@ -79,8 +75,7 @@ public class CheckInController extends BaseController
     @Log(title = "入住", businessType = BusinessType.INSERT)
     @PostMapping
     @Operation(summary = "新增入住")
-    public AjaxResult add(@RequestBody CheckIn checkIn)
-    {
+    public AjaxResult add(@RequestBody CheckIn checkIn) {
         return toAjax(checkInService.insertCheckIn(checkIn));
     }
 
@@ -91,8 +86,7 @@ public class CheckInController extends BaseController
     @Log(title = "入住", businessType = BusinessType.UPDATE)
     @PutMapping
     @Operation(summary = "修改入住")
-    public AjaxResult edit(@RequestBody CheckIn checkIn)
-    {
+    public AjaxResult edit(@RequestBody CheckIn checkIn) {
         return toAjax(checkInService.updateCheckIn(checkIn));
     }
 
@@ -101,10 +95,9 @@ public class CheckInController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('nursing:checkIn:remove')")
     @Log(title = "入住", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+    @DeleteMapping("/{ids}")
     @Operation(summary = "删除入住")
-    public AjaxResult remove(@Schema(name = "入住ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@Schema(name = "入住ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long[] ids) {
         return toAjax(checkInService.deleteCheckInByIds(ids));
     }
 
@@ -114,8 +107,7 @@ public class CheckInController extends BaseController
     @Log(title = "入住", businessType = BusinessType.INSERT)
     @PostMapping("/apply")
     @Operation(summary = "申请入住")
-    public AjaxResult apply(@RequestBody CheckInApplyDto dto)
-    {
+    public AjaxResult apply(@RequestBody CheckInApplyDto dto) {
         checkInService.apply(dto);
         return success();
     }
@@ -126,8 +118,7 @@ public class CheckInController extends BaseController
     @GetMapping("/detail/{id}")
     @Operation(summary = "查询入住详情")
     public AjaxResult detail(@Schema(name = "入住ID", requiredMode = Schema.RequiredMode.REQUIRED)
-            @PathVariable("id") Long id)
-    {
+                             @PathVariable("id") Long id) {
         return success(checkInService.getCheckInDetail(id));
     }
 }

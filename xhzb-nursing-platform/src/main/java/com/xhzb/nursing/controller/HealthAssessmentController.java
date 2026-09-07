@@ -21,15 +21,14 @@ import java.util.List;
 
 /**
  * 健康评估记录Controller
- * 
+ *
  * @author ruoyi
  * @date 2026-07-10
  */
 @RestController
 @RequestMapping("/nursing/healthAssessment")
 @Tag(name = "健康评估记录相关接口")
-public class HealthAssessmentController extends BaseController
-{
+public class HealthAssessmentController extends BaseController {
     @Autowired
     private IHealthAssessmentService healthAssessmentService;
 
@@ -39,8 +38,7 @@ public class HealthAssessmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('nursing:healthAssessment:list')")
     @GetMapping("/list")
     @Operation(summary = "查询健康评估记录列表")
-    public TableDataInfo list(HealthAssessment healthAssessment)
-    {
+    public TableDataInfo list(HealthAssessment healthAssessment) {
         startPage();
         List<HealthAssessment> list = healthAssessmentService.selectHealthAssessmentList(healthAssessment);
         return getDataTable(list);
@@ -53,8 +51,7 @@ public class HealthAssessmentController extends BaseController
     @Log(title = "健康评估记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @Operation(summary = "导出健康评估记录列表")
-    public void export(HttpServletResponse response, HealthAssessment healthAssessment)
-    {
+    public void export(HttpServletResponse response, HealthAssessment healthAssessment) {
         List<HealthAssessment> list = healthAssessmentService.selectHealthAssessmentList(healthAssessment);
         ExcelUtil<HealthAssessment> util = new ExcelUtil<HealthAssessment>(HealthAssessment.class);
         util.exportExcel(response, list, "健康评估记录数据");
@@ -67,8 +64,7 @@ public class HealthAssessmentController extends BaseController
     @GetMapping(value = "/{id}")
     @Operation(summary = "获取健康评估记录详细信息")
     public AjaxResult getInfo(@Schema(name = "健康评估记录ID", requiredMode = Schema.RequiredMode.REQUIRED)
-            @PathVariable("id") Long id)
-    {
+                              @PathVariable("id") Long id) {
         return success(healthAssessmentService.selectHealthAssessmentById(id));
     }
 
@@ -79,8 +75,7 @@ public class HealthAssessmentController extends BaseController
     @Log(title = "健康评估记录", businessType = BusinessType.INSERT)
     @PostMapping
     @Operation(summary = "新增健康评估记录")
-    public AjaxResult add(@RequestBody ElderAssessmentDto dto)
-    {
+    public AjaxResult add(@RequestBody ElderAssessmentDto dto) {
         return success(healthAssessmentService.insertHealthAssessment(dto));
     }
 
@@ -91,8 +86,7 @@ public class HealthAssessmentController extends BaseController
     @Log(title = "健康评估记录", businessType = BusinessType.UPDATE)
     @PutMapping
     @Operation(summary = "修改健康评估记录")
-    public AjaxResult edit(@RequestBody ElderAssessmentDto dto)
-    {
+    public AjaxResult edit(@RequestBody ElderAssessmentDto dto) {
         return success(healthAssessmentService.updateHealthAssessment(dto));
     }
 
@@ -101,10 +95,9 @@ public class HealthAssessmentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('nursing:healthAssessment:remove')")
     @Log(title = "健康评估记录", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+    @DeleteMapping("/{ids}")
     @Operation(summary = "删除健康评估记录")
-    public AjaxResult remove(@Schema(name = "健康评估记录ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@Schema(name = "健康评估记录ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long[] ids) {
         return toAjax(healthAssessmentService.deleteHealthAssessmentByIds(ids));
     }
 
@@ -125,7 +118,7 @@ public class HealthAssessmentController extends BaseController
     @GetMapping("/report/{id}")
     @Operation(summary = "查看评估详情（评估结果）")
     public AjaxResult report(@Schema(name = "评估ID", requiredMode = Schema.RequiredMode.REQUIRED)
-            @PathVariable("id") Long id) {
+                             @PathVariable("id") Long id) {
         return success(healthAssessmentService.selectReportByAssessmentId(id));
     }
 
@@ -135,7 +128,7 @@ public class HealthAssessmentController extends BaseController
     @GetMapping("/elder/{id}")
     @Operation(summary = "查看老人信息详情（入住字段填充）")
     public AjaxResult getElderInfo(@Schema(name = "评估ID", requiredMode = Schema.RequiredMode.REQUIRED)
-            @PathVariable("id") Long id) {
+                                   @PathVariable("id") Long id) {
         return success(healthAssessmentService.getElderInfoByAssessmentId(id));
     }
 }

@@ -18,15 +18,14 @@ import java.util.List;
 
 /**
  * 楼层Controller
- * 
+ *
  * @author ruoyi
  * @date 2025-03-28
  */
 @RestController
 @RequestMapping("/elder/floor")
 @Tag(name = "楼层相关接口")
-public class FloorController extends BaseController
-{
+public class FloorController extends BaseController {
     @Autowired
     private IFloorService floorService;
 
@@ -36,8 +35,7 @@ public class FloorController extends BaseController
     @PreAuthorize("@ss.hasPermi('elder:floor:list')")
     @GetMapping("/list")
     @Operation(summary = "查询所有楼层列表")
-    public R<List<Floor>> list()
-    {
+    public R<List<Floor>> list() {
         List<Floor> list = floorService.list();
         return R.ok(list);
     }
@@ -48,8 +46,7 @@ public class FloorController extends BaseController
     @PreAuthorize("@ss.hasPermi('elder:floor:query')")
     @GetMapping(value = "/{id}")
     @Operation(summary = "获取楼层详细信息")
-    public R<Floor> getInfo(@Schema(name = "楼层ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable("id") Long id)
-    {
+    public R<Floor> getInfo(@Schema(name = "楼层ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable("id") Long id) {
         return R.ok(floorService.selectFloorById(id));
     }
 
@@ -60,8 +57,7 @@ public class FloorController extends BaseController
     @Log(title = "楼层", businessType = BusinessType.INSERT)
     @PostMapping
     @Operation(summary = "新增楼层")
-    public AjaxResult add(@RequestBody Floor floor)
-    {
+    public AjaxResult add(@RequestBody Floor floor) {
         return toAjax(floorService.insertFloor(floor));
     }
 
@@ -72,8 +68,7 @@ public class FloorController extends BaseController
     @PreAuthorize("@ss.hasPermi('elder:floor:edit')")
     @Log(title = "楼层", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Floor floor)
-    {
+    public AjaxResult edit(@RequestBody Floor floor) {
         return toAjax(floorService.updateFloor(floor));
     }
 
@@ -83,9 +78,8 @@ public class FloorController extends BaseController
     @Operation(summary = "删除楼层")
     @PreAuthorize("@ss.hasPermi('elder:floor:remove')")
     @Log(title = "楼层", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@Schema(name = "楼层ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@Schema(name = "楼层ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long[] ids) {
         return toAjax(floorService.deleteFloorByIds(ids));
     }
 
@@ -102,7 +96,7 @@ public class FloorController extends BaseController
     @GetMapping("/getRoomAndBedByBedStatus/{status}")
     @Operation(summary = "根据床位状态查询获取所有楼层数据")
     public AjaxResult getRoomAndBedByBedStatus(@Schema(name = "床位状态", requiredMode = Schema.RequiredMode.REQUIRED)
-            @PathVariable("status") Integer status) {
+                                               @PathVariable("status") Integer status) {
         return success(floorService.getRoomAndBedByBedStatus(status));
     }
 
@@ -112,8 +106,7 @@ public class FloorController extends BaseController
     @PreAuthorize("@ss.hasPermi('elder:floor:list')")//可用可不用
     @GetMapping("/getAllFloorsWithDevice")
     @Operation(summary = "查询所有具有智能设备楼层列表")
-    public R<List<Floor>> getAllFloorsWithDevice()
-    {
+    public R<List<Floor>> getAllFloorsWithDevice() {
         List<Floor> list = floorService.getAllFloorsWithDevice();
         return R.ok(list);
     }

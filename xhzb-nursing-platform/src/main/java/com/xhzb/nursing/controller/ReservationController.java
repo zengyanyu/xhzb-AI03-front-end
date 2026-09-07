@@ -1,6 +1,7 @@
 package com.xhzb.nursing.controller;
 
 import java.util.List;
+
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +27,14 @@ import com.xhzb.common.core.page.TableDataInfo;
 
 /**
  * 预约信息Controller
- * 
+ *
  * @author ruoyi
  * @date 2026-08-21
  */
 @RestController
 @RequestMapping("/nursing/reservation")
 @Tag(name = "预约信息相关接口")
-public class ReservationController extends BaseController
-{
+public class ReservationController extends BaseController {
     @Autowired
     private IReservationService reservationService;
 
@@ -44,8 +44,7 @@ public class ReservationController extends BaseController
     @PreAuthorize("@ss.hasPermi('nursing:reservation:list')")
     @GetMapping("/list")
     @Operation(summary = "查询预约信息列表")
-    public TableDataInfo list(Reservation reservation)
-    {
+    public TableDataInfo list(Reservation reservation) {
         startPage();
         List<Reservation> list = reservationService.selectReservationList(reservation);
         return getDataTable(list);
@@ -58,8 +57,7 @@ public class ReservationController extends BaseController
     @Log(title = "预约信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @Operation(summary = "导出预约信息列表")
-    public void export(HttpServletResponse response, Reservation reservation)
-    {
+    public void export(HttpServletResponse response, Reservation reservation) {
         List<Reservation> list = reservationService.selectReservationList(reservation);
         ExcelUtil<Reservation> util = new ExcelUtil<Reservation>(Reservation.class);
         util.exportExcel(response, list, "预约信息数据");
@@ -72,8 +70,7 @@ public class ReservationController extends BaseController
     @GetMapping(value = "/{id}")
     @Operation(summary = "获取预约信息详细信息")
     public AjaxResult getInfo(@Schema(name = "预约信息ID", requiredMode = Schema.RequiredMode.REQUIRED)
-            @PathVariable("id") Long id)
-    {
+                              @PathVariable("id") Long id) {
         return success(reservationService.selectReservationById(id));
     }
 
@@ -84,8 +81,7 @@ public class ReservationController extends BaseController
     @Log(title = "预约信息", businessType = BusinessType.INSERT)
     @PostMapping
     @Operation(summary = "新增预约信息")
-    public AjaxResult add(@RequestBody Reservation reservation)
-    {
+    public AjaxResult add(@RequestBody Reservation reservation) {
         return toAjax(reservationService.insertReservation(reservation));
     }
 
@@ -96,8 +92,7 @@ public class ReservationController extends BaseController
     @Log(title = "预约信息", businessType = BusinessType.UPDATE)
     @PutMapping
     @Operation(summary = "修改预约信息")
-    public AjaxResult edit(@RequestBody Reservation reservation)
-    {
+    public AjaxResult edit(@RequestBody Reservation reservation) {
         return toAjax(reservationService.updateReservation(reservation));
     }
 
@@ -106,10 +101,9 @@ public class ReservationController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('nursing:reservation:remove')")
     @Log(title = "预约信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+    @DeleteMapping("/{ids}")
     @Operation(summary = "删除预约信息")
-    public AjaxResult remove(@Schema(name = "预约信息ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@Schema(name = "预约信息ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long[] ids) {
         return toAjax(reservationService.deleteReservationByIds(ids));
     }
 }
