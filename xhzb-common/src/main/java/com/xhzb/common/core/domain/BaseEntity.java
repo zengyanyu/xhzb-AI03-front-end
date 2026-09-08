@@ -18,118 +18,116 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @author ruoyi
  */
 @Schema(description = "Entity基类")
-public class BaseEntity implements Serializable
-{
+public class BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /** 搜索值 */
+    /**
+     * 搜索值
+     */
     @JsonIgnore
     @TableField(exist = false)
     private String searchValue;
 
-    /** 创建者 */
+    /**
+     * 创建者
+     */
     @Schema(title = "创建者")
     @TableField(fill = FieldFill.INSERT)
     private String createBy;
 
-    /** 创建时间 */
+    /**
+     * 创建时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Schema(title = "创建时间")
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 
-    /** 更新者 */
+    /**
+     * 更新者
+     */
     @Schema(title = "更新者")
     @TableField(fill = FieldFill.UPDATE)
     private String updateBy;
 
-    /** 更新时间 */
+    /**
+     * 更新时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Schema(title = "更新时间")
     @TableField(fill = FieldFill.UPDATE)
     private Date updateTime;
 
-    /** 备注 */
+    /**
+     * 备注
+     */
     @Schema(title = "备注")
     private String remark;
 
-    /** 请求参数 */
+    /**
+     * 请求参数
+     */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Schema(title = "请求参数")
     @TableField(exist = false)
     private Map<String, Object> params;
 
-    public String getSearchValue()
-    {
+    public String getSearchValue() {
         return searchValue;
     }
 
-    public void setSearchValue(String searchValue)
-    {
+    public void setSearchValue(String searchValue) {
         this.searchValue = searchValue;
     }
 
-    public String getCreateBy()
-    {
+    public String getCreateBy() {
         return createBy;
     }
 
-    public void setCreateBy(String createBy)
-    {
+    public void setCreateBy(String createBy) {
         this.createBy = createBy;
     }
 
-    public Date getCreateTime()
-    {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime)
-    {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
-    public String getUpdateBy()
-    {
+    public String getUpdateBy() {
         return updateBy;
     }
 
-    public void setUpdateBy(String updateBy)
-    {
+    public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
     }
 
-    public Date getUpdateTime()
-    {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime)
-    {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
-    public String getRemark()
-    {
+    public String getRemark() {
         return remark;
     }
 
-    public void setRemark(String remark)
-    {
+    public void setRemark(String remark) {
         this.remark = remark;
     }
 
-    public Map<String, Object> getParams()
-    {
-        if (params == null)
-        {
+    public Map<String, Object> getParams() {
+        if (params == null) {
             params = new HashMap<>();
         }
         return params;
     }
 
-    public void setParams(Map<String, Object> params)
-    {
+    public void setParams(Map<String, Object> params) {
         this.params = params;
     }
 }
