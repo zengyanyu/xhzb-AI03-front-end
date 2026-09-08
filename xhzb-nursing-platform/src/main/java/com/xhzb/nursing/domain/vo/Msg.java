@@ -26,19 +26,19 @@ public class Msg {
      * USER：用户提问消息
      * ASSISTANT：AI模型回复消息
      */
-    MessageType messageType;
+    private MessageType messageType;
 
     /**
      * 消息文本内容
      * 用户输入文字 / AI回复文字 / 系统prompt文本
      */
-    String text;
+    private String text;
 
     /**
      * 消息元数据扩展信息
      * 存储自定义附加参数，例如对话ID、用户ID、额外业务标记等
      */
-    Map<String, Object> metadata;
+    private Map<String, Object> metadata;
 
     /**
      * 消息创建时间
@@ -49,6 +49,7 @@ public class Msg {
     /**
      * 构造方法：获取SpringAI原生Message 转换为 当前业务Msg对象， 写入数据库
      * 自动填充消息类型、文本、元数据，同时记录当前创建时间
+     *
      * @param message SpringAI框架提供的标准对话消息对象
      */
     public Msg(Message message) {
@@ -64,19 +65,18 @@ public class Msg {
 
     /**
      * 将当前业务Msg对象 转换为 SpringAI标准Message对象， 因为从数据库读取数据只能用Msg, SpringAI不认识MSG，然而我们要Message
-         将历史消息给到SpringAI，这样SpringAI在Advisor前置拦截才可以获取Message历史消息，所以这里将Msg转换为Message
+     * 将历史消息给到SpringAI，这样SpringAI在Advisor前置拦截才可以获取Message历史消息，所以这里将Msg转换为Message
      * 供AI大模型接口调用使用，根据消息类型区分构建不同消息实例
+     *
      * @return SpringAI框架原生Message消息对象，可直接传入ChatClient调用大模型
      * @throws IllegalArgumentException 遇到不支持的消息类型时抛出异常
-     *
-     * 建造者设计模式创建对象：就是一种创建对象的方式，本周调用里面全参构造器，只不过赋值以一个一个的灵活赋值，没有赋值就为null
-     * UserMessage.builder()
-*                     .text(text)//给属性text赋值
-*                     .media(List.of()) // 暂无图片/文件多媒体，传入空集合
-*                     .metadata(metadata)
-*                     .build();
-     *
-     *
+     *                                  <p>
+     *                                  建造者设计模式创建对象：就是一种创建对象的方式，本周调用里面全参构造器，只不过赋值以一个一个的灵活赋值，没有赋值就为null
+     *                                  UserMessage.builder()
+     *                                  .text(text)//给属性text赋值
+     *                                  .media(List.of()) // 暂无图片/文件多媒体，传入空集合
+     *                                  .metadata(metadata)
+     *                                  .build();
      */
     public Message toMessage() {
         // 根据消息类型分支构建对应AI消息实体
