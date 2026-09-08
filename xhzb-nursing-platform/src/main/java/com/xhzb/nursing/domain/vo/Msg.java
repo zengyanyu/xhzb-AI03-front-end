@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.ai.chat.messages.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ import java.util.Map;
 @NoArgsConstructor // lombok：无参构造函数，序列化/反序列化必备
 @AllArgsConstructor // lombok：全参构造函数，方便对象快速赋值
 @Data // lombok：自动生成get/set、toString、equals、hashCode等通用方法
-public class Msg {
+public class Msg implements Serializable {
     /**
      * 消息类型枚举
      * SYSTEM：系统提示词（给AI设定角色、规则）
