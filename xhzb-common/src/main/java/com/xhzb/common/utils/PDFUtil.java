@@ -8,11 +8,8 @@ import java.io.InputStream;
 
 public class PDFUtil {
 
-    public static String pdfToString(InputStream  inputStream) {
-
+    public static String pdfToString(InputStream inputStream) {
         PDDocument document = null;
-
-
         try {
             // 加载PDF文档
             document = PDDocument.load(inputStream);

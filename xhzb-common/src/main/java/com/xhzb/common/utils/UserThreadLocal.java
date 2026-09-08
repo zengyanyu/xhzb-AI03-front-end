@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * subjectContent.java
- *  用户主体对象
+ * 用户主体对象
  */
 @Slf4j
 public class UserThreadLocal {
@@ -12,7 +12,6 @@ public class UserThreadLocal {
     private static final ThreadLocal<Long> LOCAL = new ThreadLocal<>();
 
     private UserThreadLocal() {
-
     }
 
     /**
@@ -40,6 +39,7 @@ public class UserThreadLocal {
 
     /**
      * 从当前线程中获取前端用户id
+     *
      * @return 用户id
      */
     public static Long getUserId() {
