@@ -2,7 +2,7 @@ package com.xhzb.nursing.service.impl;
 
 import com.xhzb.common.utils.SecurityUtils;
 import com.xhzb.nursing.service.ChatHistoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -18,8 +18,10 @@ import java.util.Set;
 @Service
 public class ChatHistoryServiceImpl implements ChatHistoryService {
 
-    @Autowired
+    @Resource
     private RedisTemplate<String, String> redisTemplate;
+    @Resource
+    private RedisChatMemoryService redisChatMemoryService;
 
     private static final String HISTORY_PREFIX = "chat:history:";
 
@@ -62,13 +64,11 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
 
         //3.不为空，将Set<String> 排序后转换成List<String>
         List<String> list = members.stream()
+                .map(Object::toString) // Long -> String
                 .sorted()//默认字符串升序排序
                 .toList();
         return list;
     }
-
-    @Autowired
-    private RedisChatMemoryService redisChatMemoryService;
 
     /**
      * 删除会话及聊天信息

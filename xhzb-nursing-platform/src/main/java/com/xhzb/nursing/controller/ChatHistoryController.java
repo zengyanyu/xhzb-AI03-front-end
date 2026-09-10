@@ -5,8 +5,8 @@ import com.xhzb.common.core.domain.AjaxResult;
 import com.xhzb.nursing.domain.vo.MessageVo;
 import com.xhzb.nursing.service.ChatHistoryService;
 import com.xhzb.nursing.service.impl.RedisChatMemoryService;
+import jakarta.annotation.Resource;
 import org.springframework.ai.chat.messages.Message;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +21,9 @@ import java.util.List;
 @RequestMapping("/ai")
 public class ChatHistoryController extends BaseController {
 
-    @Autowired
+    @Resource
     private ChatHistoryService chatHistoryService;
-    @Autowired
+    @Resource
     private RedisChatMemoryService redisChatMemoryService;
 
     @GetMapping("/history")

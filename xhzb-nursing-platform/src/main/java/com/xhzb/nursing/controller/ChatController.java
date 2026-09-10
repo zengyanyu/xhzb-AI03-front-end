@@ -37,15 +37,15 @@ public class ChatController {
     @PostMapping(value = "/chat", produces = "text/html;charset=utf-8")
     public Flux<String> chat(String prompt, String chatId) {//prompt用户提示词
 
-        //将会话id写入登录用户的会话id的redis的set集合中
+        // 将会话id写入登录用户的会话id的redis的set集合中
         chatHistoryService.save(chatId);
 
-        //使用大模型客户端调用调用大模型聊天接口发送提示词并返回大模型输出的结果
+        // 使用大模型客户端调用调用大模型聊天接口发送提示词并返回大模型输出的结果
         return chatClient.prompt()
-                .user(prompt) //设置用户提示词
+                .user(prompt) // 设置用户提示词
                 .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, chatId))//将会话id给到SpringAI，底层是Map存储会话id，与Request对象绑定
-                // .call() //同步调用，非流式输出，等待大模型输出所有结果在返回
-                .stream() //流式输出
-                .content();//得到大模型输出内容
+                // .call() // 同步调用，非流式输出，等待大模型输出所有结果在返回
+                .stream() // 流式输出
+                .content();// 得到大模型输出内容
     }
 }

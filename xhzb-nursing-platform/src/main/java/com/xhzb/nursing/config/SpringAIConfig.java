@@ -1,6 +1,8 @@
 package com.xhzb.nursing.config;
 
+import com.xhzb.nursing.service.impl.RedisChatMemoryService;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.deepseek.DeepSeekChatModel;
 import org.springframework.ai.transformer.splitter.TextSplitter;
@@ -76,11 +78,12 @@ public class SpringAIConfig {
      * @return
      */
     @Bean
-    public ChatClient chatClient(DeepSeekChatModel deepSeekChatModel) {
+    public ChatClient chatClient(DeepSeekChatModel deepSeekChatModel, RedisChatMemoryService redisChatMemoryService) {
         //创建调用大模型的客户端对象
         return ChatClient.builder(deepSeekChatModel)
                 .defaultSystem("您是一家名为“星海智伴deepseek”的职业养老机构的客户聊天助手，你的名字叫小智。请以友好、乐于助人和愉快的方式解答用户的各种问题。")
-                .defaultAdvisors(new SimpleLoggerAdvisor())
+                .defaultAdvisors(new SimpleLoggerAdvisor()
+                        , MessageChatMemoryAdvisor.builder(redisChatMemoryService).build())
                 .build();
     }
 

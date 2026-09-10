@@ -2,9 +2,9 @@ package com.xhzb.nursing.service.impl;
 
 import cn.hutool.json.JSONUtil;
 import com.xhzb.nursing.domain.vo.Msg;
+import jakarta.annotation.Resource;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ import java.util.List;
 @Component
 public class RedisChatMemoryService implements ChatMemory {
 
-    @Autowired
+    @Resource
     private RedisTemplate<String, String> redisTemplate;
 
     private static final String PREFIX = "chat:memory:";//redis的key前缀都使用“:”隔开
@@ -30,7 +30,6 @@ public class RedisChatMemoryService implements ChatMemory {
     //springAI使用AOP后置拦截调用将大模型回复写入数据库
     @Override
     public void add(String conversationId, List<Message> messages) {
-
         //判断messages是否为空，为空直接返回
         if (messages == null || messages.size() == 0) {
             return;
