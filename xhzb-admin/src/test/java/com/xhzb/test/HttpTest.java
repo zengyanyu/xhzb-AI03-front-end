@@ -11,51 +11,46 @@ import java.util.Map;
 
 public class HttpTest {
 
-
     @Test
-    public void testGet(){
+    public void testGet() {
         String result = HttpUtil.get("https://www.baidu.com");
         System.out.println(result);
     }
 
     @Test
-    public void testGetParam(){
+    public void testGetParam() {
         // 访问地址
         String url = "http://localhost:8080/nursing/project/list";
         //参数构建
-        Map<String,Object> param = new HashMap<>();
-        param.put("pageNum",1);
-        param.put("pageSize",10);
-
+        Map<String, Object> param = new HashMap<>();
+        param.put("pageNum", 1);
+        param.put("pageSize", 10);
 
         //分页查询护理项目
         String result = HttpUtil.get(url, param);
         System.out.println(result);
-
     }
 
     @Test
-    public void testGetByRequest(){
+    public void testGetByRequest() {
         // 访问地址
         String url = "http://localhost:8080/nursing/project/list";
         //参数构建
-        Map<String,Object> param = new HashMap<>();
-        param.put("pageNum",1);
-        param.put("pageSize",10);
-
+        Map<String, Object> param = new HashMap<>();
+        param.put("pageNum", 1);
+        param.put("pageSize", 10);
 
         //分页查询护理项目
         HttpResponse response = HttpUtil.createRequest(Method.GET, url)
                 .header("authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImxvZ2luX3VzZXJfa2V5IjoiYmRmZTEyNmEtNTRmOC00MDlkLWE5ZmUtMTEzMjMwYzc0YWI4In0.MVCqJ7dWXEOULTH7g5NkZxQzf0K6p7-BC831I3lXYhNXwXm5xlH-mfurHNkjA4m4Q3ovkV_f9IodJgrp4jN9RQ")
                 .form(param).execute();
-        if(response.isOk()){
+        if (response.isOk()) {
             System.out.println(response.body());
         }
     }
 
     @Test
-    public void testCreatePost(){
-
+    public void testCreatePost() {
         // 访问地址
         String url = "http://localhost:8080/nursing/project";
 
@@ -73,11 +68,9 @@ public class HttpTest {
                 .header("authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImxvZ2luX3VzZXJfa2V5IjoiYmRmZTEyNmEtNTRmOC00MDlkLWE5ZmUtMTEzMjMwYzc0YWI4In0.MVCqJ7dWXEOULTH7g5NkZxQzf0K6p7-BC831I3lXYhNXwXm5xlH-mfurHNkjA4m4Q3ovkV_f9IodJgrp4jN9RQ")
                 .body(JSONUtil.toJsonStr(paramMap))
                 .execute();
-        if(response.isOk()){
+        if (response.isOk()) {
             System.out.println(response.body());
         }
-
     }
 
-    
 }

@@ -1,6 +1,5 @@
 package com.xhzb.test;
 
-
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.rag.Query;
@@ -21,9 +20,12 @@ import org.springframework.core.io.InputStreamResource;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
+
 @SpringBootTest
 public class ETLTest {
 
+    @Autowired
+    private VectorStore vectorStore;
 
     @Test
     public void testLoadTex() throws FileNotFoundException {
@@ -133,16 +135,12 @@ public class ETLTest {
         10 是 “哪怕合并失败，低于 10 字符的垃圾碎片直接删掉”； 比如只剩一句单独的 “好的”（2 字符），会直接丢弃，不会存入知识库。
 
     * */
-        System.out.println("分隔之前的文档数："+pdfReader.read().size());
+        System.out.println("分隔之前的文档数：" + pdfReader.read().size());
         List<Document> documents = textSplitter.apply(pdfReader.read());
-        System.out.println("分隔之后的文档数："+documents.size());
+        System.out.println("分隔之后的文档数：" + documents.size());
         System.out.println(documents);
 
     }
-
-
-    @Autowired
-    private VectorStore vectorStore;
 
     @Test
     public void testTestSplitter2() throws FileNotFoundException {
@@ -161,11 +159,11 @@ public class ETLTest {
 
         // 创建TextSplitter
         TextSplitter textSplitter = new TokenTextSplitter();
-        System.out.println("分隔之前的文档数："+pdfReader.read().size());
+        System.out.println("分隔之前的文档数：" + pdfReader.read().size());
         List<Document> documents = textSplitter.apply(pdfReader.read());
-        System.out.println("分隔之后的文档数："+documents.size());
+        System.out.println("分隔之后的文档数：" + documents.size());
         //给每个文档Document添加自定义数据filename
-        documents.forEach(document -> document.getMetadata().put("filename","护理员工工作手册.pdf"));
+        documents.forEach(document -> document.getMetadata().put("filename", "护理员工工作手册.pdf"));
         //存储到向量数据库中，分批添加，不然会报错
         for (int i = 0; i < documents.size(); i += 10) {
             //documents.subList(0,10)  提取0~9的元素返回一个List<Document>

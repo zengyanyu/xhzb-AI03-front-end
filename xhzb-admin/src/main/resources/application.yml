@@ -27,7 +27,7 @@ spring:
       embedding:
         options:
           model: text-embedding-v3
-          dimensions: 1024
+          dimensions: 1024 #维度1024维度
     ollama:
       base-url: http://localhost:11434
       chat:

@@ -22,8 +22,7 @@ public class IoTDeviceTest {
     private IoTDAClient ioTDAClient;
 
     @Test
-    public void testProductList(){
-
+    public void testProductList() {
         //1.构建产品列表查询请求对象
         ListProductsRequest request = new ListProductsRequest();
         request.setLimit(50);
