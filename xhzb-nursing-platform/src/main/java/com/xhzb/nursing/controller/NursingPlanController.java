@@ -12,8 +12,8 @@ import com.xhzb.nursing.service.INursingPlanService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +29,7 @@ import java.util.List;
 @RequestMapping("/nursing/nursingPlan")
 @Tag(name = "护理计划相关接口")
 public class NursingPlanController extends BaseController {
-    @Autowired
+    @Resource
     private INursingPlanService nursingPlanService;
 
 

@@ -12,8 +12,8 @@ import com.xhzb.oss.client.OSSAliyunFileStorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,8 +31,10 @@ import java.util.UUID;
 @RequestMapping("/nursing/knowledgeBase")
 @Tag(name = "知识库主相关接口")
 public class KnowledgeBaseController extends BaseController {
-    @Autowired
+    @Resource
     private IKnowledgeBaseService knowledgeBaseService;
+    @Resource
+    private OSSAliyunFileStorageService fileStorageService;
 
     /**
      * 查询知识库主列表
@@ -103,17 +105,13 @@ public class KnowledgeBaseController extends BaseController {
         return toAjax(knowledgeBaseService.deleteKnowledgeBaseById(id));
     }
 
-    @Autowired
-    private OSSAliyunFileStorageService fileStorageService;
-
     @PostMapping("/upload")
-    public AjaxResult uploadFile(MultipartFile file) throws Exception {
+    public AjaxResult uploadFile(MultipartFile file) {
         try {
             //文件名--->UUID.后缀
             String originalFilename = file.getOriginalFilename();
             String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            String filename = UUID.randomUUID().toString() + extension;
-
+            String filename = UUID.randomUUID() + extension;
             //把文件上传到oss中
             String url = fileStorageService.store(filename, file.getInputStream());
 

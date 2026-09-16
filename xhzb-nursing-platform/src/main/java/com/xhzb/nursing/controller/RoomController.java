@@ -28,9 +28,8 @@ import java.util.List;
 @RequestMapping("/elder/room")
 @Tag(name = "房间相关接口")
 public class RoomController extends BaseController {
-    @Autowired
+    @Resource
     private IRoomService roomService;
-
 
     @GetMapping("/getRoomsWithNurByFloorId/{floorId}")
     @Operation(summary = "获取所有房间（负责老人）")

@@ -21,15 +21,16 @@ import java.util.List;
 public class OSSAliyunFileStorageService {
 
     @Autowired
-    OSS ossClient;
+    private OSS ossClient;
 
     @Autowired
-    AliOssConfigProperties aliOssConfigProperties;
+    private AliOssConfigProperties aliOssConfigProperties;
 
     /**
      * 上传文件
+     *
      * @param objectName  文件名
-     * @param inputStream  文件流对象
+     * @param inputStream 文件流对象
      * @return
      */
     public String store(String objectName, InputStream inputStream) {
@@ -71,10 +72,11 @@ public class OSSAliyunFileStorageService {
 
     /**
      * 根据url删除文件
-     * @param pathUrl   url地址（全路径）
+     *
+     * @param pathUrl url地址（全路径）
      */
     public void delete(String pathUrl) {
-        String prefix = "https://"+aliOssConfigProperties.getBucketName()+"."+ aliOssConfigProperties.getEndpoint()+"/";
+        String prefix = "https://" + aliOssConfigProperties.getBucketName() + "." + aliOssConfigProperties.getEndpoint() + "/";
         String key = pathUrl.replace(prefix, "");
         List<String> keys = new ArrayList<>();
         keys.add(key);
@@ -87,7 +89,7 @@ public class OSSAliyunFileStorageService {
      * 根据url从oss中下载文件
      */
     public InputStream download(String pathUrl) {
-        String prefix = "https://"+aliOssConfigProperties.getBucketName()+"."+ aliOssConfigProperties.getEndpoint()+"/";
+        String prefix = "https://" + aliOssConfigProperties.getBucketName() + "." + aliOssConfigProperties.getEndpoint() + "/";
         String key = pathUrl.replace(prefix, "");
         return ossClient.getObject(aliOssConfigProperties.getBucketName(), key).getObjectContent();
     }

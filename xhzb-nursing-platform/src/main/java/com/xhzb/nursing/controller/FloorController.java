@@ -10,7 +10,7 @@ import com.xhzb.nursing.service.IFloorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +26,7 @@ import java.util.List;
 @RequestMapping("/elder/floor")
 @Tag(name = "楼层相关接口")
 public class FloorController extends BaseController {
-    @Autowired
+    @Resource
     private IFloorService floorService;
 
     /**

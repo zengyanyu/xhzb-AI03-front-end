@@ -11,7 +11,7 @@ import com.xhzb.nursing.service.IBedService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +27,7 @@ import java.util.List;
 @RequestMapping("/elder/bed")
 @Tag(name = "床位相关接口")
 public class BedController extends BaseController {
-    @Autowired
+    @Resource
     private IBedService bedService;
 
     /**

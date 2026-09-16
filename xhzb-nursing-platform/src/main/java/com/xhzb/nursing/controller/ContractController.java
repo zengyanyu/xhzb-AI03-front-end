@@ -11,8 +11,8 @@ import com.xhzb.nursing.service.IContractService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +28,7 @@ import java.util.List;
 @RequestMapping("/nursing/contract")
 @Tag(name = "合同相关接口")
 public class ContractController extends BaseController {
-    @Autowired
+    @Resource
     private IContractService contractService;
 
     /**

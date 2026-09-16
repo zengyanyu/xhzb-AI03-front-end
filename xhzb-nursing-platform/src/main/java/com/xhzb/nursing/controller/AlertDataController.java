@@ -1,6 +1,8 @@
 package com.xhzb.nursing.controller;
 
 import java.util.List;
+
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +28,15 @@ import com.xhzb.common.core.page.TableDataInfo;
 
 /**
  * 报警数据Controller
- * 
+ *
  * @author ruoyi
  * @date 2026-08-18
  */
 @RestController
 @RequestMapping("/nursing/alertData")
 @Tag(name = "报警数据相关接口")
-public class AlertDataController extends BaseController
-{
-    @Autowired
+public class AlertDataController extends BaseController {
+    @Resource
     private IAlertDataService alertDataService;
 
     /**
@@ -44,8 +45,7 @@ public class AlertDataController extends BaseController
     @PreAuthorize("@ss.hasPermi('nursing:alertData:list')")
     @GetMapping("/list")
     @Operation(summary = "查询报警数据列表")
-    public TableDataInfo list(AlertData alertData)
-    {
+    public TableDataInfo list(AlertData alertData) {
         startPage();
         List<AlertData> list = alertDataService.selectAlertDataList(alertData);
         return getDataTable(list);
@@ -58,8 +58,7 @@ public class AlertDataController extends BaseController
     @Log(title = "报警数据", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @Operation(summary = "导出报警数据列表")
-    public void export(HttpServletResponse response, AlertData alertData)
-    {
+    public void export(HttpServletResponse response, AlertData alertData) {
         List<AlertData> list = alertDataService.selectAlertDataList(alertData);
         ExcelUtil<AlertData> util = new ExcelUtil<AlertData>(AlertData.class);
         util.exportExcel(response, list, "报警数据数据");
@@ -72,8 +71,7 @@ public class AlertDataController extends BaseController
     @GetMapping(value = "/{id}")
     @Operation(summary = "获取报警数据详细信息")
     public AjaxResult getInfo(@Schema(name = "报警数据ID", requiredMode = Schema.RequiredMode.REQUIRED)
-            @PathVariable("id") Long id)
-    {
+                              @PathVariable("id") Long id) {
         return success(alertDataService.selectAlertDataById(id));
     }
 
@@ -84,8 +82,7 @@ public class AlertDataController extends BaseController
     @Log(title = "报警数据", businessType = BusinessType.INSERT)
     @PostMapping
     @Operation(summary = "新增报警数据")
-    public AjaxResult add(@RequestBody AlertData alertData)
-    {
+    public AjaxResult add(@RequestBody AlertData alertData) {
         return toAjax(alertDataService.insertAlertData(alertData));
     }
 
@@ -96,8 +93,7 @@ public class AlertDataController extends BaseController
     @Log(title = "报警数据", businessType = BusinessType.UPDATE)
     @PutMapping
     @Operation(summary = "修改报警数据")
-    public AjaxResult edit(@RequestBody AlertData alertData)
-    {
+    public AjaxResult edit(@RequestBody AlertData alertData) {
         return toAjax(alertDataService.updateAlertData(alertData));
     }
 
@@ -106,10 +102,9 @@ public class AlertDataController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('nursing:alertData:remove')")
     @Log(title = "报警数据", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+    @DeleteMapping("/{ids}")
     @Operation(summary = "删除报警数据")
-    public AjaxResult remove(@Schema(name = "报警数据ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@Schema(name = "报警数据ID", requiredMode = Schema.RequiredMode.REQUIRED) @PathVariable Long[] ids) {
         return toAjax(alertDataService.deleteAlertDataByIds(ids));
     }
 }

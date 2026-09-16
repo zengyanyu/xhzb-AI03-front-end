@@ -11,8 +11,8 @@ import com.xhzb.nursing.service.IElderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +28,7 @@ import java.util.List;
 @RequestMapping("/nursing/elder")
 @Tag(name = "老人相关接口")
 public class ElderController extends BaseController {
-    @Autowired
+    @Resource
     private IElderService elderService;
 
     /**

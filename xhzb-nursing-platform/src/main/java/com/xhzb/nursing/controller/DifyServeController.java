@@ -1,7 +1,7 @@
 package com.xhzb.nursing.controller;
 
 import com.xhzb.nursing.service.IReservationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 @RequestMapping("/dify/serve")
 public class DifyServeController {
 
-    @Autowired
+    @Resource
     private IReservationService reservationService;
 
     @GetMapping("/getReservationByToday")

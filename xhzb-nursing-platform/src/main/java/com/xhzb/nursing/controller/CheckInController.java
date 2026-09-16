@@ -12,8 +12,8 @@ import com.xhzb.nursing.service.ICheckInService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +29,7 @@ import java.util.List;
 @RequestMapping("/nursing/checkIn")
 @Tag(name = "入住相关接口")
 public class CheckInController extends BaseController {
-    @Autowired
+    @Resource
     private ICheckInService checkInService;
 
     /**
