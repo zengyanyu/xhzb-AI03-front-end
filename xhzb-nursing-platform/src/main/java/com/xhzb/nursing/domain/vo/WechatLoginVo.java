@@ -10,9 +10,13 @@ import lombok.Data;
 @Data
 public class WechatLoginVo {
 
-    /** 认证token */
+    /**
+     * 认证token
+     */
     private String token;
 
-    /** 用户昵称 */
+    /**
+     * 用户昵称
+     */
     private String nickName;
 }

@@ -11,20 +11,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 预约信息Controller
- * 
+ *
  * @author ruoyi
  */
 @RestController
 @RequestMapping("/member/reservation")
-@Tag(name =  "预约信息相关接口")
-public class MemberReservationController extends BaseController
-{
+@Tag(name = "预约信息相关接口")
+public class MemberReservationController extends BaseController {
 
     @GetMapping("/cancelled-count")
     @Operation(summary = "查询取消预约数量")
     public R<Integer> getCancelledReservationCount() {
         Long userId = UserThreadLocal.getUserId();
-        System.out.println("------"+userId);
+        System.out.println("------" + userId);
         return R.ok(1);
     }
 

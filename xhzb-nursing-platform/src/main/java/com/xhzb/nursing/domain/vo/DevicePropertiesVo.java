@@ -11,17 +11,22 @@ import lombok.Data;
  */
 @Data
 @Schema(description = "设备上报的数据响应VO")
-public class DevicePropertiesVo
-{
-    /** 功能ID（产品模型中的服务/属性标识） */
+public class DevicePropertiesVo {
+    /**
+     * 功能ID（产品模型中的服务/属性标识）
+     */
     @Schema(title = "功能ID")
     private String functionId;
 
-    /** 上报时间（北京时间，格式 yyyy-MM-dd'T'HH:mm:ss） */
+    /**
+     * 上报时间（北京时间，格式 yyyy-MM-dd'T'HH:mm:ss）
+     */
     @Schema(title = "上报时间")
     private String eventTime;
 
-    /** 上报值 */
+    /**
+     * 上报值
+     */
     @Schema(title = "上报值")
     private Object value;
 }

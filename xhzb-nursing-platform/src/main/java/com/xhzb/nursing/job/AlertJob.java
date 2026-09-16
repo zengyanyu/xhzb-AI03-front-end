@@ -7,8 +7,8 @@ import com.xhzb.common.utils.StringUtils;
 import com.xhzb.nursing.domain.AlertRule;
 import com.xhzb.nursing.domain.DeviceData;
 import com.xhzb.nursing.service.IAlertRuleService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -29,28 +29,34 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class AlertJob {
 
-    @Autowired
+    @Resource
     private IAlertRuleService alertRuleService;
 
-    @Autowired
+    @Resource
     private StringRedisTemplate stringRedisTemplate;
 
-    /** Redis Hash大key，存储设备最新上报数据 */
+    /**
+     * Redis Hash大key，存储设备最新上报数据
+     */
     private static final String IOT_DEVICE_LATEST_DATA_KEY = "iot:device_latest_data";
 
-    /** Redis报警次数key前缀（规则id:设备id） */
+    /**
+     * Redis报警次数key前缀（规则id:设备id）
+     */
     private static final String ALERT_COUNT_PREFIX = "alert:count:";
 
-    /** Redis报警沉默周期key前缀（规则id:设备id） */
+    /**
+     * Redis报警沉默周期key前缀（规则id:设备id）
+     */
     private static final String ALERT_SILENT_PREFIX = "alert:silent:";
 
     /**
      * 设备数据报警过滤
-     *
+     * <p>
      * 步骤：1.查询所有正在生效的报警规则，没有则结束
-     *      2.查询Redis中设备最新上报的数据，没有则结束
-     *      3.遍历每条设备上报数据，查询匹配的报警规则
-     *      4.遍历每条报警规则，校验阈值、沉默周期、持续周期，达到条件保存报警数据
+     * 2.查询Redis中设备最新上报的数据，没有则结束
+     * 3.遍历每条设备上报数据，查询匹配的报警规则
+     * 4.遍历每条报警规则，校验阈值、沉默周期、持续周期，达到条件保存报警数据
      */
     public void deviceDataAlertFilter() {
         log.info("定时器执行!");
@@ -112,14 +118,14 @@ public class AlertJob {
 
     /**
      * 处理一条设备上报数据对应的报警规则，校验判断是否需要报警处理
-     *
+     * <p>
      * 步骤：1.校验数据是否到达报警规则的阈值，未达则删除Redis中报警次数
-     *      2.判断Redis中是否有沉默周期，有则跳过
-     *      3.查询Redis中已报警次数加1，未达到持续周期则跳过
-     *      4.达到持续周期，删除报警次数、添加沉默周期并保存报警数据
+     * 2.判断Redis中是否有沉默周期，有则跳过
+     * 3.查询Redis中已报警次数加1，未达到持续周期则跳过
+     * 4.达到持续周期，删除报警次数、添加沉默周期并保存报警数据
      *
      * @param deviceData 设备上报数据
-     * @param alertRule 报警规则
+     * @param alertRule  报警规则
      */
     private void processAlertRule(DeviceData deviceData, AlertRule alertRule) {
         //校验当前时间是否在报警生效时段内，不在则跳过本次规则校验
@@ -171,7 +177,7 @@ public class AlertJob {
 
     /**
      * 查询设备上报数据对应的报警规则
-     *
+     * <p>
      * 需要查询该产品物模型下所有设备的规则和该产品物模型下对应设备的规则，两个查询的结果合并到一起
      *
      * @param deviceData 设备上报数据
@@ -270,7 +276,7 @@ public class AlertJob {
     /**
      * 获取Redis中报警次数的key
      *
-     * @param alertRule 报警规则
+     * @param alertRule  报警规则
      * @param deviceData 设备上报数据
      * @return 报警次数key
      */
@@ -281,7 +287,7 @@ public class AlertJob {
     /**
      * 获取Redis中报警沉默周期的key
      *
-     * @param alertRule 报警规则
+     * @param alertRule  报警规则
      * @param deviceData 设备上报数据
      * @return 报警沉默周期key
      */
@@ -289,3 +295,4 @@ public class AlertJob {
         return ALERT_SILENT_PREFIX + alertRule.getId() + ":" + deviceData.getIotId();
     }
 }
+

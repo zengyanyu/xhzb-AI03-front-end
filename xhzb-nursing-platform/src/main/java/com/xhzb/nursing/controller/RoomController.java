@@ -7,12 +7,12 @@ import com.xhzb.common.core.domain.R;
 import com.xhzb.common.core.page.TableDataInfo;
 import com.xhzb.common.enums.BusinessType;
 import com.xhzb.nursing.domain.Room;
-import com.xhzb.nursing.service.IRoomService;
 import com.xhzb.nursing.domain.vo.RoomVo;
+import com.xhzb.nursing.service.IRoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

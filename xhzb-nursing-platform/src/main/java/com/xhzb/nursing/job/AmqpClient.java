@@ -3,12 +3,12 @@ package com.xhzb.nursing.job;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.xhzb.framework.config.properties.HuaWeiIotConfigProperties;
 import com.xhzb.nursing.service.IDeviceDataService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.qpid.jms.*;
 import org.apache.qpid.jms.message.JmsInboundMessageDispatch;
 import org.apache.qpid.jms.transports.TransportOptions;
 import org.apache.qpid.jms.transports.TransportSupport;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -32,14 +32,14 @@ import java.util.stream.Collectors;
 @Component
 public class AmqpClient implements ApplicationRunner {
 
-    @Autowired
+    @Resource
     private HuaWeiIotConfigProperties huaWeiIotConfigProperties;
 
-    @Autowired
+    @Resource
     private IDeviceDataService deviceDataService;
 
     //业务处理异步线程池，线程池参数可以根据您的业务特点调整，或者您也可以用其他异步方式处理接收到的消息。
-    @Autowired
+    @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     //控制台服务端订阅中消费组状态页客户端ID一栏将显示clientId参数。

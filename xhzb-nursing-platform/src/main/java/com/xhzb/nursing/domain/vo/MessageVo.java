@@ -15,10 +15,10 @@ public class MessageVo {
 
     private String content;
 
-    public MessageVo(Message message){
-        this.role = switch (message.getMessageType()){
-            case USER->"user";
-            case SYSTEM->"system";
+    public MessageVo(Message message) {
+        this.role = switch (message.getMessageType()) {
+            case USER -> "user";
+            case SYSTEM -> "system";
             case ASSISTANT -> "assistant";
             default -> "";
         };

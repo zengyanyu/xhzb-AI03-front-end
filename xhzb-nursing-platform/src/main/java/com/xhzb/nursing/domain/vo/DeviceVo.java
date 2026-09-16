@@ -16,27 +16,39 @@ import java.util.List;
 @Schema(description = "设备及数据VO")
 public class DeviceVo {
 
-    /** 设备ID */
+    /**
+     * 设备ID
+     */
     @Schema(title = "设备ID")
     private Long id;
 
-    /** 物联网设备ID */
+    /**
+     * 物联网设备ID
+     */
     @Schema(title = "物联网设备ID")
     private String iotId;
 
-    /** 设备名称 */
+    /**
+     * 设备名称
+     */
     @Schema(title = "设备名称")
     private String deviceName;
 
-    /** 产品key */
+    /**
+     * 产品key
+     */
     @Schema(title = "产品key")
     private String productKey;
 
-    /** 产品名称 */
+    /**
+     * 产品名称
+     */
     @Schema(title = "产品名称")
     private String productName;
 
-    /** 设备上报数据列表（从Redis获取） */
+    /**
+     * 设备上报数据列表（从Redis获取）
+     */
     @Schema(title = "设备上报数据列表")
     private List<DeviceData> deviceDataVos;
 

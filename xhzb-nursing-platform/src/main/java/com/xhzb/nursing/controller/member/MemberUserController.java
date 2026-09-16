@@ -7,7 +7,7 @@ import com.xhzb.nursing.domain.vo.WechatLoginVo;
 import com.xhzb.nursing.service.IFamilyMemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "小程序用户接口")
 public class MemberUserController extends BaseController {
 
-    @Autowired
+    @Resource
     private IFamilyMemberService familyMemberService;
 
     /**

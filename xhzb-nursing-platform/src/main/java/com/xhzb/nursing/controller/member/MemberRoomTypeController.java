@@ -6,7 +6,7 @@ import com.xhzb.nursing.domain.RoomType;
 import com.xhzb.nursing.service.IRoomTypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +18,7 @@ import java.util.List;
 @Tag(name = "客户房型管理")
 public class MemberRoomTypeController extends BaseController {
 
-    @Autowired
+    @Resource
     private IRoomTypeService roomTypeService;
 
     @GetMapping

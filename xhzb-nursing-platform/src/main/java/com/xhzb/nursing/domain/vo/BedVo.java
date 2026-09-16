@@ -10,7 +10,6 @@ import java.util.List;
 @Schema(description = "床位VO")
 public class BedVo {
 
-
     @Schema(title = "床位ID")
     private Long id;
 

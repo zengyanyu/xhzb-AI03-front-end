@@ -12,19 +12,24 @@ import lombok.Data;
  */
 @Data
 @Schema(description = "护理员老人关联对象")
-public class NursingElder extends BaseEntity
-{
+public class NursingElder extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** id */
+    /**
+     * id
+     */
     @Schema(title = "id")
     private Long id;
 
-    /** 护理员id */
+    /**
+     * 护理员id
+     */
     @Schema(title = "护理员id")
     private Long nursingId;
 
-    /** 老人id */
+    /**
+     * 老人id
+     */
     @Schema(title = "老人id")
     private Long elderId;
 
