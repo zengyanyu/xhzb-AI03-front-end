@@ -2,9 +2,6 @@ package com.xhzb.oss.config;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
-import com.aliyun.oss.model.CannedAccessControlList;
-import com.aliyun.oss.model.CreateBucketRequest;
-import com.aliyun.oss.model.SetBucketLoggingRequest;
 import com.xhzb.oss.properties.AliOssConfigProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +16,7 @@ public class OssAliyunAutoConfig {
     AliOssConfigProperties aliOssConfigProperties;
 
     @Bean
-    public OSS ossClient(){
+    public OSS ossClient() {
         log.info("-----------------开始创建OSSClient--------------------");
         OSS ossClient = new OSSClientBuilder().build(aliOssConfigProperties.getEndpoint(),
                 aliOssConfigProperties.getAccessKeyId(), aliOssConfigProperties.getAccessKeySecret());
