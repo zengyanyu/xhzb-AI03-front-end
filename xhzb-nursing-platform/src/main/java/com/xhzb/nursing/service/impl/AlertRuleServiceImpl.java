@@ -50,9 +50,6 @@ public class AlertRuleServiceImpl extends ServiceImpl<AlertRuleMapper, AlertRule
     private static final String ROLE_NAME_SUPER_ADMIN = "超级管理员";
 
     @Autowired
-    private AlertRuleMapper alertRuleMapper;
-
-    @Autowired
     private IAlertDataService alertDataService;
 
     @Autowired
@@ -86,7 +83,7 @@ public class AlertRuleServiceImpl extends ServiceImpl<AlertRuleMapper, AlertRule
      */
     @Override
     public List<AlertRule> selectAlertRuleList(AlertRule alertRule) {
-        return alertRuleMapper.selectAlertRuleList(alertRule);
+        return this.baseMapper.selectAlertRuleList(alertRule);
     }
 
     /**

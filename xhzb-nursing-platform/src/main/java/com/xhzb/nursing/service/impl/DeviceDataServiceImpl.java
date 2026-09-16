@@ -1,16 +1,5 @@
 package com.xhzb.nursing.service.impl;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
-
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -28,6 +17,12 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
 /**
  * 设备数据Service业务层处理
  *
@@ -37,8 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceData> implements IDeviceDataService {
-    @Autowired
-    private DeviceDataMapper deviceDataMapper;
 
     @Autowired
     private IDeviceService deviceService;
@@ -70,7 +63,7 @@ public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceD
      */
     @Override
     public List<DeviceData> selectDeviceDataList(DeviceData deviceData) {
-        return deviceDataMapper.selectDeviceDataList(deviceData);
+        return this.baseMapper.selectDeviceDataList(deviceData);
     }
 
     /**

@@ -24,9 +24,6 @@ import java.util.List;
 @Service
 public class FloorServiceImpl extends ServiceImpl<FloorMapper, Floor> implements IFloorService {
     @Autowired
-    private FloorMapper floorMapper;
-
-    @Autowired
     private RoomMapper roomMapper;
 
     /**
@@ -92,7 +89,7 @@ public class FloorServiceImpl extends ServiceImpl<FloorMapper, Floor> implements
      */
     @Override
     public List<Floor> selectAllByNur() {
-        return floorMapper.selectAllByNur();
+        return this.baseMapper.selectAllByNur();
     }
 
     /**
@@ -104,7 +101,7 @@ public class FloorServiceImpl extends ServiceImpl<FloorMapper, Floor> implements
     @Override
     public List<FloorRoomBedVo> getRoomAndBedByBedStatus(Integer bedStatus) {
         // 1. 查询有符合条件床位的楼层
-        List<Floor> floors = floorMapper.selectFloorsWithRoomAndBedByStatus(bedStatus);
+        List<Floor> floors = this.baseMapper.selectFloorsWithRoomAndBedByStatus(bedStatus);
 
         // 2. 组装树形结构
         List<FloorRoomBedVo> result = new ArrayList<>();
@@ -148,6 +145,6 @@ public class FloorServiceImpl extends ServiceImpl<FloorMapper, Floor> implements
      */
     @Override
     public List<Floor> getAllFloorsWithDevice() {
-        return floorMapper.getAllFloorsWithDevice();
+        return this.baseMapper.getAllFloorsWithDevice();
     }
 }

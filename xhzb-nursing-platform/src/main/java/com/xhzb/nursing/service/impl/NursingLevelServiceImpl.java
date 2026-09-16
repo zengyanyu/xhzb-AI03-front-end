@@ -5,7 +5,6 @@ import com.xhzb.nursing.domain.NursingLevel;
 import com.xhzb.nursing.domain.vo.NursingLevelVo;
 import com.xhzb.nursing.mapper.NursingLevelMapper;
 import com.xhzb.nursing.service.INursingLevelService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +17,6 @@ import java.util.List;
  */
 @Service
 public class NursingLevelServiceImpl extends ServiceImpl<NursingLevelMapper, NursingLevel> implements INursingLevelService {
-    @Autowired
-    private NursingLevelMapper nursingLevelMapper;
 
     /**
      * 查询护理等级
@@ -29,7 +26,7 @@ public class NursingLevelServiceImpl extends ServiceImpl<NursingLevelMapper, Nur
      */
     @Override
     public NursingLevel selectNursingLevelById(Long id) {
-        return nursingLevelMapper.selectNursingLevelById(id);
+        return this.baseMapper.selectNursingLevelById(id);
     }
 
     /**
@@ -40,7 +37,7 @@ public class NursingLevelServiceImpl extends ServiceImpl<NursingLevelMapper, Nur
      */
     @Override
     public List<NursingLevelVo> selectNursingLevelList(NursingLevel nursingLevel) {
-        return nursingLevelMapper.selectNursingLevelList(nursingLevel);
+        return this.baseMapper.selectNursingLevelList(nursingLevel);
     }
 
     /**
@@ -51,7 +48,7 @@ public class NursingLevelServiceImpl extends ServiceImpl<NursingLevelMapper, Nur
      */
     @Override
     public int insertNursingLevel(NursingLevel nursingLevel) {
-        return nursingLevelMapper.insertNursingLevel(nursingLevel);
+        return this.baseMapper.insertNursingLevel(nursingLevel);
     }
 
     /**
@@ -62,7 +59,7 @@ public class NursingLevelServiceImpl extends ServiceImpl<NursingLevelMapper, Nur
      */
     @Override
     public int updateNursingLevel(NursingLevel nursingLevel) {
-        return nursingLevelMapper.updateNursingLevel(nursingLevel);
+        return this.baseMapper.updateNursingLevel(nursingLevel);
     }
 
     /**
@@ -73,7 +70,7 @@ public class NursingLevelServiceImpl extends ServiceImpl<NursingLevelMapper, Nur
      */
     @Override
     public int deleteNursingLevelByIds(Long[] ids) {
-        return nursingLevelMapper.deleteNursingLevelByIds(ids);
+        return this.baseMapper.deleteNursingLevelByIds(ids);
     }
 
     /**
@@ -84,7 +81,7 @@ public class NursingLevelServiceImpl extends ServiceImpl<NursingLevelMapper, Nur
      */
     @Override
     public int deleteNursingLevelById(Long id) {
-        return nursingLevelMapper.deleteNursingLevelById(id);
+        return this.baseMapper.deleteNursingLevelById(id);
     }
 
     /**
@@ -94,7 +91,7 @@ public class NursingLevelServiceImpl extends ServiceImpl<NursingLevelMapper, Nur
      */
     @Override
     public List<NursingLevel> listAll() {
-        return nursingLevelMapper.selectAllEnabled();
+        return this.baseMapper.selectAllEnabled();
     }
 
 }

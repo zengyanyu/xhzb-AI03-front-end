@@ -7,7 +7,6 @@ import com.xhzb.common.exception.base.BaseException;
 import com.xhzb.nursing.domain.RoomType;
 import com.xhzb.nursing.mapper.RoomTypeMapper;
 import com.xhzb.nursing.service.IRoomTypeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -21,8 +20,6 @@ import java.util.List;
  */
 @Service
 public class RoomTypeServiceImpl extends ServiceImpl<RoomTypeMapper, RoomType> implements IRoomTypeService {
-    @Autowired
-    private RoomTypeMapper roomTypeMapper;
 
     /**
      * 查询房型
@@ -43,7 +40,7 @@ public class RoomTypeServiceImpl extends ServiceImpl<RoomTypeMapper, RoomType> i
      */
     @Override
     public List<RoomType> selectRoomTypeList(RoomType roomType) {
-        return roomTypeMapper.selectRoomTypeList(roomType);
+        return this.baseMapper.selectRoomTypeList(roomType);
     }
 
     /**
@@ -98,7 +95,6 @@ public class RoomTypeServiceImpl extends ServiceImpl<RoomTypeMapper, RoomType> i
      */
     @Override
     public List<RoomType> findRoomTypeListByStatus(Integer status) {
-
         if (ObjectUtil.isEmpty(status)) {
             throw new BaseException("参数为空");
         }

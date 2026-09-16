@@ -23,8 +23,6 @@ import java.util.List;
  */
 @Service
 public class NursingProjectServiceImpl extends ServiceImpl<NursingProjectMapper, NursingProject> implements INursingProjectService {
-    @Autowired
-    private NursingProjectMapper nursingProjectMapper;
 
     @Autowired
     private NursingProjectPlanMapper nursingProjectPlanMapper;
@@ -48,7 +46,7 @@ public class NursingProjectServiceImpl extends ServiceImpl<NursingProjectMapper,
      */
     @Override
     public List<NursingProject> selectNursingProjectList(NursingProject nursingProject) {
-        return nursingProjectMapper.selectNursingProjectList(nursingProject);
+        return this.baseMapper.selectNursingProjectList(nursingProject);
     }
 
     /**
@@ -120,6 +118,6 @@ public class NursingProjectServiceImpl extends ServiceImpl<NursingProjectMapper,
      */
     @Override
     public List<NursingProjectVo> listAll() {
-        return nursingProjectMapper.listAll();
+        return this.baseMapper.listAll();
     }
 }

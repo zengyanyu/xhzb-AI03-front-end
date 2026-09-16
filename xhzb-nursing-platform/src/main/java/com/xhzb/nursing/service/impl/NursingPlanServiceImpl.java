@@ -1,25 +1,23 @@
 package com.xhzb.nursing.service.impl;
 
-import java.util.List;
-
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xhzb.common.utils.DateUtils;
 import com.xhzb.nursing.domain.NursingLevel;
-import com.xhzb.nursing.domain.NursingProjectPlan;
+import com.xhzb.nursing.domain.NursingPlan;
 import com.xhzb.nursing.domain.dto.NursingPlanDto;
-import com.xhzb.nursing.mapper.NursingProjectPlanMapper;
 import com.xhzb.nursing.domain.vo.NursingPlanVo;
 import com.xhzb.nursing.domain.vo.NursingProjectPlanVo;
+import com.xhzb.nursing.mapper.NursingPlanMapper;
+import com.xhzb.nursing.mapper.NursingProjectPlanMapper;
 import com.xhzb.nursing.service.INursingLevelService;
+import com.xhzb.nursing.service.INursingPlanService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.xhzb.nursing.mapper.NursingPlanMapper;
-import com.xhzb.nursing.domain.NursingPlan;
-import com.xhzb.nursing.service.INursingPlanService;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 护理计划Service业务层处理
@@ -30,8 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Service
 public class NursingPlanServiceImpl extends ServiceImpl<NursingPlanMapper, NursingPlan> implements INursingPlanService {
-    @Autowired
-    private NursingPlanMapper nursingPlanMapper;
 
     /**
      * 查询护理计划
@@ -42,7 +38,7 @@ public class NursingPlanServiceImpl extends ServiceImpl<NursingPlanMapper, Nursi
     @Override
     public NursingPlanVo selectNursingPlanById(Long id) {
         //查询护理计划
-        NursingPlan nursingPlan = nursingPlanMapper.selectNursingPlanById(id);
+        NursingPlan nursingPlan = this.baseMapper.selectNursingPlanById(id);
         NursingPlanVo nursingPlanVo = new NursingPlanVo();
         BeanUtils.copyProperties(nursingPlan, nursingPlanVo);
 
@@ -61,7 +57,7 @@ public class NursingPlanServiceImpl extends ServiceImpl<NursingPlanMapper, Nursi
      */
     @Override
     public List<NursingPlan> selectNursingPlanList(NursingPlan nursingPlan) {
-        return nursingPlanMapper.selectNursingPlanList(nursingPlan);
+        return this.baseMapper.selectNursingPlanList(nursingPlan);
     }
 
     @Autowired
@@ -80,7 +76,7 @@ public class NursingPlanServiceImpl extends ServiceImpl<NursingPlanMapper, Nursi
         NursingPlan nursingPlan = new NursingPlan();
         BeanUtils.copyProperties(dto, nursingPlan);
         nursingPlan.setCreateTime(DateUtils.getNowDate());
-        int count = nursingPlanMapper.insertNursingPlan(nursingPlan);
+        int count = this.baseMapper.insertNursingPlan(nursingPlan);
 
         //保存护理项目计划中间关系数据
         if (dto.getProjectPlans() != null && !dto.getProjectPlans().isEmpty()) {
@@ -132,7 +128,7 @@ public class NursingPlanServiceImpl extends ServiceImpl<NursingPlanMapper, Nursi
         }
 
         //不管dto的list空不空，都要修改护理计划
-        return nursingPlanMapper.updateNursingPlan(nursingPlan);
+        return this.baseMapper.updateNursingPlan(nursingPlan);
 
     }
 
@@ -151,7 +147,7 @@ public class NursingPlanServiceImpl extends ServiceImpl<NursingPlanMapper, Nursi
         }
         //删除之前的关联关系  根据护理计划ID删除
         nursingProjectPlanMapper.deleteByPlanId(id);
-        return nursingPlanMapper.deleteNursingPlanById(id);
+        return this.baseMapper.deleteNursingPlanById(id);
     }
 
     /**
@@ -161,6 +157,6 @@ public class NursingPlanServiceImpl extends ServiceImpl<NursingPlanMapper, Nursi
      */
     @Override
     public List<NursingPlan> listAll() {
-        return nursingPlanMapper.listAll();
+        return this.baseMapper.listAll();
     }
 }

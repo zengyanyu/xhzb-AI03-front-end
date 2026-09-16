@@ -11,14 +11,20 @@ import lombok.Data;
 @Data
 public class WechatLoginDto {
 
-    /** 临时登录凭证code */
+    /**
+     * 临时登录凭证code
+     */
     @NotBlank(message = "微信登录code不能为空")
     private String code;
 
-    /** 微信用户昵称 */
+    /**
+     * 微信用户昵称
+     */
     private String nickName;
 
-    /** 获取手机号的临时code */
+    /**
+     * 获取手机号的临时code
+     */
     @NotBlank(message = "获取手机号的code不能为空")
     private String phoneCode;
 }

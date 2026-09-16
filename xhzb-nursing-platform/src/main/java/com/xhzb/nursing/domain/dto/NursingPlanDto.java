@@ -9,7 +9,6 @@ import java.util.List;
 @Schema(description = "护理计划DTO")
 public class NursingPlanDto {
 
-
     @Schema(title = "编号")
     private Long id;
 

@@ -1,16 +1,13 @@
 package com.xhzb.nursing.service.impl;
 
-import java.util.List;
-
-import com.xhzb.common.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.xhzb.nursing.mapper.ElderMapper;
-import com.xhzb.nursing.domain.Elder;
-import com.xhzb.nursing.service.IElderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xhzb.nursing.domain.Elder;
+import com.xhzb.nursing.mapper.ElderMapper;
+import com.xhzb.nursing.service.IElderService;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 老人Service业务层处理
@@ -20,9 +17,6 @@ import java.util.Arrays;
  */
 @Service
 public class ElderServiceImpl extends ServiceImpl<ElderMapper, Elder> implements IElderService {
-    @Autowired
-    private ElderMapper elderMapper;
-
     /**
      * 查询老人
      *
@@ -42,7 +36,7 @@ public class ElderServiceImpl extends ServiceImpl<ElderMapper, Elder> implements
      */
     @Override
     public List<Elder> selectElderList(Elder elder) {
-        return elderMapper.selectElderList(elder);
+        return this.baseMapper.selectElderList(elder);
     }
 
     /**

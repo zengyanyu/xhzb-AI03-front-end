@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xhzb.nursing.domain.AlertData;
 import com.xhzb.nursing.mapper.AlertDataMapper;
 import com.xhzb.nursing.service.IAlertDataService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -18,8 +17,6 @@ import java.util.List;
  */
 @Service
 public class AlertDataServiceImpl extends ServiceImpl<AlertDataMapper, AlertData> implements IAlertDataService {
-    @Autowired
-    private AlertDataMapper alertDataMapper;
 
     /**
      * 查询报警数据
@@ -40,7 +37,7 @@ public class AlertDataServiceImpl extends ServiceImpl<AlertDataMapper, AlertData
      */
     @Override
     public List<AlertData> selectAlertDataList(AlertData alertData) {
-        return alertDataMapper.selectAlertDataList(alertData);
+        return this.baseMapper.selectAlertDataList(alertData);
     }
 
     /**

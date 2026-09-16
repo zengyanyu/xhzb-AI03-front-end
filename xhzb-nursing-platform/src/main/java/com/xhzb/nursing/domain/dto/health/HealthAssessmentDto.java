@@ -7,7 +7,6 @@ import lombok.Data;
 /**
  * 健康评估
  */
-
 @Data
 @Schema(description = "健康评估")
 public class HealthAssessmentDto {
@@ -24,7 +23,7 @@ public class HealthAssessmentDto {
     @JsonProperty("recent30Days")
     @Schema(title = "最近30天意外事件和体检报告")
     private Recent30Days recent30Days;
-    
+
     @Data
     public static class DiseaseDiagnosis {
         /**
@@ -46,7 +45,7 @@ public class HealthAssessmentDto {
         @Schema(title = "慢性病")
         private String chronicDiseases;
     }
-    
+
     @Data
     public static class Recent30Days {
         /**

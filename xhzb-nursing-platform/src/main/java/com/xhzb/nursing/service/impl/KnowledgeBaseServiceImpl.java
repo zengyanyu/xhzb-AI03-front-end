@@ -13,7 +13,6 @@ import org.springframework.ai.reader.ExtractedTextFormatter;
 import org.springframework.ai.reader.pdf.ParagraphPdfDocumentReader;
 import org.springframework.ai.reader.pdf.config.PdfDocumentReaderConfig;
 import org.springframework.ai.transformer.splitter.TextSplitter;
-import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
@@ -30,8 +29,6 @@ import java.util.List;
  */
 @Service
 public class KnowledgeBaseServiceImpl extends ServiceImpl<KnowledgeBaseMapper, KnowledgeBase> implements IKnowledgeBaseService {
-    @Autowired
-    private KnowledgeBaseMapper knowledgeBaseMapper;
 
     /**
      * 查询知识库主
@@ -52,7 +49,7 @@ public class KnowledgeBaseServiceImpl extends ServiceImpl<KnowledgeBaseMapper, K
      */
     @Override
     public List<KnowledgeBase> selectKnowledgeBaseList(KnowledgeBase knowledgeBase) {
-        return knowledgeBaseMapper.selectKnowledgeBaseList(knowledgeBase);
+        return this.baseMapper.selectKnowledgeBaseList(knowledgeBase);
     }
 
     //导入OSS存储业务类

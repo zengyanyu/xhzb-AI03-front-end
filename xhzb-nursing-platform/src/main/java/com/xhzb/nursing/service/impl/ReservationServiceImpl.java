@@ -7,7 +7,6 @@ import com.xhzb.nursing.domain.Reservation;
 import com.xhzb.nursing.domain.vo.ElderVisitInfoVO;
 import com.xhzb.nursing.mapper.ReservationMapper;
 import com.xhzb.nursing.service.IReservationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,8 +22,6 @@ import java.util.List;
  */
 @Service
 public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reservation> implements IReservationService {
-    @Autowired
-    private ReservationMapper reservationMapper;
 
     /**
      * 查询预约信息
@@ -45,7 +42,7 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
      */
     @Override
     public List<Reservation> selectReservationList(Reservation reservation) {
-        return reservationMapper.selectReservationList(reservation);
+        return this.baseMapper.selectReservationList(reservation);
     }
 
     /**
@@ -105,7 +102,7 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
             dateTime = LocalDate.now();
         }
 
-        List<Reservation> list = reservationMapper.selectByNow(dateTime);
+        List<Reservation> list = this.baseMapper.selectByNow(dateTime);
         if (null != list && !list.isEmpty()) {
 
             List<ElderVisitInfoVO> resultList = new ArrayList<>();

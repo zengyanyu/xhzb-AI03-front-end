@@ -23,9 +23,9 @@ public interface DifyChatService {
     /**
      * 流式聊天: 调用 Dify /chat-messages 接口, 将 SSE 事件逐条转发给前端
      *
-     * @param query           用户输入内容
-     * @param conversationId  会话ID, 新会话传空字符串或null
-     * @param user            用户标识(用于Dify区分终端用户)
+     * @param query          用户输入内容
+     * @param conversationId 会话ID, 新会话传空字符串或null
+     * @param user           用户标识(用于Dify区分终端用户)
      * @return SseEmitter SSE发射器
      */
     SseEmitter chatStream(String query, String conversationId, String user);

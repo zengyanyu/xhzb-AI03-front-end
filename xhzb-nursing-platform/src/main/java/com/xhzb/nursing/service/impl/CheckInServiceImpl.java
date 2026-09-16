@@ -35,9 +35,6 @@ import java.util.List;
 @Service
 public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> implements ICheckInService {
     @Autowired
-    private CheckInMapper checkInMapper;
-
-    @Autowired
     private CheckInConfigMapper checkInConfigMapper;
 
     @Autowired
@@ -80,7 +77,7 @@ public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> impl
      */
     @Override
     public List<CheckIn> selectCheckInList(CheckIn checkIn) {
-        return checkInMapper.selectCheckInList(checkIn);
+        return this.baseMapper.selectCheckInList(checkIn);
     }
 
     /**

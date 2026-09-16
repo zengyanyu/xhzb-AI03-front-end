@@ -22,16 +22,24 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "dify")
 public class DifyProperties {
 
-    /** Dify API 基础地址(带 /v1) */
+    /**
+     * Dify API 基础地址(带 /v1)
+     */
     private String baseUrl = "http://192.168.100.128/v1";
 
-    /** Dify 应用 API 秘钥 */
+    /**
+     * Dify 应用 API 秘钥
+     */
     private String apiKey = "app-TPBAg6vcHXbARqwUap0bnTwG";
 
-    /** 普通接口(会话列表/历史消息/删除会话)超时时间(秒) */
+    /**
+     * 普通接口(会话列表/历史消息/删除会话)超时时间(秒)
+     */
     private Integer timeoutSeconds = 60;
 
-    /** 流式聊天接口连接超时时间(秒), 读取不超时(由服务端控制) */
+    /**
+     * 流式聊天接口连接超时时间(秒), 读取不超时(由服务端控制)
+     */
     private Integer streamConnectTimeoutSeconds = 15;
 
     public String getBaseUrl() {

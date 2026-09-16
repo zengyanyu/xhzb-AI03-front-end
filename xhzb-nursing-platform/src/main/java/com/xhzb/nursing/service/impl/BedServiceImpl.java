@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xhzb.nursing.domain.Bed;
 import com.xhzb.nursing.mapper.BedMapper;
 import com.xhzb.nursing.service.IBedService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -18,9 +17,6 @@ import java.util.List;
  */
 @Service
 public class BedServiceImpl extends ServiceImpl<BedMapper, Bed> implements IBedService {
-    @Autowired
-    private BedMapper bedMapper;
-
     /**
      * 查询床位
      *
@@ -40,7 +36,7 @@ public class BedServiceImpl extends ServiceImpl<BedMapper, Bed> implements IBedS
      */
     @Override
     public List<Bed> selectBedList(Bed bed) {
-        return bedMapper.selectBedList(bed);
+        return this.baseMapper.selectBedList(bed);
     }
 
     /**

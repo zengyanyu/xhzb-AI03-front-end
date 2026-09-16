@@ -43,8 +43,6 @@ import java.util.List;
 @Slf4j
 @Service
 public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMapper, HealthAssessment> implements IHealthAssessmentService {
-    @Autowired
-    private HealthAssessmentMapper healthAssessmentMapper;
 
     @Autowired
     private IHealthAssessmentDataCollectionService healthAssessmentDataCollectionService;
@@ -78,7 +76,7 @@ public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMap
      */
     @Override
     public List<HealthAssessment> selectHealthAssessmentList(HealthAssessment healthAssessment) {
-        return healthAssessmentMapper.selectHealthAssessmentList(healthAssessment);
+        return this.baseMapper.selectHealthAssessmentList(healthAssessment);
     }
 
     /**

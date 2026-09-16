@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
- *  社会参与
+ * 社会参与
  */
 @Data
 @Schema(description = "社会参与")

@@ -11,7 +11,6 @@ import lombok.Data;
 @Schema(description = "基本信息")
 public class BasicInfo {
 
-
     /**
      * 老人姓名
      */
@@ -20,7 +19,7 @@ public class BasicInfo {
     private String elderName;
 
     /**
-     *  身份证号码
+     * 身份证号码
      */
     @JsonProperty("idCard")
     @Schema(title = "身份证号码")

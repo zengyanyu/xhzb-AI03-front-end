@@ -1,18 +1,9 @@
 package com.xhzb.nursing.service.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import com.xhzb.common.constant.Constants;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xhzb.common.core.domain.entity.SysUser;
 import com.xhzb.common.core.domain.model.LoginUser;
 import com.xhzb.common.exception.ServiceException;
@@ -23,7 +14,11 @@ import com.xhzb.nursing.domain.dto.WechatLoginDto;
 import com.xhzb.nursing.domain.vo.WechatLoginVo;
 import com.xhzb.nursing.mapper.FamilyMemberMapper;
 import com.xhzb.nursing.service.IFamilyMemberService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * 老人家属Service业务层处理
@@ -33,9 +28,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 public class FamilyMemberServiceImpl extends ServiceImpl<FamilyMemberMapper, FamilyMember> implements IFamilyMemberService {
-
-    @Autowired
-    private FamilyMemberMapper familyMemberMapper;
 
     @Autowired
     private TokenService tokenService;
@@ -101,7 +93,7 @@ public class FamilyMemberServiceImpl extends ServiceImpl<FamilyMemberMapper, Fam
      */
     @Override
     public List<FamilyMember> selectFamilyMemberList(FamilyMember familyMember) {
-        return familyMemberMapper.selectFamilyMemberList(familyMember);
+        return this.baseMapper.selectFamilyMemberList(familyMember);
     }
 
     /**

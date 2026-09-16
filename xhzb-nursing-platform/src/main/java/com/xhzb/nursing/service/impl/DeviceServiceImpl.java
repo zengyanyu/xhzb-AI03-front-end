@@ -41,9 +41,6 @@ import java.util.*;
 @Service
 public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> implements IDeviceService {
     @Autowired
-    private DeviceMapper deviceMapper;
-
-    @Autowired
     private ISysUserService sysUserService;
 
     /**
@@ -65,7 +62,7 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
      */
     @Override
     public List<Device> selectDeviceList(Device device) {
-        return deviceMapper.selectDeviceList(device);
+        return this.baseMapper.selectDeviceList(device);
     }
 
     /**

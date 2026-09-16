@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xhzb.nursing.domain.CheckInConfig;
 import com.xhzb.nursing.mapper.CheckInConfigMapper;
 import com.xhzb.nursing.service.ICheckInConfigService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -18,9 +17,6 @@ import java.util.List;
  */
 @Service
 public class CheckInConfigServiceImpl extends ServiceImpl<CheckInConfigMapper, CheckInConfig> implements ICheckInConfigService {
-    @Autowired
-    private CheckInConfigMapper checkInConfigMapper;
-
     /**
      * 查询入住配置
      *
@@ -40,7 +36,7 @@ public class CheckInConfigServiceImpl extends ServiceImpl<CheckInConfigMapper, C
      */
     @Override
     public List<CheckInConfig> selectCheckInConfigList(CheckInConfig checkInConfig) {
-        return checkInConfigMapper.selectCheckInConfigList(checkInConfig);
+        return this.baseMapper.selectCheckInConfigList(checkInConfig);
     }
 
     /**

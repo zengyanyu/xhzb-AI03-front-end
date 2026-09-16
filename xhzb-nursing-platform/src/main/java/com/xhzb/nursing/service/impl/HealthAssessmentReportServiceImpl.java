@@ -1,16 +1,13 @@
 package com.xhzb.nursing.service.impl;
 
-import java.util.List;
-
-import com.xhzb.common.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.xhzb.nursing.mapper.HealthAssessmentReportMapper;
-import com.xhzb.nursing.domain.HealthAssessmentReport;
-import com.xhzb.nursing.service.IHealthAssessmentReportService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xhzb.nursing.domain.HealthAssessmentReport;
+import com.xhzb.nursing.mapper.HealthAssessmentReportMapper;
+import com.xhzb.nursing.service.IHealthAssessmentReportService;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 健康评估报告Service业务层处理
@@ -20,8 +17,6 @@ import java.util.Arrays;
  */
 @Service
 public class HealthAssessmentReportServiceImpl extends ServiceImpl<HealthAssessmentReportMapper, HealthAssessmentReport> implements IHealthAssessmentReportService {
-    @Autowired
-    private HealthAssessmentReportMapper healthAssessmentReportMapper;
 
     /**
      * 查询健康评估报告
@@ -42,7 +37,7 @@ public class HealthAssessmentReportServiceImpl extends ServiceImpl<HealthAssessm
      */
     @Override
     public List<HealthAssessmentReport> selectHealthAssessmentReportList(HealthAssessmentReport healthAssessmentReport) {
-        return healthAssessmentReportMapper.selectHealthAssessmentReportList(healthAssessmentReport);
+        return this.baseMapper.selectHealthAssessmentReportList(healthAssessmentReport);
     }
 
     /**

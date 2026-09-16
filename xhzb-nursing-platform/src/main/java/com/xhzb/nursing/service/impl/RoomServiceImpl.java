@@ -32,8 +32,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements IRoomService {
-    @Autowired
-    private RoomMapper roomMapper;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -62,7 +60,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements IR
      */
     @Override
     public List<Room> selectRoomList(Room room) {
-        return roomMapper.selectRoomList(room);
+        return this.baseMapper.selectRoomList(room);
     }
 
     /**
@@ -106,7 +104,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements IR
      */
     @Override
     public List<RoomVo> getRoomsByFloorId(Long floorId) {
-        return roomMapper.selectByFloorId(floorId);
+        return this.baseMapper.selectByFloorId(floorId);
     }
 
 
@@ -118,7 +116,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements IR
      */
     @Override
     public List<RoomVo> getRoomsWithNurByFloorId(Long floorId) {
-        return roomMapper.selectByFloorIdWithNur(floorId);
+        return this.baseMapper.selectByFloorIdWithNur(floorId);
     }
 
     /**
@@ -129,7 +127,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements IR
      */
     @Override
     public RoomVo getRoomDetailById(Long id) {
-        return roomMapper.selectRoomDetailById(id);
+        return this.baseMapper.selectRoomDetailById(id);
     }
 
     /**
@@ -144,7 +142,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements IR
     @Override
     public List<RoomVo> getRoomsWithDeviceByFloorId(Long floorId) {
         //1.查询房间及房间级设备
-        List<RoomVo> rooms = roomMapper.selectRoomsWithDevicesByFloorId(floorId);
+        List<RoomVo> rooms = this.baseMapper.selectRoomsWithDevicesByFloorId(floorId);
         if (rooms == null || rooms.isEmpty()) {
             return List.of();
         }
@@ -155,7 +153,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements IR
                 .collect(Collectors.toList());
 
         //3.查询床位及床位级设备
-        List<BedVo> allBeds = roomMapper.selectBedsWithDevicesByRoomIds(roomIds);
+        List<BedVo> allBeds = this.baseMapper.selectBedsWithDevicesByRoomIds(roomIds);
 
         //4.按房间ID分组床位
         Map<Long, List<BedVo>> bedsByRoomId = new LinkedHashMap<>();

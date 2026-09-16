@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xhzb.nursing.domain.HealthAssessmentDataCollection;
 import com.xhzb.nursing.mapper.HealthAssessmentDataCollectionMapper;
 import com.xhzb.nursing.service.IHealthAssessmentDataCollectionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -18,8 +17,6 @@ import java.util.List;
  */
 @Service
 public class HealthAssessmentDataCollectionServiceImpl extends ServiceImpl<HealthAssessmentDataCollectionMapper, HealthAssessmentDataCollection> implements IHealthAssessmentDataCollectionService {
-    @Autowired
-    private HealthAssessmentDataCollectionMapper healthAssessmentDataCollectionMapper;
 
     /**
      * 查询健康评估数据采集
@@ -40,7 +37,7 @@ public class HealthAssessmentDataCollectionServiceImpl extends ServiceImpl<Healt
      */
     @Override
     public List<HealthAssessmentDataCollection> selectHealthAssessmentDataCollectionList(HealthAssessmentDataCollection healthAssessmentDataCollection) {
-        return healthAssessmentDataCollectionMapper.selectHealthAssessmentDataCollectionList(healthAssessmentDataCollection);
+        return this.baseMapper.selectHealthAssessmentDataCollectionList(healthAssessmentDataCollection);
     }
 
     /**

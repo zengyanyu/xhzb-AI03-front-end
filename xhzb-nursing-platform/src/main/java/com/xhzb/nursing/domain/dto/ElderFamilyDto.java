@@ -13,15 +13,21 @@ import lombok.Data;
 @Schema(description = "老人家属信息DTO")
 public class ElderFamilyDto {
 
-    /** 家属关系（0:子女 1:配偶等） */
+    /**
+     * 家属关系（0:子女 1:配偶等）
+     */
     @Schema(title = "家属关系")
     private String kinship;
 
-    /** 家属姓名 */
+    /**
+     * 家属姓名
+     */
     @Schema(title = "家属姓名")
     private String name;
 
-    /** 家属联系电话 */
+    /**
+     * 家属联系电话
+     */
     @Schema(title = "家属联系电话")
     private String phone;
 }
