@@ -2,6 +2,7 @@ package com.xhzb.framework.config;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -18,19 +19,17 @@ import com.xhzb.common.utils.StringUtils;
  * @author ruoyi
  */
 @Configuration
-public class FilterConfig
-{
+public class FilterConfig {
     @Value("${xss.excludes}")
     private String excludes;
 
     @Value("${xss.urlPatterns}")
     private String urlPatterns;
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Bean
     @ConditionalOnProperty(value = "xss.enabled", havingValue = "true")
-    public FilterRegistrationBean xssFilterRegistration()
-    {
+    public FilterRegistrationBean xssFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setDispatcherTypes(DispatcherType.REQUEST);
         registration.setFilter(new XssFilter());
@@ -43,10 +42,9 @@ public class FilterConfig
         return registration;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Bean
-    public FilterRegistrationBean someFilterRegistration()
-    {
+    public FilterRegistrationBean someFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new RepeatableFilter());
         registration.addUrlPatterns("/*");

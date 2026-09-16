@@ -22,7 +22,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public boolean isExclude() {
         try {
             String requestURI = request.getRequestURI();
-            if(requestURI.startsWith("/member")){
+            if (requestURI.startsWith("/member")) {
                 return false;
             }
             return true;
@@ -35,30 +35,31 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         this.strictInsertFill(metaObject, "createTime", Date.class, new Date());
-        if(isExclude()){
-            this.strictInsertFill(metaObject, "createBy", String.class, loadUserId()+"");
+        if (isExclude()) {
+            this.strictInsertFill(metaObject, "createBy", String.class, loadUserId() + "");
         }
 
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        this.strictUpdateFill(metaObject,"updateTime",Date.class,new Date());
-        if(isExclude()){
-            this.strictUpdateFill(metaObject, "updateBy", String.class, loadUserId()+"");
+        this.strictUpdateFill(metaObject, "updateTime", Date.class, new Date());
+        if (isExclude()) {
+            this.strictUpdateFill(metaObject, "updateBy", String.class, loadUserId() + "");
         }
 
     }
 
     /**
      * 获取当前登录人的ID
+     *
      * @return
      */
-    public static Long loadUserId(){
+    public static Long loadUserId() {
         try {
             //获取当前登录人的id
             LoginUser loginUser = SecurityUtils.getLoginUser();
-            if(ObjectUtils.isNotEmpty(loginUser)){
+            if (ObjectUtils.isNotEmpty(loginUser)) {
                 return loginUser.getUserId();
             }
             return 1L;

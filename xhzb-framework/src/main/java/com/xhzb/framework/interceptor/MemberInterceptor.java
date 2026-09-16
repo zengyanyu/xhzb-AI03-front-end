@@ -25,18 +25,18 @@ public class MemberInterceptor implements HandlerInterceptor {
 
         //获取token
         String token = request.getHeader("authorization");
-        if(StringUtils.isEmpty(token)){
+        if (StringUtils.isEmpty(token)) {
             throw new BaseException("认证失败");
         }
         //解析token
-        Map<String, Object> claims =  tokenService.parseToken(token);
-        if(ObjectUtil.isEmpty(claims)){
+        Map<String, Object> claims = tokenService.parseToken(token);
+        if (ObjectUtil.isEmpty(claims)) {
             throw new BaseException("认证失败");
         }
         //注意这里要和生成Token时设置的userId要保持一致
         // Long userId = MapUtil.get(claims, Constants.JWT_USERID, Long.class);
-        Long userId =  ((Integer)claims.get(Constants.JWT_USERID)).longValue();
-        if(ObjectUtil.isEmpty(userId)){
+        Long userId = ((Integer) claims.get(Constants.JWT_USERID)).longValue();
+        if (ObjectUtil.isEmpty(userId)) {
             throw new BaseException("认证失败");
         }
         //把数据存储到线程中
