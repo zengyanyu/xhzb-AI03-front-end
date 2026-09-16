@@ -96,8 +96,6 @@ public interface ISysDeptService {
      *
      * @param deptId 部门id
      */
-    c
-
     void checkDeptDataScope(Long deptId);
 
     /**
