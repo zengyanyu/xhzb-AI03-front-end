@@ -9,7 +9,7 @@ import com.xhzb.nursing.domain.vo.NursingProjectVo;
 import com.xhzb.nursing.mapper.NursingProjectMapper;
 import com.xhzb.nursing.mapper.NursingProjectPlanMapper;
 import com.xhzb.nursing.service.INursingProjectService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 public class NursingProjectServiceImpl extends ServiceImpl<NursingProjectMapper, NursingProject> implements INursingProjectService {
 
-    @Autowired
+    @Resource
     private NursingProjectPlanMapper nursingProjectPlanMapper;
 
     /**

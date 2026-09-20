@@ -20,8 +20,8 @@ import com.xhzb.nursing.service.IElderService;
 import com.xhzb.nursing.service.INursingElderService;
 import com.xhzb.system.service.ISysRoleService;
 import com.xhzb.system.service.ISysUserService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,19 +49,15 @@ public class AlertRuleServiceImpl extends ServiceImpl<AlertRuleMapper, AlertRule
      */
     private static final String ROLE_NAME_SUPER_ADMIN = "超级管理员";
 
-    @Autowired
+    @Resource
     private IAlertDataService alertDataService;
-
-    @Autowired
+    @Resource
     private IElderService elderService;
-
-    @Autowired
+    @Resource
     private INursingElderService nursingElderService;
-
-    @Autowired
+    @Resource
     private ISysRoleService sysRoleService;
-
-    @Autowired
+    @Resource
     private ISysUserService sysUserService;
 
     /**

@@ -22,6 +22,7 @@ import com.xhzb.nursing.domain.vo.ProductVo;
 import com.xhzb.nursing.mapper.DeviceMapper;
 import com.xhzb.nursing.service.IDeviceService;
 import com.xhzb.system.service.ISysUserService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -40,7 +41,7 @@ import java.util.*;
 @Slf4j
 @Service
 public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> implements IDeviceService {
-    @Autowired
+    @Resource
     private ISysUserService sysUserService;
 
     /**

@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.xhzb.nursing.config.DifyProperties;
 import com.xhzb.nursing.service.DifyChatService;
 import jakarta.annotation.PreDestroy;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -41,7 +41,7 @@ public class DifyChatServiceImpl implements DifyChatService {
 
     private static final Logger log = LoggerFactory.getLogger(DifyChatServiceImpl.class);
 
-    @Autowired
+    @Resource
     private DifyProperties difyProperties;
 
     private final ObjectMapper objectMapper = new ObjectMapper();

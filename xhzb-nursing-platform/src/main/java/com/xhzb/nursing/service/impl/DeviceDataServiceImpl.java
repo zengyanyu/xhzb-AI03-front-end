@@ -11,8 +11,8 @@ import com.xhzb.nursing.domain.DeviceData;
 import com.xhzb.nursing.mapper.DeviceDataMapper;
 import com.xhzb.nursing.service.IDeviceDataService;
 import com.xhzb.nursing.service.IDeviceService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,10 +33,10 @@ import java.util.*;
 @Service
 public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceData> implements IDeviceDataService {
 
-    @Autowired
+    @Resource
     private IDeviceService deviceService;
 
-    @Autowired
+    @Resource
     private StringRedisTemplate stringRedisTemplate;
 
     /**

@@ -22,6 +22,7 @@ import com.xhzb.nursing.service.IHealthAssessmentDataCollectionService;
 import com.xhzb.nursing.service.IHealthAssessmentReportService;
 import com.xhzb.nursing.service.IHealthAssessmentService;
 import com.xhzb.oss.client.OSSAliyunFileStorageService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +45,13 @@ import java.util.List;
 @Service
 public class HealthAssessmentServiceImpl extends ServiceImpl<HealthAssessmentMapper, HealthAssessment> implements IHealthAssessmentService {
 
-    @Autowired
+    @Resource
     private IHealthAssessmentDataCollectionService healthAssessmentDataCollectionService;
 
-    @Autowired
+    @Resource
     private IHealthAssessmentReportService healthAssessmentReportService;
 
-    @Autowired
+    @Resource
     private OSSAliyunFileStorageService ossAliyunFileStorageService;
 
     @Autowired(required = false)

@@ -8,7 +8,7 @@ import com.xhzb.nursing.domain.vo.RoomVo;
 import com.xhzb.nursing.mapper.FloorMapper;
 import com.xhzb.nursing.mapper.RoomMapper;
 import com.xhzb.nursing.service.IFloorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Service
 public class FloorServiceImpl extends ServiceImpl<FloorMapper, Floor> implements IFloorService {
-    @Autowired
+    @Resource
     private RoomMapper roomMapper;
 
     /**

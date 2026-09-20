@@ -14,7 +14,7 @@ import com.xhzb.nursing.domain.dto.WechatLoginDto;
 import com.xhzb.nursing.domain.vo.WechatLoginVo;
 import com.xhzb.nursing.mapper.FamilyMemberMapper;
 import com.xhzb.nursing.service.IFamilyMemberService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,7 @@ import java.util.*;
 @Service
 public class FamilyMemberServiceImpl extends ServiceImpl<FamilyMemberMapper, FamilyMember> implements IFamilyMemberService {
 
-    @Autowired
+    @Resource
     private TokenService tokenService;
 
     /**

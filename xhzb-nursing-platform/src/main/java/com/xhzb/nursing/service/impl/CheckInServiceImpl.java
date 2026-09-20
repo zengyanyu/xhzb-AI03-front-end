@@ -14,7 +14,7 @@ import com.xhzb.nursing.mapper.CheckInConfigMapper;
 import com.xhzb.nursing.mapper.CheckInMapper;
 import com.xhzb.nursing.mapper.ContractMapper;
 import com.xhzb.nursing.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,28 +34,21 @@ import java.util.List;
  */
 @Service
 public class CheckInServiceImpl extends ServiceImpl<CheckInMapper, CheckIn> implements ICheckInService {
-    @Autowired
+    @Resource
     private CheckInConfigMapper checkInConfigMapper;
-
-    @Autowired
+    @Resource
     private ContractMapper contractMapper;
-
-    @Autowired
+    @Resource
     private IElderService elderService;
-
-    @Autowired
+    @Resource
     private IContractService contractService;
-
-    @Autowired
+    @Resource
     private ICheckInConfigService checkInConfigService;
-
-    @Autowired
+    @Resource
     private IHealthAssessmentService healthAssessmentService;
-
-    @Autowired
+    @Resource
     private IHealthAssessmentReportService healthAssessmentReportService;
-
-    @Autowired
+    @Resource
     private IBedService bedService;
 
     /**

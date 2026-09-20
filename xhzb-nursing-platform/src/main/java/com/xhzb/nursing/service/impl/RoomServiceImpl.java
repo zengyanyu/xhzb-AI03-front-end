@@ -4,23 +4,17 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xhzb.nursing.domain.DeviceData;
 import com.xhzb.nursing.domain.Room;
-import com.xhzb.nursing.mapper.RoomMapper;
-import com.xhzb.nursing.service.IRoomService;
 import com.xhzb.nursing.domain.vo.BedVo;
 import com.xhzb.nursing.domain.vo.DeviceVo;
 import com.xhzb.nursing.domain.vo.RoomVo;
+import com.xhzb.nursing.mapper.RoomMapper;
+import com.xhzb.nursing.service.IRoomService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements IRoomService {
 
-    @Autowired
+    @Resource
     private StringRedisTemplate stringRedisTemplate;
 
     /**
