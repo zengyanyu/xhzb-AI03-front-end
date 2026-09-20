@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @ClassName AliOssConfigProperties.java
- * 
  */
 @Setter
 @Getter
@@ -22,22 +21,22 @@ public class AliOssConfigProperties {
     /**
      * 域名站点
      */
-    private String endpoint ;
+    private String endpoint;
 
     /**
      * 秘钥Id
      */
-    private String accessKeyId ;
+    private String accessKeyId;
 
     /**
      * 秘钥
      */
-    private String accessKeySecret ;
+    private String accessKeySecret;
 
     /**
      * 桶名称
      */
-    private String bucketName ;
+    private String bucketName;
 
 }
 

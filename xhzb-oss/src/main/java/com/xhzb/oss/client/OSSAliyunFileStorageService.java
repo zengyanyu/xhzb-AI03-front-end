@@ -8,8 +8,8 @@ import com.aliyun.oss.model.DeleteObjectsRequest;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
 import com.xhzb.oss.properties.AliOssConfigProperties;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
@@ -20,10 +20,10 @@ import java.util.List;
 @Component
 public class OSSAliyunFileStorageService {
 
-    @Autowired
+    @Resource
     private OSS ossClient;
 
-    @Autowired
+    @Resource
     private AliOssConfigProperties aliOssConfigProperties;
 
     /**
@@ -82,7 +82,6 @@ public class OSSAliyunFileStorageService {
         keys.add(key);
         // 删除Objects
         ossClient.deleteObjects(new DeleteObjectsRequest(aliOssConfigProperties.getBucketName()).withKeys(keys));
-
     }
 
     /**

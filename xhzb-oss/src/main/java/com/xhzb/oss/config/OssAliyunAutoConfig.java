@@ -3,8 +3,8 @@ package com.xhzb.oss.config;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.xhzb.oss.properties.AliOssConfigProperties;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OssAliyunAutoConfig {
 
-    @Autowired
+    @Resource
     AliOssConfigProperties aliOssConfigProperties;
 
     @Bean
@@ -40,6 +40,5 @@ public class OssAliyunAutoConfig {
         log.info("-----------------结束创建OSSClient--------------------");
         return ossClient;
     }
-
 
 }
