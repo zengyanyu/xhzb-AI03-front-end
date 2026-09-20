@@ -1,17 +1,17 @@
 package com.xhzb.framework.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.xhzb.common.filter.RepeatableFilter;
+import com.xhzb.common.filter.XssFilter;
+import com.xhzb.common.utils.StringUtils;
 import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.xhzb.common.filter.RepeatableFilter;
-import com.xhzb.common.filter.XssFilter;
-import com.xhzb.common.utils.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Filter配置
@@ -26,7 +26,6 @@ public class FilterConfig {
     @Value("${xss.urlPatterns}")
     private String urlPatterns;
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @Bean
     @ConditionalOnProperty(value = "xss.enabled", havingValue = "true")
     public FilterRegistrationBean xssFilterRegistration() {
@@ -42,7 +41,6 @@ public class FilterConfig {
         return registration;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @Bean
     public FilterRegistrationBean someFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
