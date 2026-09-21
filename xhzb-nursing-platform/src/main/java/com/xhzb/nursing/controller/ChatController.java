@@ -19,11 +19,11 @@ import reactor.core.publisher.Flux;
 @RequestMapping("/ai")
 public class ChatController {
 
+    @Autowired(required = false)
+    private ChatClient chatClient;
     @Resource
     private ChatHistoryService chatHistoryService;
 
-    @Autowired(required = false)
-    private ChatClient chatClient;
 
     /**
      * 处理大模型聊天请求
@@ -36,7 +36,6 @@ public class ChatController {
      */
     @PostMapping(value = "/chat", produces = "text/html;charset=utf-8")
     public Flux<String> chat(String prompt, String chatId) {//prompt用户提示词
-
         // 将会话id写入登录用户的会话id的redis的set集合中
         chatHistoryService.save(chatId);
 

@@ -39,7 +39,6 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
 
         //写入redis
         redisTemplate.opsForSet().add(HISTORY_PREFIX + userId, chatId);
-
     }
 
     /**
@@ -50,7 +49,6 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
      */
     @Override
     public List<String> getHistory() {
-
         //获取登录用户id
         Long userId = SecurityUtils.getUserId();
 

@@ -28,6 +28,7 @@ import java.util.List;
 @RequestMapping("/nursing/alertRule")
 @Tag(name = "报警规则相关接口")
 public class AlertRuleController extends BaseController {
+
     @Resource
     private IAlertRuleService alertRuleService;
 

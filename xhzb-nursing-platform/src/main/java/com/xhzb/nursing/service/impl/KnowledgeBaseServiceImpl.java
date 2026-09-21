@@ -29,6 +29,15 @@ import java.util.List;
  */
 @Service
 public class KnowledgeBaseServiceImpl extends ServiceImpl<KnowledgeBaseMapper, KnowledgeBase> implements IKnowledgeBaseService {
+    //导入文本分割器
+    @Autowired
+    private TextSplitter textSplitter;
+    //导入OSS存储业务类
+    @Autowired
+    private OSSAliyunFileStorageService ossAliyunFileStorageService;
+    //导入向量存储对象
+//    @Autowired
+//    private VectorStore vectorStore;
 
     /**
      * 查询知识库主
@@ -51,18 +60,6 @@ public class KnowledgeBaseServiceImpl extends ServiceImpl<KnowledgeBaseMapper, K
     public List<KnowledgeBase> selectKnowledgeBaseList(KnowledgeBase knowledgeBase) {
         return this.baseMapper.selectKnowledgeBaseList(knowledgeBase);
     }
-
-    //导入OSS存储业务类
-    @Autowired
-    private OSSAliyunFileStorageService ossAliyunFileStorageService;
-
-    //导入文本分割器
-    @Autowired
-    private TextSplitter textSplitter;
-
-    //导入向量存储对象
-//    @Autowired
-//    private VectorStore vectorStore;
 
     /**
      * 新增知识库主

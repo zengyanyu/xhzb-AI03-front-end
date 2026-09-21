@@ -35,7 +35,6 @@ public class DeviceDataServiceImpl extends ServiceImpl<DeviceDataMapper, DeviceD
 
     @Resource
     private IDeviceService deviceService;
-
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 

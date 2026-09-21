@@ -29,6 +29,9 @@ import java.util.List;
 @Service
 public class NursingPlanServiceImpl extends ServiceImpl<NursingPlanMapper, NursingPlan> implements INursingPlanService {
 
+    @Autowired
+    private NursingProjectPlanMapper nursingProjectPlanMapper;
+
     /**
      * 查询护理计划
      *
@@ -59,9 +62,6 @@ public class NursingPlanServiceImpl extends ServiceImpl<NursingPlanMapper, Nursi
     public List<NursingPlan> selectNursingPlanList(NursingPlan nursingPlan) {
         return this.baseMapper.selectNursingPlanList(nursingPlan);
     }
-
-    @Autowired
-    private NursingProjectPlanMapper nursingProjectPlanMapper;
 
     /**
      * 新增护理计划

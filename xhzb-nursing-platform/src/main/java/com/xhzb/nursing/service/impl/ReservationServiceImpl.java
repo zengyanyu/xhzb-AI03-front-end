@@ -97,7 +97,6 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
      */
     @Override
     public String getReservationByDay(LocalDate dateTime) {
-
         if (ObjectUtil.isEmpty(dateTime)) {
             dateTime = LocalDate.now();
         }
@@ -116,7 +115,7 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
             }
             return JSONUtil.toJsonStr(resultList);
         }
-
         return null;
     }
+
 }

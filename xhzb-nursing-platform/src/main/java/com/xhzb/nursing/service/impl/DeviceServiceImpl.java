@@ -24,7 +24,6 @@ import com.xhzb.nursing.service.IDeviceService;
 import com.xhzb.system.service.ISysUserService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +42,10 @@ import java.util.*;
 public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> implements IDeviceService {
     @Resource
     private ISysUserService sysUserService;
+    @Resource
+    private IoTDAClient ioTDAClient;
+    @Resource
+    private RedisTemplate<String, String> redisTemplate;
 
     /**
      * 查询设备管理
@@ -110,11 +113,6 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
         return removeById(id) ? 1 : 0;
     }
 
-    @Autowired
-    private IoTDAClient ioTDAClient;
-
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
 
     /**
      * 同步产品列表
