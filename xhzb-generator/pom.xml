@@ -11,12 +11,9 @@
 
     <artifactId>xhzb-generator</artifactId>
 
-    <description>
-        generator代码生成
-    </description>
+    <description>generator代码生成</description>
 
     <dependencies>
-
         <!-- velocity代码生成使用模板 -->
         <dependency>
             <groupId>org.apache.velocity</groupId>
@@ -34,7 +31,6 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-3-starter</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>
