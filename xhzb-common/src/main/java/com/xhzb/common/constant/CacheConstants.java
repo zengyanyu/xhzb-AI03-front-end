@@ -2,11 +2,10 @@ package com.xhzb.common.constant;
 
 /**
  * 缓存的key 常量
- * 
+ *
  * @author ruoyi
  */
-public class CacheConstants
-{
+public class CacheConstants {
     /**
      * 登录用户 redis key
      */
@@ -42,5 +41,5 @@ public class CacheConstants
      */
     public static final String PWD_ERR_CNT_KEY = "pwd_err_cnt:";
 
-    public static final String IOT_ALL_PRODUCT_LIST= "iot:all_product_list";
+    public static final String IOT_ALL_PRODUCT_LIST = "iot:all_product_list";
 }
