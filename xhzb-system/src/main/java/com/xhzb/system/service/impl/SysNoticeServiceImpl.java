@@ -3,7 +3,7 @@ package com.xhzb.system.service.impl;
 import com.xhzb.system.domain.SysNotice;
 import com.xhzb.system.mapper.SysNoticeMapper;
 import com.xhzb.system.service.ISysNoticeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +15,8 @@ import java.util.List;
  */
 @Service
 public class SysNoticeServiceImpl implements ISysNoticeService {
-    @Autowired
+
+    @Resource
     private SysNoticeMapper noticeMapper;
 
     /**

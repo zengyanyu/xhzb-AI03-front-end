@@ -1,12 +1,5 @@
 package com.xhzb.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.xhzb.common.annotation.DataScope;
 import com.xhzb.common.constant.UserConstants;
 import com.xhzb.common.core.domain.TreeSelect;
@@ -21,6 +14,13 @@ import com.xhzb.common.utils.spring.SpringUtils;
 import com.xhzb.system.mapper.SysDeptMapper;
 import com.xhzb.system.mapper.SysRoleMapper;
 import com.xhzb.system.service.ISysDeptService;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 部门管理 服务实现
@@ -29,10 +29,10 @@ import com.xhzb.system.service.ISysDeptService;
  */
 @Service
 public class SysDeptServiceImpl implements ISysDeptService {
-    @Autowired
-    private SysDeptMapper deptMapper;
 
-    @Autowired
+    @Resource
+    private SysDeptMapper deptMapper;
+    @Resource
     private SysRoleMapper roleMapper;
 
     /**

@@ -87,6 +87,11 @@ public class SpringAIConfig {
                 .build();
     }
 
+    /**
+     * 文本分割器
+     *
+     * @return
+     */
     @Bean
     public TextSplitter textSplitter() {
         return TokenTextSplitter.builder()

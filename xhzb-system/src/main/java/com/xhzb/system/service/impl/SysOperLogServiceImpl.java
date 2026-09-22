@@ -1,12 +1,12 @@
 package com.xhzb.system.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.xhzb.system.domain.SysOperLog;
 import com.xhzb.system.mapper.SysOperLogMapper;
 import com.xhzb.system.service.ISysOperLogService;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 操作日志 服务层处理
@@ -15,7 +15,8 @@ import com.xhzb.system.service.ISysOperLogService;
  */
 @Service
 public class SysOperLogServiceImpl implements ISysOperLogService {
-    @Autowired
+
+    @Resource
     private SysOperLogMapper operLogMapper;
 
     /**

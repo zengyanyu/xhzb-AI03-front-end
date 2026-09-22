@@ -1,13 +1,13 @@
 package com.xhzb.system.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.xhzb.common.core.domain.entity.SysDictData;
 import com.xhzb.common.utils.DictUtils;
 import com.xhzb.system.mapper.SysDictDataMapper;
 import com.xhzb.system.service.ISysDictDataService;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 字典 业务层处理
@@ -16,7 +16,8 @@ import com.xhzb.system.service.ISysDictDataService;
  */
 @Service
 public class SysDictDataServiceImpl implements ISysDictDataService {
-    @Autowired
+
+    @Resource
     private SysDictDataMapper dictDataMapper;
 
     /**

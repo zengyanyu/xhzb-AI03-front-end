@@ -1,9 +1,5 @@
 package com.xhzb.system.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.xhzb.common.constant.UserConstants;
 import com.xhzb.common.exception.ServiceException;
 import com.xhzb.common.utils.StringUtils;
@@ -11,6 +7,10 @@ import com.xhzb.system.domain.SysPost;
 import com.xhzb.system.mapper.SysPostMapper;
 import com.xhzb.system.mapper.SysUserPostMapper;
 import com.xhzb.system.service.ISysPostService;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 岗位信息 服务层处理
@@ -19,10 +19,10 @@ import com.xhzb.system.service.ISysPostService;
  */
 @Service
 public class SysPostServiceImpl implements ISysPostService {
-    @Autowired
-    private SysPostMapper postMapper;
 
-    @Autowired
+    @Resource
+    private SysPostMapper postMapper;
+    @Resource
     private SysUserPostMapper userPostMapper;
 
     /**

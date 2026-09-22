@@ -12,7 +12,7 @@ import com.xhzb.system.domain.SysConfig;
 import com.xhzb.system.mapper.SysConfigMapper;
 import com.xhzb.system.service.ISysConfigService;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -25,10 +25,10 @@ import java.util.List;
  */
 @Service
 public class SysConfigServiceImpl implements ISysConfigService {
-    @Autowired
-    private SysConfigMapper configMapper;
 
-    @Autowired
+    @Resource
+    private SysConfigMapper configMapper;
+    @Resource
     private RedisCache redisCache;
 
     /**

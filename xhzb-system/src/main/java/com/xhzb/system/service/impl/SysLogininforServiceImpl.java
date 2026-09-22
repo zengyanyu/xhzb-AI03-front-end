@@ -1,12 +1,12 @@
 package com.xhzb.system.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.xhzb.system.domain.SysLogininfor;
 import com.xhzb.system.mapper.SysLogininforMapper;
 import com.xhzb.system.service.ISysLogininforService;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 系统访问日志情况信息 服务层处理
@@ -16,7 +16,7 @@ import com.xhzb.system.service.ISysLogininforService;
 @Service
 public class SysLogininforServiceImpl implements ISysLogininforService {
 
-    @Autowired
+    @Resource
     private SysLogininforMapper logininforMapper;
 
     /**
